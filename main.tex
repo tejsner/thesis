@@ -1,0 +1,67 @@
+\documentclass[a4paper, oneside, table]{memoir}
+
+%% Language and font encodings
+\usepackage[english]{babel}
+
+%%% Margins
+\setulmarginsandblock{2cm}{2cm}{*}
+\setlrmarginsandblock{3cm}{3cm}{*}
+\checkandfixthelayout
+
+%% Useful packages
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[colorlinks=true, allcolors=blue, pdfencoding=auto]{hyperref}
+\usepackage{siunitx}
+\usepackage{booktabs}
+\usepackage[version=4]{mhchem}
+\usepackage{listings}
+
+% some commands for making tables with alternating colors (replaces tabular environment)
+\definecolor{tablegrey}{gray}{0.9}
+\let\oldtabular\tabular
+\let\endoldtabular\endtabular
+\renewenvironment{tabular}{\rowcolors{2}{white}{tablegrey}\oldtabular}{\endoldtabular}
+\def\arraystretch{1.2}
+
+%% TIKZ
+\usetikzlibrary{quotes,angles}
+
+%% Bibliography
+\usepackage[numbers]{natbib}
+
+\author{Tim Birger Tejsner}
+\title{Oxygen Dynamics in the High-Temperature Superconductor LSCO+O}
+\date{\today}
+
+%\includeonly{ch/simulation}
+
+\begin{document}
+%\maketitle
+\tableofcontents
+
+\clearpage
+
+\listoffigures
+\listoftables
+
+\include{ch/introduction}
+\include{ch/lsco}
+\include{ch/methods}
+\include{ch/samples}
+\include{ch/simulation}
+\include{ch/gdos}
+\include{ch/anomaly}
+\include{ch/arpes}
+\include{ch/pdf}
+\include{ch/discussion}
+\include{ch/conclusion}
+\appendix
+\include{ch/appendix}
+
+\bibliographystyle{apsrev4-1}
+\bibliography{bibliography}
+
+\end{document}

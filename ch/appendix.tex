@@ -19,13 +19,18 @@ In most textbooks (e.g. Kittel \cite{Kittel2005}), phonon calculations are exemp
     \label{fig:diatomic}
 \end{figure}
 
-The diamtomic chain is visualized in Figure XX. It is an infinite chain of alternating (1,2) atoms with distinct masses ($m$,$M$) in a unit cell of length $a$. Displacements from equilibrium positions are denoted with $u$.
 
+The diamtomic chain is visualized in Figure \ref{fig:diatomic}. We consider an infinite chain of alternating ($1,2$) atoms with distinct masses ($m$,$M$) in a unit cell of length $a$. Displacements from equilibrium positions are denoted with $u_{i,n}$, where $n$ is the unit cell index. We start by making the assumption that the energy of this idealized lattice depends on the distance between pairs of atoms. If we consider the displacements $u$ to be small, the total energy of our chain can be expressed as a Taylor series
 
+\[ E^\text{tot} = E_0 + \sum_i \frac{\partial E}{\partial u_{i}}  + \frac{1}{2} \sum_{i,j} u_{i} \frac{\partial ^2 E}{\partial u_{i} \partial u_{j}} u_{j} + \dots \, , \]
 
-\[ E = E_0 + \frac{1}{2} \frac{\partial^2 E}{\partial r^2} \sum_n (r - r_0)^2 + \frac{1}{3!} \frac{\partial^3 E}{\partial r^3} \sum_n (r - r_0)^3 + \dots \]
+\noindent where the two indices $i$ and $j$ runs over all atomic species in the chain. To continue we first invoke the \emph{harmonic approximation} and ignore terms with power greater than 2 in the series. Second, we assume that the system is in equilibrium such that
 
+\[ \frac{\partial E}{\partial u_{i}} = 0 \, , \]
 
+\noindent for all values of $i$. Physically this corresponds to atoms being at rest in a parabolic (harmonic) potential. Since we are interested in  dynamics, it is convenient to use the \emph{harmonic energy} $E$ of the system
+
+\[ E = E^\text{tot} - E_0 = \frac{1}{2} \sum_{i,j} u_{i} \frac{\partial ^2 E}{\partial u_{i} \partial u_{j}} u_{j} \]
 
 
 

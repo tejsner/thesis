@@ -28,16 +28,18 @@ In most textbooks (e.g. Kittel \cite{Kittel2005}), phonon calculations are exemp
 	\item Primitive unit cell and fractional atomic coordinates
 	\item Symmetry operations
 	\item The mass of each atomic species
-	\item The force constant matrix
+	\item The force constants
 \end{enumerate}
 
-Items 1-3 are familiar to most condensed matter physicists and can usually be found in various databases. The force constant matrix, on the other hand, contains information about interatomic forces and is not directly obtainable from experiment. For this reason, phonon calculations requires some modelling either through semi-empirical or ab-initio methods. In the following I will attempt to explain what the force constant matrix represents and how we use it to get phonon band structures.
+Items 1-3 are familiar to most condensed matter physicists and can usually be found in various databases. The force constants, on the other hand, contains information about interatomic forces and is not directly obtainable from experiment. For this reason, phonon calculations requires some modelling either through semi-empirical or ab-initio methods. In the following I will attempt to explain what the force constants represents and how we use it to get phonon band structures.
 
-We start completely generally in one dimension with an arbitrary number of unit cells containing an arbitrary number of atomic species at equilibrium. Displacements from equilibrium positions are denoted $u(jl)$, where $l$ is the unit cell index and $j$ is the atomic index. If we consider the displacements $u$ to be small, the total energy of our system can be expressed as a Taylor series
+\section{Theory}
+
+We start completely generally in one dimension with an arbitrary number of unit cells containing an arbitrary number of atomic species at equilibrium. Displacements from equilibrium positions are denoted $u(jl)$, where $l$ is the unit cell index and $j \in \{1,\dots,n\}$ is the atomic index. If we consider the displacements $u$ to be small, the total energy of our system can be expressed as a Taylor series
 
 \[ E^\text{tot} = E_0 + \sum_{l}\sum_{j} \left. \frac{\partial E}{\partial u(jl)} \right\rvert_{r_{lj}}  + \frac{1}{2} \sum_{l,\lp} \sum_{j,\jp} u(jl) \left. \frac{\partial ^2 E}{\partial u(jl) \partial u(\jp \lp)} \right\rvert_{r_{lj}, r_{\lp \jp}} u(\jp \lp) + \dots \, , \]
 
-\noindent where $r_{lj}$ is the equilibrium position of atom $j$ in unit cell $l$. The main approximation in phonon calculations is the so-called \emph{harmonic approximation} which ignores terms with power greater than 2 in the series. Higher-order contributions are denoted \emph{anharmonic} terms and will be important in particular at higher temperatures (phase transitions, thermal conductivity, thermal expansion). The fact that our system is in equilibrium can be stated succinctly as
+\noindent where $r_{lj}$ is the equilibrium position of atom $j$ in unit cell $l$. The main approximation in phonon calculations is the so-called \emph{harmonic approximation} which ignores terms with power greater than 2 in the series. Higher-order contributions are denoted \emph{anharmonic} terms and can become important at higher temperatures (phase transitions, thermal conductivity, thermal expansion). The fact that our system is in equilibrium can be stated succinctly as
 
 \[ \frac{\partial E}{\partial u(jl)} = 0 \, , \]
 
@@ -65,22 +67,22 @@ E = E^\text{tot} - E_0 = \frac{1}{2} \sum_{l,\lp} \sum_{j,\jp} u(jl) \left. \fra
 \begin{figure}
 	\centering
 	\includegraphics[width=0.9\textwidth]{fig/temp/diatomic.png}
-	\caption{Diatomic chain}
+	\caption{Diatomic chain. TODO: Make new figure. Use $l$ as unit cell index for consistency with the notation.}
 	\label{fig:diatomic}
 \end{figure}
 
 \noindent and it becomes evident that the harmonic energy can be described with respect to atoms or bonds in mathematically equivalent ways. Since the bond-centered description does not include individual atomic displacements, it is necessary to add a self-term to $\bm{\Theta}$. As a visual aid to these index-heavy equations, Figure \ref{fig:diatomic} illustrates the one-dimensional diatomic chain, which is often used in introductory texts. If we consider only nearest-neighbour interactions and identical springs, the bond-centered harmonic energy can be written
 
 \begin{align*}
-	E &= \frac{1}{4} \bm{\Theta} \sum_n 2 \left[ u(1,n) - u(2,n) \right]^2 + \frac{1}{4} \bm{\Theta} \sum_n 2 \left[ u(2,n) - u(1,n+1) \right]^2 \\
-	  &= \frac{1}{2} \bm{\Theta} \sum_n \left[ u(1,n) - u(2,n) \right]^2 + \frac{1}{2} \bm{\Theta} \sum_n \left[ u(2,n) - u(1,n+1) \right]^2
+	E &= \frac{1}{4} \bm{\Theta} \sum_l 2 \left[ u(1,l) - u(2,l) \right]^2 + \frac{1}{4} \bm{\Theta} \sum_n 2 \left[ u(2,l) - u(1,l+1) \right]^2 \\
+	  &= \frac{1}{2} \bm{\Theta} \sum_l \left[ u(1,l) - u(2,l) \right]^2 + \frac{1}{2} \bm{\Theta} \sum_n \left[ u(2,l) - u(1,l+1) \right]^2
 \end{align*}
 
-\noindent where the factor of 2 comes from double-counting. The purpose of this example is to show that the (somewhat abstract) harmonic energy in equation \eqref{eq:eharm} is equivalent to our intuitive understanding of coupled harmonic oscillators. With this in mind, we can return to the matter at hand and write the equation of motion for an atom $j$ in cell $l$ through Newtons well known $F=ma$:
+\noindent where the factor of 2 comes from double-counting. The purpose of this example is to show that the (somewhat abstract) harmonic energy in equation \eqref{eq:eharm} is equivalent to our intuitive understanding of coupled harmonic oscillators. With this in mind, we can return to the matter at hand and write the equation of motion for an atom $j$ in cell $l$ through Newtons second law $F=ma$:
 
 \[ m_j \ddot{u}(jl, t) = - \frac{\partial E}{\partial u(jl)} = - \sum_{\lp} \sum_{\jp} \fc u(\jp \lp, t) \, , \]
 
-\noindent where $m_j$ is the atomic mass of atom $j$. The factor of 2 when compared to equation \eqref{eq:total_energy} is due to ?? (sum changes, i=j stuff...). Solution to this equation is given as a sum of travelling harmonic waves with different wave vector $q$ and band index $\nu$
+\noindent where $m_j$ is the atomic mass of atom $j$. The factor of 2 when compared to equation \eqref{eq:total_energy} is due to ?? (sum changes, i=j stuff...). Solutions to this equation is given as a sum of travelling harmonic waves with wave vectors $q$ and band indices $\nu \in \{1,\dots , n \}$
 
 \[ u(jl,t) = \sum_{q,\nu} \tilde{u}(j,q,\nu) \exp (iqr(jl)) \exp(-i \omega(q,\nu) t) \, \]
 
@@ -94,22 +96,74 @@ E = E^\text{tot} - E_0 = \frac{1}{2} \sum_{l,\lp} \sum_{j,\jp} u(jl) \left. \fra
 
 \noindent where the last equality is simply a change of origin in order to follow the convention of most software. The full account of phonon frequencies $\omega$ and displacements $\tilde{u}$ can be found as a solutions to equation \eqref{eq:motion}. At a given $q$ and $\nu$, the equations are indexed by $j$ and we will have $n$ equations with $n$ unknowns with respect to $\tilde{u}(j,q,\nu)$, where $n$ is the number of atoms in the unit cell. In fact, equation \eqref{eq:motion} can be written as an eigenvalue equation:
 
-\[  \bm{D(q)} \cdot \bm{e}(\bm{q},\nu) = \omega(\bm{q},\nu)^2 \cdot \bm{e}(\bm{q},\nu) \, , \]
+\begin{equation}
+\bm{D}(q) \cdot \bm{e}(q,\nu) = \omega(q,\nu)^2 \cdot \bm{e}(q,\nu) \, , \label{eq:dynmat}
+\end{equation}
 
 \noindent where 
 
-\[ \bm{e}(\bm{q},\nu) = \begin{pmatrix}
-\sqrt{m_1}\tilde{u}(1,\bm{q},\nu) \\
-\sqrt{m_2}\tilde{u}(2,\bm{q},\nu) \\
+\[ \bm{e}(q,\nu) = \begin{pmatrix}
+\sqrt{m_1}\tilde{u}(1,q,\nu) \\
+\sqrt{m_2}\tilde{u}(2,q,\nu) \\
 \vdots \\
-\sqrt{m_n}\tilde{u}(n,\bm{q},\nu)
+\sqrt{m_n}\tilde{u}(n,q,\nu)
 \end{pmatrix} \]
 
-\noindent and the elements of $\bm{D(q)}$ are
+\noindent and the elements of $\bm{D}(q)$ are given 
 
-\[ D_{j\jp} = \frac{1}{\sqrt{m_j m_{\jp}}} \sum_{\jp} \fczero \exp (i\bm{q}[\bm{r}(\jp\lp) - \bm{r}(j0)])  \]
+\begin{equation}
+D(j\jp) = \frac{1}{\sqrt{m_j m_{\jp}}} \sum_{\lp} \fczero \exp (iq[r(\jp\lp) - r(j0)]) \, . \label{eq:dynmat_ij}
+\end{equation}
 
-\noindent $\bm{D(q)}$ is known as the dynamical matrix and can be constructed solely from force constants. Furthermore, the dynamical matrix is Hermitian so the eigenvalues $\omega(\bm{q},\nu)^2$ are real and the eigenvectors $\bm{e}(\bm{q}, \nu)$ are orthogonal. In addition, the eigenvalues and eigenvectors are trivially obtained numerically (e.g. \texttt{numpy.linalg.eigh} in Python with the numpy library).
+\noindent $\bm{D}(q)$ is known as the dynamical matrix and can be constructed solely from force constants. Furthermore, equation \eqref{eq:dynmat_ij} reveals that the dynamical matrix is Hermitian so the eigenvalues $\omega(q,\nu)^2$ are real and the eigenvectors $\bm{e}(q, \nu)$ are orthonormal. In addition, the eigenvalues and eigenvectors are trivially obtained numerically (e.g. \texttt{numpy.linalg.eigh} in the Python numpy library). In order to get the full dispersion, this diagonalization is performed for each of the $n$ bands $\nu$ at the desired wave vectors in the first Brillouin Zone (FBZ). 
+
+The extension to 3 dimensions is done by treating the Cartesian components separately and considering $\bm{q}$ and $\bm{r}$ as vectors. The eigenvector then becomes a column vector of $3n$ components 
+
+\[ \bm{e}(\bm{q},\nu) = \begin{pmatrix}
+\sqrt{m_1}\tilde{u}_x(1,\bm{q},\nu) \\
+\sqrt{m_1}\tilde{u}_y(1,\bm{q},\nu) \\
+\sqrt{m_1}\tilde{u}_z(1,\bm{q},\nu) \\
+\sqrt{m_2}\tilde{u}_x(2,\bm{q},\nu) \\
+\vdots \\
+\sqrt{m_{n}}\tilde{u}_z(n,\bm{q},\nu)
+\end{pmatrix} \]
+
+\noindent and we get a $3n \times 3n$ dynamical matrix, where each component \eqref{eq:dynmat_ij} is a $3 \times 3$ block of the form
+
+\[
+\bm{D}(j\jp) = \begin{pmatrix}
+D(j\jp)_{xx} & D(j\jp)_{xy} & D(j\jp)_{xz} \\
+D(j\jp)_{yx} & D(j\jp)_{yy} & D(j\jp)_{yz} \\
+D(j\jp)_{zx} & D(j\jp)_{zy} & D(j\jp)_{zz}
+\end{pmatrix}
+\]
+
+\noindent where
+
+\begin{equation}
+D(j\jp)_{\alpha\beta} = \frac{1}{\sqrt{m_j m_{\jp}}} \sum_{\lp} \fczero _{\alpha\beta} \exp (i\bm{q}[\bm{r}(\jp\lp) - \bm{r}(j0)]) \label{eq:dynmat_ij2}
+\end{equation}
+
+\noindent While the path was somewhat involved, it is useful to take a step back and consider the consequences of our outlined formalism. Everything we need to know about our phonon system can be obtained from the dynamical matrix that, in turn,  is constructed from force constants through equation \eqref{eq:dynmat_ij2}. 
+
+\section{Practical considerations}
+At this point, it is useful to step back and consider how we construct elements of the dynamical matrix in practice. Inspection of equation \eqref{eq:dynmat_ij2} contains a sum over all unit cells $\lp$ and is thus an infinite sum. On the other hand, it is reasonable to assume that the dominant force constants $\bm{\Phi}$ are short range. The compromise is to use a finite supercell such that the second derivatives involved in calculating force constants are minimized. While the reasonable size of such a supercell obviously depends on the system and model, quantum contributions to the force constants vanish within a distance of roughly \SIrange{10}{15}{\angstrom} [CRYSTAL website]. If the force constants can be obtained analytically from a semi-empirical potential, calculation is computationally simple and we can use large supercells. However, since force constants are usually obtained from DFT, we are limited by computational resources and are usually restricted to supercells with a maximal interatomic distance of roughly \SI{5}{\angstrom} (e.g. a cubic system with $a=\SI{10}{\angstrom}$).
+
+Since the number of force constants needed is equal to the size of the dynamical matrix, the number of calculations to perform is $3n \times 3n$. Even for a fairly small system such as LCO in the I4/mmm space group (HTT, $n=7$) the number of elements in the dynamical matrix is $(3\cdot 7)^2 = 441$. In the finite displacement method, each force constant is the result of a self-consistent calculation, so the computational effort appears prohibitively expensive at first glance. For this reason, it is absolutely essential to calculate only the symmetry-inequivalent force constants. The case of LCO in the I4/mmm space group the number of necessary displacements is reduced to only 7 (6 if we ignore magnetism), making the problem much more manageable.
+
+\section{Phonon eigenvectors}
+The phonon dispersion is contained within the eigenvalues $\omega (\bm{q},\nu)^2$. We can plot the bands $\nu$ along high-symmetry lines in the FBZ by carefully choosing the values of $\bm{q}$ where the dynamical matrix is diagonalized. Similarly, we can sample the dispersion in a dense $\bm{q}$-mesh in order to evaluate the phonon density of states. In addition, many thermodynamic properties can be calculated by only considering the eigenvalues.
+
+The eigenvectors $\bm{e}(\bm{q}, \nu)$ are more subtle in nature. Each component of  $\bm{e}(\bm{q}, \nu)$ is a complex number that describes the wave amplitude and phase of one atomic species $j$ in one cartesian direction $\alpha$. In addition, the eigenvector is normalized and thus only describes relative atomic motion. In order to visualize the collective displacement due to a phonon mode $\nu$ at $\bm{q}$ we can displace all atoms $j$ in unit cells $l$ by
+
+\[ \Delta = \frac{A}{\sqrt{m_j}} \text{Re} \left[ \exp(i\phi) \bm{e}_j(\bm{q}, \nu) \exp (\bm{q} \cdot \bm{r}(jl)) \right] \]
+
+\noindent where $\bm{e}_j(\bm{q}, \nu)$ is the $j$'th component of $\bm{e}(\bm{q}, \nu)$ and $A$ is an amplitude. The phase $\phi$ describes periodic motion of atoms. An animation can be produced by varying $\phi$ between 0 and $2 \pi$.
+
+\section{Thermodynamics}
+
+\section{Obtaining Force Constants from DFT}
+
 
 
 

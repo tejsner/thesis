@@ -126,9 +126,9 @@ The extension to 3 dimensions is done by treating the Cartesian components separ
 \sqrt{m_2}\tilde{u}_x(2,\bm{q},\nu) \\
 \vdots \\
 \sqrt{m_{n}}\tilde{u}_z(n,\bm{q},\nu)
-\end{pmatrix} \]
+\end{pmatrix} \, , \]
 
-\noindent and we get a $3n \times 3n$ dynamical matrix, where each component \eqref{eq:dynmat_ij} is a $3 \times 3$ block of the form
+\noindent the number of bands increase to $3n$ and we get a $3n \times 3n$ dynamical matrix, where each component \eqref{eq:dynmat_ij} is a $3 \times 3$ block of the form
 
 \[
 \bm{D}(j\jp) = \begin{pmatrix}
@@ -144,28 +144,41 @@ D(j\jp)_{zx} & D(j\jp)_{zy} & D(j\jp)_{zz}
 D(j\jp)_{\alpha\beta} = \frac{1}{\sqrt{m_j m_{\jp}}} \sum_{\lp} \fczero _{\alpha\beta} \exp (i\bm{q}[\bm{r}(\jp\lp) - \bm{r}(j0)]) \label{eq:dynmat_ij2}
 \end{equation}
 
-\noindent While the path was somewhat involved, it is useful to take a step back and consider the consequences of our outlined formalism. Everything we need to know about our phonon system can be obtained from the dynamical matrix that, in turn,  is constructed from force constants through equation \eqref{eq:dynmat_ij2}. 
+\noindent While the path was somewhat involved, it is useful to take a step back and consider the consequences of our outlined formalism. Everything we need to know about our phonon system can be obtained from the dynamical matrix that, in turn,  is constructed from force constants through equation \eqref{eq:dynmat_ij2}. Finally, all of these objects can be constructed in computationally trivial way from force constants.
 
 \section{Practical considerations}
-At this point, it is useful to step back and consider how we construct elements of the dynamical matrix in practice. Inspection of equation \eqref{eq:dynmat_ij2} contains a sum over all unit cells $\lp$ and is thus an infinite sum. On the other hand, it is reasonable to assume that the dominant force constants $\bm{\Phi}$ are short range. The compromise is to use a finite supercell such that the second derivatives involved in calculating force constants are minimized. While the reasonable size of such a supercell obviously depends on the system and model, quantum contributions to the force constants vanish within a distance of roughly \SIrange{10}{15}{\angstrom} [CRYSTAL website]. If the force constants can be obtained analytically from a semi-empirical potential, calculation is computationally simple and we can use large supercells. However, since force constants are usually obtained from DFT, we are limited by computational resources and are usually restricted to supercells with a maximal interatomic distance of roughly \SI{5}{\angstrom} (e.g. a cubic system with $a=\SI{10}{\angstrom}$).
+At this point, it is useful to consider how we construct elements of the dynamical matrix in practice. Inspection of equation \eqref{eq:dynmat_ij2} contains a sum over all unit cells $\lp$ and is thus an infinite sum. On the other hand, it is reasonable to assume that the dominant force constants $\bm{\Phi}$ are short range. The compromise is to use a finite supercell such that the second derivatives involved in calculating force constants outside this cell are minimized. While the reasonable size of such a supercell obviously depends on the system and model, quantum contributions to the force constants generally vanish within a distance of roughly \SIrange{10}{15}{\angstrom} [CRYSTAL website]. If the force constants can be obtained analytically from a semi-empirical potential, calculation is computationally simple and we can use large supercells. However, since force constants are usually obtained from DFT, we are limited by computational resources and are usually restricted to supercells with a maximal interatomic distance of roughly \SI{5}{\angstrom} (e.g. a cubic system with $a=\SI{10}{\angstrom}$).
 
-Since the number of force constants needed is equal to the size of the dynamical matrix, the number of calculations to perform is $3n \times 3n$. Even for a fairly small system such as LCO in the I4/mmm space group (HTT, $n=7$) the number of elements in the dynamical matrix is $(3\cdot 7)^2 = 441$. In the finite displacement method, each force constant is the result of a self-consistent calculation, so the computational effort appears prohibitively expensive at first glance. For this reason, it is absolutely essential to calculate only the symmetry-inequivalent force constants. The case of LCO in the I4/mmm space group the number of necessary displacements is reduced to only 7 (6 if we ignore magnetism), making the problem much more manageable.
+Since the number of force constants needed is equal to the size of the dynamical matrix, the number of calculations to perform is $3n \times 3n$. Even for a fairly small system such as LCO in the I4/mmm space group (HTT, $n=7$) the number of elements in the dynamical matrix is $(3\cdot 7)^2 = 441$. In the finite displacement method, each force constant is the result of a self-consistent DFT calculation, so the computational effort appears prohibitively expensive at first glance. For this reason we use a numerical fitting of symmetry inequivalent force constants (see section \ref{sec:forceDFT}). In the case of LCO in the I4/mmm space group the number of necessary displacements is reduced to only 7 (6 if we ignore magnetism), making the problem much more manageable.
 
 \section{Phonon eigenvectors}
 The phonon dispersion is contained within the eigenvalues $\omega (\bm{q},\nu)^2$. We can plot the bands $\nu$ along high-symmetry lines in the FBZ by carefully choosing the values of $\bm{q}$ where the dynamical matrix is diagonalized. Similarly, we can sample the dispersion in a dense $\bm{q}$-mesh in order to evaluate the phonon density of states. In addition, many thermodynamic properties can be calculated by only considering the eigenvalues.
 
 The eigenvectors $\bm{e}(\bm{q}, \nu)$ are more subtle in nature. Each component of  $\bm{e}(\bm{q}, \nu)$ is a complex number that describes the wave amplitude and phase of one atomic species $j$ in one cartesian direction $\alpha$. In addition, the eigenvector is normalized and thus only describes relative atomic motion. In order to visualize the collective displacement due to a phonon mode $\nu$ at $\bm{q}$ we can displace all atoms $j$ in unit cells $l$ by
 
-\[ \Delta = \frac{A}{\sqrt{m_j}} \text{Re} \left[ \exp(i\phi) \bm{e}_j(\bm{q}, \nu) \exp (\bm{q} \cdot \bm{r}(jl)) \right] \]
+\begin{equation}
+\Delta_{jl} = \frac{A}{\sqrt{m_j}} \text{Re} \left[ \exp (i\phi) \bm{e}_j(\bm{q}, \nu) \exp (i \, 2 \pi \, \bm{q} \cdot \bm{r}(jl) \right] \label{eq:displacements}
+\end{equation}
 
-\noindent where $\bm{e}_j(\bm{q}, \nu)$ is the $j$'th component of $\bm{e}(\bm{q}, \nu)$ and $A$ is an amplitude. The phase $\phi$ describes periodic motion of atoms. An animation can be produced by varying $\phi$ between 0 and $2 \pi$.
+\noindent where $\bm{e}_j(\bm{q}, \nu)$ is the $j$'th component of $\bm{e}(\bm{q}, \nu)$ and $A$ is an arbitrary amplitude. The phase $\phi$ describes periodic motion of atoms. An animation can be produced by varying $\phi$ between 0 and $2 \pi$.
 
-\section{Thermodynamics}
+In \texttt{Phonopy} the eigenvectors are always given with respect to the primitive unit cell and the 3 Cartesian components are along the basis vectors of this primitive unit cell. If we want to, for example, to visualize the bond-stretching mode in the HTT phase of LCO at $q=(\frac{1}{4},\frac{1}{4},0)$ in orthorhombic notation, we look at atoms in primitive unit cells with origin (0,0,0), (1,0,1), (2,0,2) and (3,0,3) using the eigenvectors at $q=(0.125,-0.125,0.125)$. For this specific mode, the movement of oxygen with fractional coordinates (0.5,0,0.5) dominates. The movement is exactly along the Cu-O bond and we can plot it in one dimension. Figure \ref{fig:bs-displacements} shows this phonon mode at the zone center, the zone boundary and halfway through the zone (where the giant phonon anomaly is observed).
 
-\section{Obtaining Force Constants from DFT}
+\begin{figure}
+	\centering
+	\includegraphics{fig/temp/bs-phonons.pdf}
+	\caption{Cu-O bond stretching mode in LCO at three different values of $q$ referring to the primitive HTT (I4/mmm) unit cell. Blue markers are oxygen and red markers are copper. The phase is set to $\phi=\frac{3}{4}\pi$ in equation \ref{eq:displacements} in order to get displacement vectors of equal length.}
+	\label{fig:bs-displacements}
+\end{figure}
 
+\section{Obtaining Force Constants from DFT}\label{sec:forceDFT}
+The minimum number of force fields is equal to the number of nonequivalent atoms in the crystal primitive unit cell multiplied by a number of independent x,y,z coordinates in the site symmetry of a given atom.
 
-
+\begin{itemize}
+	\item Hellman-Feynman forces
+	\item Finite displacements
+	\item Construction of force constant matrix
+\end{itemize}
 
 
 

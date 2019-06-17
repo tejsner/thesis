@@ -1,41 +1,42 @@
 \chapter{Simulation}
+In this chapter, results from ab-initio simulations are presented independent of experimental data. It turns out that a careful investigation of various phases of LSCO+O presents us with valuable clues regarding the average and local structure. The general strategy is to investigate the structure and dynamics within the DFT framework and use the results to discuss how and why DFT fails to describe the strongly correlated nature of cuprates.
 
-\section{The many-body wavefunction}
-In electronic structure calculations we are ultimately interested in the many-body wavefunction
+One example of such comparison is shown in Chapter \ref{ch:anomaly}, where we can detect potentially interesting physics by following how experiments diverge from simulation. In this chapter we do a full suite of simulations including various dopants and electronic ground states in order to have a starting point for experimental studies.
 
-\[ \Psi(\bm{r}_1,\bm{r}_2,\dots, \bm{r}_n; \bm{R}_1, \bm{R}_2, \dots , \bm{R}_N) \]
+\section{Crystal Structure}
+The structural phases of lanthanum based cuprates fall into a moderate number of space groups as listed in Table \ref{tab:crystalstructures}. All of the structural phases can be described with reference to Figure \ref{fig:lscocrystal} where we define $Q_1$ as a rotation around the $[010]_o$ and $Q_2$ as a rotation around the $[100]_o$ axis. In our simulations we have chosen to focus mainly on the HTT, LTO and LTT phases, since they are the most common and give a good compromise when investigating the role of tilts $Q_1$, $Q_2$ and orthorhombic strain $\eta$.
 
-\noindent where $\bm{r}_i$ are electron coordinates and $\bm{R}_i$ are nuclear coordinates. Imagine that we want to calculate this object for a small molecule such as Benzene (C$_6$H$_6$) containing 12 nuclei and 42 electrons. This wavefunction exists in $42\cdot3-6 = 156$ dimensional cartesian space! If we want to store this object on a computer with a modest precision of 10 grid points per coordinate, it would require $10^{156}$ complex numbers or $64 \cdot 10^{156}$ bits (assuming single-precision floating points numbers of 32 bits). Lloyd2000 estimated the total number of bits available for computation in the observable universe to be $10^{90}$ (Lloyd2000). Even with the entire universe at our disposal this object is completely unmanageable. This exercise also emphasizes the potential of Quantum Computers. For this reason, we fix the ionic positions and assume that the many-body wavefunction can be written as a product of single-electron wavefunctions (orbitals):
-
-\[ \Psi(\bm{r}_1,\bm{r}_2,\dots, \bm{r}_n; \bm{R}_1, \bm{R}_2, \dots , \bm{R}_N) \longrightarrow \phi(\bm{r}_1)\phi(\bm{r}_2)\dots\phi(\bm{r}_n) \]
-
-\section{Band paths}
-
-\begin{figure}
-    \centering
-    \includegraphics{fig/simulation/band_paths.pdf}
-    \caption[Band paths]{\textbf{Left:} BZ of a primitive tetragonal cell with high-symmetry lines. \textbf{Right:} The in-plane BZ with the same labels and the usual $\Gamma$-$X$-$M$-$\Gamma$ path. If the large BZ is the crystallographic HTT phase, then the broken blue lines represent the LTO/LTT/LTLO BZ and we can consider the $\Gamma$-$X$-$\frac{M}{2}$-$\Gamma$ path, since $M$ becomes $\Gamma$ for this (smaller) BZ. In literature the labels are often confused, while $(\pi,\pi)$ and $(\pi,0)$ are universally agreed upon. In any band structure diagrams presented here, the labels in this figure is used.} 
-    \label{fig:band_paths}
-\end{figure}
-
-\begin{figure}
-    \centering
-    \input{fig/simulation/pa_matrices.tex}
-    \caption[Transformation matrices]{Transformation matrix from the orthorhombic crystallographic unit cell (Bmab) to primitive cells in the HTT/LTO phases. For LTT and LTLO the transformation matrix is the identity. Since band structure calculations (bands/electronic) are based on primtive cells, these matrices can be used to generate $k$-points starting from the more `intuitive' notation outlined in Figure \ref{fig:band_paths}. For example, the $X$-point ($(\frac{1}{2} \frac{1}{2} 0)$ wrt LTT) in the HTT phase becomes $(\frac{1}{2} \frac{1}{2} 0) \cdot \text{PA(HTT)} = (\frac{1}{4} \bar{\frac{1}{4}} \frac{1}{4})$}
-    \label{fig:primtive_axes}
-\end{figure}
-
-\section{Octahedral tilts}
-We are interested in describing the distances $d_y$ and $d_z$ as a function of the tilt angle as shown in Figure \ref{fig:tilt}(right). Our coordinate system is usually given in terms of lattice constants that define the coordinate system and scaled coordinates. To do the rigid rotation, we thus need to perform some transformations in order to make sure the tilt angles are with reference to the real-space lattice.
+\begin{table}
+	\centering
+	\begin{tabular}{@{}llll@{}}
+		\toprule
+		Space Group (\#) & Name (shorthand)                         & Tilts                                    & $\eta$   \\ \midrule
+		I4/mmm (139)     & High-Temperature Tetragonal (HTT)        & $Q_1=Q_2=0$                              & $=0$     \\
+		Fmmm (69)        &                                          & $Q_1=Q_2=0$                              & $\neq 0$ \\
+		Bmab (64)        & Low-Temperature Orthorhombic (LTO)       & $Q_2 \neq 0$, $Q_1 = 0$                  & $\neq 0$ \\
+		P4$_2$/ncm (138) & Low-Temperature Tetragonal (LTT)         & $Q_1=Q_2 \neq 0$                         & $=0$     \\
+		Pccn (56)        & Low-Temperature-Less-Orthorhombic (LTLO) & $Q_1 \neq Q_2 \neq 0$ & $\neq 0$ \\ \bottomrule
+	\end{tabular}
+	\caption[Crystal structures LSCO]{Crystal structures found in various lanthanum-based cuprates. All structural phases can be parametrized with respect to LTLO, where $Q_1$ and $Q_2$ represent octahedral tilts as described in the text and $\eta=\frac{b-a}{b+a}$ is the orthorhombic strain.}
+	\label{tab:crystalstructures}
+\end{table}
 
 \begin{figure}
-    \centering
-    \includegraphics[width=0.8\textwidth]{fig/simulation/tilt.pdf}
-    \caption[Geometry of octahedral tilts]{Left: Geometry of octahedral tilts in the with the $c$-axis vertical. Right: Illustration of the two inequivalent in-plane oxygens. The $Q_1$ irreducible representation represents a rotation around the (010) axis while $Q_2$ is a rotation around the (100) axis.}
-    \label{fig:tilt}
+	\centering
+	\includegraphics[width=0.8\textwidth]{fig/simulation/crystal_hucker.png}
+	\caption[LSCO crystal]{Crystal structure of lanthanum based cuprates. From \cite{Hucker2012}. \todo[inline]{redo figure in orthorhombic coordinates with Q1 and Q2 as tilts}}
+	\label{fig:lscocrystal}
 \end{figure}
 
-All possible tilts can be described with reference to the LTLO (Pccn) phase. The octahedra are described with two in-plane oxygens (O$_1$, O$_2$) and one apical oxygen $O_3$. Due to symmetry constrains, a rotation of this octahedron will cause a displacements in the $z$-direction of the in-plane oxygen and in the $a$- and $b$-directions of the apical oxygen. Following \cite{Axe1989}, we define $Q_1$ as a rotation around the (010) axis and $Q_2$ as a rotation around the (100) axis in orthorhombic notation. In more intuitive terms, $Q_1$ `tilts' the octahedron along $x$, while $Q_2$ `tilts' along $y$.
+\subsection{Octahedral tilts}
+In order to quantify the octahedral tilts, we use the coordinate system sketched in Figure \ref{fig:tilt}. All possible tilts can be described with reference to the LTLO (Pccn) phase. The octahedra are described with two in-plane oxygens (O$_1$, O$_2$) and one apical oxygen $O_3$. Due to symmetry constrains, a rotation of this octahedron will cause a displacements in the $c$-direction of the in-plane oxygen and in the $a$- and $b$-directions of the apical oxygen. Following \cite{Axe1989}, we define $Q_1$ as a rotation around the (010) axis and $Q_2$ as a rotation around the (100) axis in orthorhombic notation. In more intuitive terms, $Q_1$ `tilts' the octahedron along $x$, while $Q_2$ `tilts' along $y$.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.8\textwidth]{fig/simulation/tilt.pdf}
+	\caption[Geometry of octahedral tilts]{Left: Geometry of octahedral tilts in the with the $c$-axis vertical. Right: Illustration of the two inequivalent in-plane oxygens. The $Q_1$ irreducible representation represents a rotation around the (010) axis while $Q_2$ is a rotation around the (100) axis.\todo[inline]{could use an update}}
+	\label{fig:tilt}
+\end{figure}
 
 By inspection of Figure \ref{fig:tilt}, a $Q_1$ rotation will displace O$_3$ in the $x$-direction and O$_1$, O$_2$ in the negative $z$-direction. A $Q_2$ rotation will displace O$_3$ in the $y$-direction, O$_1$ in the positive $z$-direction and O$_2$ in the negative $z$-direction. If we want to express $Q_1$ and $Q_2$ as angles, the displacements become:
 
@@ -61,35 +62,50 @@ Q_1 &= \sin^{-1}  \left( - \frac{2c}{a} \times (d_z(\text{O}_1) + d_z(\text{O}_2
 Q_2 &= \sin^{-1}  \left( -\frac{4c}{b} \times d_z(\text{O}_2) - \frac{a}{b} \times \sin (Q_1) \right) \, .
 \end{align*}
 
-These equations can then be used to generate desired tilts and extract tilt angles from a structural minimization.
+\noindent These equations can then be used to generate desired tilts and extract tilt angles from any given structure.
 
-\section{Equation of state fits}
+\subsection{Band Structures}
+Band structures are described with respect to the reciprocal lattice. Due to the enlargement of the real-space crystal structure as we move through HTT $\rightarrow$ LTO $\rightarrow$ LTT, the Brillouin Zone (BZ) shrinks by the same amount. Similar to how it is useful to describe our real-space lattice with respect to the LTLO coordinate system, it is useful to describe reciprocal space with respect to a common coordinate system when comparing results. As we can see in Figure \ref{fig:allbz}, the BZ's of HTT, LTO and LTT have vastly different shapes, so it is difficult to superimpose results.
 
-Equation of state fit based on Vinet's exponential equation of state \cite{Vinet1987}:
+\begin{figure}
+	\centering
+	\includegraphics[width=0.8\textwidth]{fig/simulation/BZAll.png}
+	\caption[HTT LTO LTT BZs]{BZ of the HTT, LTO and LTT phases. Modified from \todo[inline]{refer to hinuma paper}}
+	\label{fig:allbz}
+\end{figure}
 
-\begin{equation*}
-\tiny
-E(V) = E_0 + \frac{2B_0V_0}{\left(B_0^\prime-1\right)^2}\left\lbrace 2 -\left[ 5 + 3\left( \frac{V}{V_0}\right)^\frac{1}{3} (B_0^\prime -1)  -3B_0^\prime \right] \right. \left. \exp \left[ -\frac{3}{2} \left( B_0^\prime-1\right)\left[\left( \frac{V}{V_0}\right)^\frac{1}{3} -1\right]\right]\right\rbrace
-\end{equation*}
+For this reason, we chose a \emph{primitive} tetragonal BZ to describe the HTT phase and then construct the smaller LTO and LTT BZ's with respect to this construction. The idea is sketched in Figure \ref{fig:band_paths}. This construction also helps emphasize the 2-dimensional nature of the cuprates. In all following simulations, the band labels in Figure \ref{fig:band_paths} will be used, keeping in mind that the nature of high-symmetry points can change depending on the considered structural phase. One example is that the $M$ point, which is the zone boundary of HTT, becomes the zone center of LTO and would thus usually be denoted $\Gamma$.
 
-\noindent where $V_0$ is the equilibrium volume, $B_0$ is the equilibrium bulk modulus and 
+\begin{figure}
+    \centering
+    \includegraphics{fig/simulation/band_paths.pdf}
+    \caption[Band paths]{\textbf{Left:} BZ of a primitive tetragonal cell with high-symmetry lines. \textbf{Right:} The in-plane BZ with the same labels and the usual $\Gamma$-$X$-$M$-$\Gamma$ path. If the large BZ is the crystallographic HTT phase, then the broken blue lines represent the LTO/LTT/LTLO BZ and we can consider the $\Gamma$-$X$-$\frac{M}{2}$-$\Gamma$ path, since $M$ becomes $\Gamma$ for this (smaller) BZ. In literature the labels are often confused, while $(\pi,\pi)$ and $(\pi,0)$ are universally agreed upon. In any band structure diagrams presented here, the labels in this figure is used.} 
+    \label{fig:band_paths}
+\end{figure}
 
-\begin{equation*}
-    B_0^\prime = \left( \frac{\partial B_0}{\partial P}\right)_T
-\end{equation*}
+While this construction is useful for our intuitive understanding of the different phases, most software expects $k$-vectors with respect to the primitive unit cell. For this reason, we need the transformation matrices from our constructed LTT coordinate system to the primitive HTT and LTO unit cells. This conversion can be done with the following matrices.
 
-\section{MD}
-Temperature fluctuations in a closed system:
+\[
+\text{PA(HTT)} =  
+\begin{pmatrix}
+0 & 0 & \frac{1}{2} \\
+\frac{1}{2} & \bar{\frac{1}{2}} & 0 \\
+\frac{1}{2} & \frac{1}{2} & \bar{\frac{1}{2}}
+\end{pmatrix}
+\qquad
+\text{PA(LTO)} =  
+\begin{pmatrix}
+\frac{1}{2} & \frac{1}{2} & 0 \\
+0 & 0 & 1 \\
+\frac{1}{2} & \bar{\frac{1}{2}} & 0
+\end{pmatrix}
+\]
 
-\[ \frac{\Delta T}{T} = \sqrt{\frac{2}{3N}} \quad \Rightarrow \quad \Delta T(T=\SI{300}{\kelvin}) = \SI{23.1}{\kelvin} \]
+\noindent these matrices can be used to generate $k$-points starting from the more `intuitive' notation outlined in Figure \ref{fig:band_paths}. For example, the $X$-point ($(\frac{1}{2} \frac{1}{2} 0)$ with respect to LTT) in the HTT phase becomes $(\frac{1}{2} \frac{1}{2} 0) \cdot \text{PA(HTT)} = (\frac{1}{4} \bar{\frac{1}{4}} \frac{1}{4})$.\todo{Double-check this. It works for the band structures, but still not sure why. Relation to real-space transformation matrices?}
 
-\noindent Nose-Hover algorithm:
+\section{VASP Simulation details}
+All DFT simulations\todo{refer to method} are performed using the Vienna Ab-Initio Simulation Package (VASP)\todo{several refs}. While ab-initio loosely translates to `from the beginning', There are several choices to be made with regards to computational parameters. First, we need to define the pseudo-potentials that describes the valence electrons of each atomic species in our system. For LCO, the relevant pseudo-potentials are listed in Table \ref{tab:vasp_pseudo} along with their electronic configuration. For both La and O we used the recommended potentials, while for Cu we used a more accurate version where 3p electrons are included (\verb|_pv| is short for `p in valence').
 
-\begin{align*}
-v_i^\text{scaled} &= \frac{\bm{p}_i}{m_i} \\
-\text{d}\bm{p}_i &= (\bm{F}_i - \zeta \bm{p}_i) \text{d}t \\
-\text{d}\zeta &= \frac{1}{Q} \left( \sum_{i=1}^N \frac{|\bm{p_i}|^2}{m_i} - (3N+1)k_\text{B}T\right) \text{d}t
-\end{align*}
 
 \begin{table}[b]
 \centering
@@ -97,12 +113,15 @@ v_i^\text{scaled} &= \frac{\bm{p}_i}{m_i} \\
 \toprule
  & Core (\# electrons) & Valence (\# electrons)                        \\ \midrule
 \texttt{La}                 & Kr4d$^{10}$ (46)                & 5s$^1$6s$^2$5p$^6$5d$^1$ (11) \\
+\texttt{Sr\_sv} & (28) & 4s$^2$4p$^6$5s$^2$ (10) \\
 \texttt{Cu\_pv}                 & 1s$^2$2s$^2$2p$^6$3s$^2$ (12) & 3p$^6$3d$^{10}$4s$^1$ (17)      \\
 \texttt{O}                  & 1s$^2$ (2)                    & 2s$^2$2p$^4$ (6)              \\ \bottomrule
 \end{tabular}
-\caption[VASP Pseudopotentials]{Psedopotenial electronic configuration used in VASP calculations.}
+\caption[VASP Pseudopotentials]{Psedopotenial electronic configuration used in VASP calculations.\todo[inline]{Check Sr potential}}
 \label{tab:vasp_pseudo}
 \end{table}
+
+A VASP simulations requires 4 distinct files to run. The \texttt{POSCAR} file defines the lattice and fractional coordinates. The \texttt{POTCAR} files contains the pseudo-potentials. The \texttt{KPOINTS} file determines the $k$-point sampling mesh. Finally \texttt{INCAR} gives the computational parameters. A minimal \texttt{INCAR} file for VASP is shown in Figure \ref{fig:incar}. Depending on the type of simulation, parameters may be added or changed. It is not always straightforward to chose an optimal set of parameters since it depends heavily on the type of problem, system size and available computational resources.
 
 \begin{figure}
     \centering
@@ -114,8 +133,13 @@ v_i^\text{scaled} &= \frac{\bm{p}_i}{m_i} \\
     ADDGRID = .FALSE.
     LREAL = Auto # Switch to .FALSE. for phonons
     
+    GGA = PS # PBESol functional, PE switches to default PBE
+    
     ISPIN = 2
     MAGMOM = 1 -1 1 -1 24*0 # AFM structure
+    
+    IBRION = -1 # Single point calculation
+    NSW = 0     # Number of ionic steps
     
     ISMEAR = 0
     SIGMA = 0.1
@@ -130,12 +154,10 @@ v_i^\text{scaled} &= \frac{\bm{p}_i}{m_i} \\
     \label{fig:incar}
 \end{figure}
 
-\begin{figure}
-    \centering
-    \input{fig/simulation/matrices.tex}
-    \caption[Structural transformation matrices]{Structural transformation matrices between HTT (I4/mmm), LTO (Bmab) and LTT (P4$_2$/ncm). Top: Conventional cells. Bottom: Primitive cells. LTT and LTO conventional are identical. NB: In \texttt{CRYSTAL17} the expansion matrices are transposed with respect to the ones shown in the figure. In e.g. \texttt{VESTA} they can be used directly. This distinction only matters for the I4/mmm to Bmab primitive transformation (which is needed to describe anti-ferromagnetism in LTT). For the others it just changes the direction of rotation.}
-    \label{fig:matrices}
-\end{figure}
+\section{Benchmarking}
+When performing DFT calculations in VASP there are a few parameters that have significant impact on the precision of the calculation. Increasing the precision also results in significantly longer computation time, so it is important to find a compromise. 
+
+Figure \ref{fig:sim_bench_afm} shows a benchmark of AFM LCO with respect to the $k$-point mesh and smearing width $\sigma$. Since there are no states at the Fermi level, the smearing width converges rather quickly, and we can safely use a value of $\sigma = \SI{0.1}{\eV}$. The $k$-point density also converges rather quickly, and we achieve a precision of \SI{0.1}{\milli\eV} using a fairly coarse MP-grid of $8\times 8 \times 4$. In AFM LCO we also checked the effect on electronic structure due to the on-site repulsion $U$. The result is shown in Table \ref{tab:ldau}
 
 \begin{figure}
     \centering
@@ -144,6 +166,23 @@ v_i^\text{scaled} &= \frac{\bm{p}_i}{m_i} \\
     \label{fig:sim_bench_afm}
 \end{figure}
 
+\begin{table}[b]
+	\centering
+	\begin{tabular}{@{}llll@{}}
+		\toprule
+		U [eV] & J [eV] & Moment [$\mu_\text{B}$] & Optical gap [eV] \\ \midrule
+		4.0    & 0.4    & 0.330       & 0.348    \\
+		6.0    & 0.6    & 0.481       & 1.016    \\
+		8.0    & 0.8    & 0.588       & 1.686    \\
+		10.0   & 1.0    & 0.676       & 1.877    \\
+		12.0   & 1.2    & 0.755       & 2.042    \\ \bottomrule
+	\end{tabular}
+	\caption[LDA+U Benchmarking]{LDA+U Benchmarking}
+	\label{tab:ldau}
+\end{table}
+
+Due to partial occupancies, metallic systems are generally more sensitive to $k$-point density and smearing width/method. For this reason, we performed a more comprehensive set of benchmarks as shown in Figure \ref{fig:sim_bench_para}. While the numerical fluctuations are still within a few meV, the precision on total energy is decreased by a few orders of magnitude.
+
 \begin{figure}
     \centering
     \includegraphics{fig/simulation/convergence_metal.pdf}
@@ -151,42 +190,28 @@ v_i^\text{scaled} &= \frac{\bm{p}_i}{m_i} \\
     \label{fig:sim_bench_para}
 \end{figure}
 
-\begin{table}[b]
-    \centering
-    \begin{tabular}{@{}llll@{}}
-    \toprule
-    U [eV] & J [eV] & Moment [$\mu_\text{B}$] & Optical gap [eV] \\ \midrule
-    4.0    & 0.4    & 0.330       & 0.348    \\
-    6.0    & 0.6    & 0.481       & 1.016    \\
-    8.0    & 0.8    & 0.588       & 1.686    \\
-    10.0   & 1.0    & 0.676       & 1.877    \\
-    12.0   & 1.2    & 0.755       & 2.042    \\ \bottomrule
-    \end{tabular}
-    \caption[LDA+U Benchmarking]{LDA+U Benchmarking}
-    \label{tab:ldau}
-\end{table}
+%\begin{table}[b]
+%	\centering
+%	\begin{tabular}{@{}lllll@{}}
+%		\toprule
+%		& HTT & HTT (metal)  & LTO    & LTT    \\ \midrule
+%		a [\AA]         & 5.32 & 5.31 & 5.34   & 5.37   \\
+%		c [\AA]         & 12.99 & 13.05 & 13.01  & 12.93  \\
+%		O3(z)      & 0.184 & 0.185 & 0.185  & 0.184  \\
+%		La(x)      & 0     & 0 & 0      & -0.009 \\
+%		La(y)      & 0     & 0 & -0.012 & -0.009 \\
+%		La(z)      & 0.362 & 0.362 & 0.361  & 0.361  \\
+%		$\eta$ ($\times 100$) & 0  & 0 &  1.465  & 0      \\
+%		Q1 (degrees)        & 0 & 0 &  0      & 4.6125 \\
+%		Q2 (degrees)        & 0 & 0 &  5.786  & 4.6125 \\ 
+%		degrees of freedom & 2 & 2 & 5 & 5 \\ \bottomrule
+%	\end{tabular}
+%	\caption[HTT, LTO, LTT: Structural parameters]{HTT, LTO, LTT: Structural parameters, defined with a minimal set of parameters based on results from simulations. Q1/Q2 are taken as the average angle from equatorial and apical tilt. The fractional positions of O1, O2 and O3 are completely described using Q1, Q2 and O3(z), Cu is allways at (0,0,0) and $\eta = \frac{b-a}{b+a}$ uniquely defines any difference between $a$ and $b$. In the generation of structures, the Pccn (LTLO) space group is used. Degrees of freedom refers to the atomic positions only. The description of our system in terms of Q1/Q2 thus removes one degree of freedom by coupling the apical and equatorial oxygen.}
+%	\label{tab:struct_par}
+%\end{table}
 
-\begin{table}[b]
-    \centering
-    \begin{tabular}{@{}lllll@{}}
-    \toprule
-               & HTT & HTT (metal)  & LTO    & LTT    \\ \midrule
-    a [\AA]         & 5.32 & 5.31 & 5.34   & 5.37   \\
-    c [\AA]         & 12.99 & 13.05 & 13.01  & 12.93  \\
-    O3(z)      & 0.184 & 0.185 & 0.185  & 0.184  \\
-    La(x)      & 0     & 0 & 0      & -0.009 \\
-    La(y)      & 0     & 0 & -0.012 & -0.009 \\
-    La(z)      & 0.362 & 0.362 & 0.361  & 0.361  \\
-    $\eta$ ($\times 100$) & 0  & 0 &  1.465  & 0      \\
-    Q1 (degrees)        & 0 & 0 &  0      & 4.6125 \\
-    Q2 (degrees)        & 0 & 0 &  5.786  & 4.6125 \\ 
-    degrees of freedom & 2 & 2 & 5 & 5 \\ \bottomrule
-    \end{tabular}
-    \caption[HTT, LTO, LTT: Structural parameters]{HTT, LTO, LTT: Structural parameters, defined with a minimal set of parameters based on results from simulations. Q1/Q2 are taken as the average angle from equatorial and apical tilt. The fractional positions of O1, O2 and O3 are completely described using Q1, Q2 and O3(z), Cu is allways at (0,0,0) and $\eta = \frac{b-a}{b+a}$ uniquely defines any difference between $a$ and $b$. In the generation of structures, the Pccn (LTLO) space group is used. Degrees of freedom refers to the atomic positions only. The description of our system in terms of Q1/Q2 thus removes one degree of freedom by coupling the apical and equatorial oxygen.}
-    \label{tab:struct_par}
-\end{table}
-
-
+\section{Electronic Structure}
+While we are generally interested in lattice dynamics, a DFT calculation is leveraging the electronic structure in any simulation. It is thus worthwhile to check if the electronic structure, at least approximately, represents reality. In the cuprates, it is well known that DFT is unable to explain the peculiarities in the superconducting phase. However, we can get fairly close in the limit of zero doping (AFM Mott Insulator) and overdoping (fermi liquid). Figure \ref{fig:edos_htt} compares the electronic density of states of the Mott Insulator and fermi liquid for two different functionals. We clearly see how the DFT+U opens a gap by pushing states below the Fermi level.
 
 \begin{figure}
     \centering
@@ -195,6 +220,8 @@ v_i^\text{scaled} &= \frac{\bm{p}_i}{m_i} \\
     \label{fig:edos_htt}
 \end{figure}
 
+To further illustrate this point, Figure \ref{fig:bs_afm2} and \ref{fig:bs_metal} shows the band structure coloured by atomic projections in the AFM and metallic state, respectively. We now notice that DFT+U is pushing the Cu states down, as expected from the on-site respulsion.
+
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{fig/simulation/bs_afm2.png}
@@ -202,12 +229,12 @@ v_i^\text{scaled} &= \frac{\bm{p}_i}{m_i} \\
     \label{fig:bs_afm2}
 \end{figure}
 
-\begin{figure}
-    \centering
-    \includegraphics[width=\textwidth]{fig/simulation/bs_afm1.png}
-    \caption[GGA+U: AFM Electronic Band Structure]{GGA+U: AFM Electronic Band Structure of the Bmab LTO structure along the $\Gamma$-$X$-$M$-$\Gamma$ path (HTT high symmetry lines). The upper and lower Hubbard bands are clearly visible and are separated by \SI{8}{\eV} as expected.}
-    \label{fig:bs_afm1}
-\end{figure}
+%\begin{figure}
+%    \centering
+%    \includegraphics[width=\textwidth]{fig/simulation/bs_afm1.png}
+%    \caption[GGA+U: AFM Electronic Band Structure]{GGA+U: AFM Electronic Band Structure of the Bmab LTO structure along the $\Gamma$-$X$-$M$-$\Gamma$ path (HTT high symmetry lines). The upper and lower Hubbard bands are clearly visible and are separated by \SI{8}{\eV} as expected.}
+%    \label{fig:bs_afm1}
+%\end{figure}
 
 \begin{figure}
     \centering
@@ -215,6 +242,8 @@ v_i^\text{scaled} &= \frac{\bm{p}_i}{m_i} \\
     \caption[GGA: Metallic Electronic Band Structure]{Metallic Electronic Band Structure of the I4/mmm HTT structure. Path is through the high-symmetry points as defined in Figure \ref{fig:band_paths} with respect to the conventional unit cell. The $\Gamma$-$Z$ path is shown to illustrate the 2-dimensional nature of the electronic structure (The dispersion is relatively flat).}
     \label{fig:bs_metal}
 \end{figure}
+
+\section{Geometry optimization}
 
 \begin{figure}
     \centering

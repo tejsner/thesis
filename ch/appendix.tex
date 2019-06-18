@@ -1,7 +1,7 @@
 \lstset{basicstyle=\ttfamily\footnotesize, breaklines=true, frame=single}
 
-\chapter{Example using Phonopy}
-In practice, the procedures outlined in this chapter are sufficiently general such that the calculation of phonon band structures can be performed by a computer program with minimal human interference. In the following example, I will show how phonons are calculated in the HTT phase of LCO using Phonopy and VASP.
+\chapter{Phonopy tutorial}
+In practice, the procedures outlined in this chapter\todo{refer to chapter/section} are sufficiently general such that the calculation of phonon band structures can be performed by a computer program with minimal human interference. In the following example, I will show how phonons are calculated in the HTT phase of LCO using Phonopy and VASP.
 
 \section{Starting Structure}
 To begin, you need to know the space group and fractional coordinates of the structure. These are usually determined experimentally through diffraction experiments and can be found in various databases (such as the ICSD [REF?]). For VASP to understand the input structure, it is necessary to convert the downloaded file (usually .cif) into POSCAR format using e.g. VESTA. Since both Phonopy and VASP automatically determines symmetry, the starting structure does not need to be primitive. In this example we use LCO in the orthorhombic coordinate system wth the HTT symmetry (La$_8$Cu$_4$O$_{16}$)
@@ -30,3 +30,35 @@ phonopy -f 01/vasprun.xml 02/vasprun.xml 03/vasprun.xml ...
 
 \section{Saving and Distributing}
 At this point, we can generate phonon band structures, density of states, thermodynamic properties and visualize phonon modes. For details, I will refer to the Phonopy website [REF\footnote{https://atztogo.github.io/phonopy/}] and the excellent phonon visualization website [REF\footnote{http://henriquemiranda.github.io/phononwebsite/index.html}]. The data needed to construct the dynamical matrix is fully contained in the \texttt{FORCE\_SETS} and \texttt{phonopy\_disp.yaml} files. While these files are sufficient to distribute phonon data, it is useful to include the computational parameters geometry optimization and phonon calculations.
+
+\chapter{Structural Transformation Matrices}
+
+Conventional Cells (Bmab and P4$_2$/ncm are identical so this transformation is the identity)
+
+\[
+\text{I4/mmm} \quad 
+\begin{pmatrix}
+1 & \bar{1} & 0 \\
+1 & 1 & 0 \\
+0 & 0 & 1
+\end{pmatrix}
+\quad \text{Bmab}
+\]
+
+\noindent Primitive Cells
+
+\[
+\text{I4/mmm} \quad 
+\begin{pmatrix}
+1 & 1 & 0 \\
+1 & \bar{1} & 0 \\
+1 & 0 & \bar{1}
+\end{pmatrix}
+\quad \text{Bmab} \quad
+\begin{pmatrix}
+1 & 0 & 1 \\
+0 & 1 & 0 \\
+\bar{1} & 0 & 1
+\end{pmatrix} 
+\quad \text{P4}_2\text{/ncm}
+\]

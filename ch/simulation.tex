@@ -70,7 +70,7 @@ Band structures are described with respect to the reciprocal lattice. Due to the
 \begin{figure}
 	\centering
 	\includegraphics[width=0.8\textwidth]{fig/simulation/BZAll.png}
-	\caption[HTT LTO LTT BZs]{BZ of the HTT, LTO and LTT phases. Modified from \todo[inline]{refer to hinuma paper}}
+	\caption[HTT LTO LTT BZs]{BZ of the HTT, LTO and LTT phases. Modified from \cite{Hinuma2017}}
 	\label{fig:allbz}
 \end{figure}
 
@@ -104,7 +104,7 @@ While this construction is useful for our intuitive understanding of the differe
 \noindent these matrices can be used to generate $k$-points starting from the more `intuitive' notation outlined in Figure \ref{fig:band_paths}. For example, the $X$-point ($(\frac{1}{2} \frac{1}{2} 0)$ with respect to LTT) in the HTT phase becomes $(\frac{1}{2} \frac{1}{2} 0) \cdot \text{PA(HTT)} = (\frac{1}{4} \bar{\frac{1}{4}} \frac{1}{4})$.\todo{Double-check this. It works for the band structures, but still not sure why. Relation to real-space transformation matrices?}
 
 \section{VASP Simulation details}
-All DFT simulations\todo{refer to method} are performed using the Vienna Ab-Initio Simulation Package (VASP)\todo{several refs}. While ab-initio loosely translates to `from the beginning', There are several choices to be made with regards to computational parameters. First, we need to define the pseudo-potentials that describes the valence electrons of each atomic species in our system. For LCO, the relevant pseudo-potentials are listed in Table \ref{tab:vasp_pseudo} along with their electronic configuration. For both La and O we used the recommended potentials, while for Cu we used a more accurate version where 3p electrons are included (\verb|_pv| is short for `p in valence').
+All DFT simulations (see section \ref{sec:dft}) are performed using the Vienna Ab-Initio Simulation Package (VASP)\todo{several refs}. While ab-initio loosely translates to `from the beginning', There are several choices to be made with regards to computational parameters. First, we need to define the pseudo-potentials that describes the valence electrons of each atomic species in our system. For LCO, the relevant pseudo-potentials are listed in Table \ref{tab:vasp_pseudo} along with their electronic configuration. For both La and O we used the recommended potentials, while for Cu we used a more accurate version where 3p electrons are included (\verb|_pv| is short for `p in valence').\todo{functional discussion here?}
 
 
 \begin{table}[b]
@@ -244,27 +244,62 @@ To further illustrate this point, Figure \ref{fig:bs_afm2} and \ref{fig:bs_metal
 \end{figure}
 
 \section{Geometry optimization}
+Optimizing geometry in VASP can be performed with 3 different algorithms controlled by the \texttt{IBRION} tag\todo{references}:
+
+\begin{enumerate}
+	\item RM-DIIS
+	\item Conjugate Gradient (CG)
+	\item Damped molecular dynamics
+\end{enumerate}
+
+\noindent All algorithms requires to set the \texttt{POTIM} tag which controls the step-size. Usually the default value of 0.5 is reasonable. Damped molecular dynamics requires a damping factor in addition, set by the \texttt{SMASS} tag. For this reason RM-DIIS and CG require less user intervention and are good first choices. While RM-DIIS is usually a good choice for systems close to equilibrium, it struggles with rigid unit modes such as octahedral tilts in perovskites. Since these tilts are at the centre of our investigation, we use CG in most cases.
+
+The optimization routine is constrained by the point group symmetry as determined by VASP. The \texttt{ISIF} tag controls how the positions, cell shape and cell volume is updated during the optimization. It might seem obvious to simply optimize everything, but for complex problems convergence can be problematic. In addition, changing the cell volume changes the basis set\footnote{The basis set is defined by the number of plane waves up to a certain frequency that fits in the unit cell. If the unit cell dimensions change, so do the set of plane waves.}. VASP explicitly avoids changing the basis set during volume optimizations, resulting in the so-called \emph{Pulay stress} due to incompleteness of the basis set. In practice, there are two primary strategies for getting accurate geometry optimizations. The first is a step-wise optimization of parameters in the scheme
+
+\begin{quote}
+	Coordinates $\rightarrow$ Coordinates/Shape $\rightarrow$ Coordinates/Shape/Volume
+\end{quote}
+
+\noindent The second is perform successive coordinate/shape optimizations at a set of volumes and fit the resulting volume-energy curve to an equation of state. While this method is more computationally expensive, it provides us with additional information about volume-dependent behaviour such as the bulk modulus. In practice we use the exponential equation of state formulated by \citeauthor{Vinet1987}\cite{Vinet1987}:
+
+\begin{equation*}
+\tiny
+E(V) = E_0 + \frac{2B_0V_0}{\left(B_0^\prime-1\right)^2}\left\lbrace 2 -\left[ 5 + 3\left( \frac{V}{V_0}\right)^\frac{1}{3} (B_0^\prime -1)  -3B_0^\prime \right] \right. \left. \exp \left[ -\frac{3}{2} \left( B_0^\prime-1\right)\left[\left( \frac{V}{V_0}\right)^\frac{1}{3} -1\right]\right]\right\rbrace
+\end{equation*}
+
+\noindent where $V_0$ is the equilibrium volume, $B_0$ is the bulk modulus and 
+
+\begin{equation*}
+B_0^\prime = \left( \frac{\partial B_0}{\partial P}\right)_T
+\end{equation*}
+
+\subsection{Geometry of AFM LCO}
+We performed equation-of-state fits to AFM LCO in all three structural phases. Figure \ref{fig:eos_afm_all} shows the Energy-Volume fits, Figure \ref{fig:eos_ratios_afm} shows the volume dependence of the cell ratios and Figure \ref{fig:angles_afm} shows how the angles in the LTO and LTT phases change as a function of volume. Contrary to experiment, the LTO phase is energetically unfavourable and the favoured phase is LTT. Figure \ref{fig:angles_afm} reveals that the $Q_1$ and $Q_2$ are not exactly rigid, consistent with experiment. Intuitively, it is `easier' to move the apical oxygen due to the rocksalt-layer being less dense.\todo{Maybe overkill with 3 graphs for a few simple conclusions? 6 if we count the metallic counterparts}
+
 
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{fig/simulation/eos_all.pdf}
     \caption[AFM: Equation-of-state fits]{Equation-of-state fits (AFM). Optimal volume of simulated structures are found by performing optimization of fractional coordinates and cell shape at a series of fixed volumes. The resulting Energy/Volume curve is then fit to a Vinet exponential equation of state \cite{Vinet1987}. This is done for the HTT, LTO and LTT phases with the PBESol functional.}
-    \label{fig:eos_all}
+    \label{fig:eos_afm_all}
 \end{figure}
 
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{fig/simulation/ratio_all.pdf}
-    \caption[AFM: Cell ratios during EOS fits]{Cell Ratios (AFM). During the equation-of-states fits from Figure \ref{fig:eos_all}, the cell shape is modified, changing the $b/a$ ratio (orthorhombicity) and $c/a$ ratio (larger values correspond to a cell that is elongated along $c$). Due to symmeetry $b/a = 1$ for the HTT and LTT phases. Vertical line is the optimal volume from the fit.}
-    \label{fig:eos_ratios}
+    \caption[AFM: Cell ratios during EOS fits]{Cell Ratios (AFM). During the equation-of-states fits from Figure \ref{fig:eos_afm_all}, the cell shape is modified, changing the $b/a$ ratio (orthorhombicity) and $c/a$ ratio (larger values correspond to a cell that is elongated along $c$). Due to symmetry $b/a = 1$ for the HTT and LTT phases. Vertical line is the optimal volume from the fit.}
+    \label{fig:eos_ratios_afm}
 \end{figure}
 
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{fig/simulation/angles_lto_ltt.pdf}
-    \caption[AFM: LTO/LTT angles during EOS fits]{LTO/LTT Angles (AFM) During equation-of-state fits (Figure \ref{fig:eos_all}, we record the tilt angles for the LTO and LTT phase. Here, they are plotted as a function of Volume. Note that for LTO $Q_1=0$ and for LTT $Q_1=Q_2$. However, the rotation angle is measured differently from the equatorial (eq) and apical (ap) oxygen. The difference in values can be thought of as `non-rigidity' of the rotation.}
-    \label{fig:my_label}
+    \caption[AFM: LTO/LTT angles during EOS fits]{LTO/LTT Angles (AFM) During equation-of-state fits, we record the tilt angles for the LTO and LTT phase. Here, they are plotted as a function of Volume. Note that for LTO $Q_1=0$ and for LTT $Q_1=Q_2$. However, the rotation angle is measured differently from the equatorial (eq) and apical (ap) oxygen. The difference in values can be thought of as `non-rigidity' of the rotation.}
+    \label{fig:angles_afm}
 \end{figure}
+
+\subsection{Geometry of metallic LCO}
+The same geometry optimization was performed in the metallic state of LCO. Equation-of-state fits are shown in Figure \ref{fig:eos_metal_all}, cell ratios are shown in Figure \ref{fig:eos_ratios_metal} and the LTO/LTT angles are shown in Figure \ref{fig:angles_metal}. Qualitatively, we notice very similar behaviour to AFM LCO, but for these calculations LTT and LTO are the preferred phases with very similar total energies.
 
 
 \begin{figure}
@@ -278,64 +313,111 @@ To further illustrate this point, Figure \ref{fig:bs_afm2} and \ref{fig:bs_metal
     \centering
     \includegraphics[width=\textwidth]{fig/simulation/ratio_metal_all.pdf}
     \caption[Metal: Cell ratios during EOS fits]{Cell ratios (Metal). During the equation-of-states fits from Figure \ref{fig:eos_metal_all}, the cell shape is modified, changing the $b/a$ ratio (orthorhombicity) and $c/a$ ratio (larger values correspond to a cell that is elongated along $c$). Due to symmeetry $b/a = 1$ for the HTT and LTT phases. Vertical line is the optimal volume from the fit.}
-    \label{fig:eos_ratios}
+    \label{fig:eos_ratios_metal}
 \end{figure}
 
 \begin{figure}
-    \centering
-    \includegraphics[width=\textwidth]{fig/simulation/angles_metal_lto_ltt.pdf}
-    \caption[Metal: LTO/LTT angles during EOS fits]{LTO/LTT angles (Metal). During equation-of-state fits (Figure \ref{fig:eos_all}, we record the tilt angles for the LTO and LTT phase. Here, they are plotted as a function of Volume. Note that for LTO $Q_1=0$ and for LTT $Q_1=Q_2$. However, the rotation angle is measured differently from the equatorial (eq) and apical (ap) oxygen. The difference in values can be thought of as `non-rigidity' of the rotation.}
-    \label{fig:my_label}
+	\centering
+	\includegraphics[width=\textwidth]{fig/simulation/angles_metal_lto_ltt.pdf}
+	\caption[Metal: LTO/LTT angles during EOS fits]{LTO/LTT angles (Metal). During equation-of-state fits, we record the tilt angles for the LTO and LTT phase. Here, they are plotted as a function of Volume. Note that for LTO $Q_1=0$ and for LTT $Q_1=Q_2$. However, the rotation angle is measured differently from the equatorial (eq) and apical (ap) oxygen. The difference in values can be thought of as `non-rigidity' of the rotation.}
+	\label{fig:angles_metal}
 \end{figure}
 
-\begin{table}[b]
+
+\subsection{Summary of geometry optimization}
+A summary of all the geometry optimizations are shown in Table \ref{tab:sim_struct}. Additional data from simulations with a different functional have been added to this table. We notice that the PBE functional finds a volume closer to experimental value, but phonon calculations show a more consistent behaviour of the PBESol functional.
+
+
+\begin{table}
     \centering
     \input{tab/sim_struct.tex}
-    \caption[Simulation Structure Results]{Resulting structure due to EOS fits to various structural phases and functionals. The two values given for $Q_1$/$Q_2$ are angles calculated from equatorial and apical oxygens, respectively. Interestingly, in terms of energy LTT $<$ HTT $<$ LTO, while the phonons are `more unstable' for HTT than LTO (See Figures \ref{fig:htt_ps}, \ref{fig:lto_ps}, \ref{fig:ltt_ps}). For the metallic cases, we note the optimal geometry is similar to the magnetic case. While the energy is lower, it is not meaningful to compare total energies between GGA+U and GGA.}
+    \caption[Simulation Structure Results]{Resulting structure due to EOS fits to various structural phases and functionals. The two values given for $Q_1$/$Q_2$ are angles calculated from equatorial and apical oxygens, respectively. Interestingly, in terms of energy LTT $<$ HTT $<$ LTO, while the phonons are `more unstable' for HTT than LTO (See Figures \ref{fig:htt_bands}, \ref{fig:lto_bands}, \ref{fig:ltt_bands}). For the metallic cases, we note the optimal geometry is similar to the magnetic case. While the energy is lower, it is not meaningful to compare total energies between GGA+U and GGA.}
     \label{tab:sim_struct}
 \end{table}
 
+\section{Phonon bands}
+Phonon calculations were performed on both metallic and AFM LCO in the HTT, LTO and LTT structrual phases. While benchmarking with regards to $k$-points and smearing width $\sigma$ is reasonable, we check the effect of functional choice and energy cut-off \texttt{ENCUT} on phonon bands. In Figure \ref{fig:pbe_bands}, we show the phonon band structure in the AFM phase with \texttt{ENCUT=520} and \texttt{ENCUT=800}. While the effect of increasing the plane wave cut-off is small, we see immediately that it fixes some unstable modes at $\Gamma$. While we do expect instabilities at the $M$ point in the HTT phase, the results could be improved.
+
 \begin{figure}
-    \centering
-    \includegraphics[width=\textwidth]{fig/simulation/band_dos_htt_pe.pdf}
-    \caption[HTT Phonons (PBE)]{Phonons in HTT phase with PBE functional. Units are meV (the label is wrong). Note the problems with $\Gamma$ phonons.}
-    \label{fig:htt_pe}
+	\centering
+	\includegraphics[width=\textwidth]{fig/simulation/htt_pbe_bands.pdf}
+	\caption[PBE Bands: Comparison wrt ENCUT]{Phonon band structure of LCO in the HTT phase using the PBE functional with a \SI{520}{\eV} (low prec]) and \SI{800}{\eV} (high prec) plane wave cut-off. Both simulations are performed using a magnetic electronic structure within the DFT+U formalism.}  
+	\label{fig:pbe_bands}
+\end{figure}
+
+For this reason, we keep the \SI{800}{\eV} cut-off and perform the same phonon calculation using the PBESol \cite{Csonka2009} functional. This functional has been successful for phonon calculations in other perovskite systems \cite{DaSilva2015}, so it is a likely candidate for improvement. Figure \ref{fig:htt_bands} shows phonon band structures in the HTT phase using both AFM and metallic electronic structures. We immediately notice improvements on two fronts. First, the low-energy modes are `more stable' and the unstable modes are localized around $M$ where we expect instabilities. Second, the high-energy bond-strething mode ($\Gamma$-$X$) has increased in energy and is much closer to experimental values. In addition, we reproduce the softening of this mode at the zone boundary due to doping.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{fig/simulation/htt_bands.pdf}
+	\caption[HTT Bands]{Phonon band structure of LCO in the HTT phase using the PBESol functional and an 800 eV plane-wave cut-off. The high-symmetry lines are with respect to the primitive tetragonal BZ (See Figure \ref{fig:band_paths})}
+	\label{fig:htt_bands}
+\end{figure}
+
+While there, in principle, are a huge number of functionals one could try, phonon calculations are quite expensive and the PBESol results are reasonable in the context of lattice dynamics. We thus stick to the PBESol functional in simulations moving forward.
+
+To check the stability of structural phases in LCO, we perform phonon calculation in the LTO and LTT phases, shown in Figure \ref{fig:lto_bands} and \ref{fig:ltt_bands}. Qualitatively, we see similar features to HTT (apart from the obvious increase of bands). The most significant result is that the LTO and LTT phases clearly stabilizes at the $M$-point, suggesting that our simulations reproduce the observed structural phase transitions. The stability of LTT is particularly interesting in this case, since this phase is believed to suppress superconductivity. In particular when combined with the fact that LTO and LTT are very close in energy when looking at the metallic simulations.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{fig/simulation/lto_bands.pdf}
+	\caption[LTO Bands]{Phonon band structure of LCO in the LTO phase using the PBESol functional and an 800 eV plane-wave cut-off. The high-symmetry lines are with respect to the primitive tetragonal BZ (See Figure \ref{fig:band_paths})}
+	\label{fig:lto_bands}
 \end{figure}
 
 \begin{figure}
-    \centering
-    \includegraphics[width=\textwidth]{fig/simulation/band_dos_htt_ps.pdf}
-    \caption[HTT Phonons (PBESol)]{Phonons in HTT phase with PBESol functional. Units are meV (the label is wrong). Note $\Gamma$ phonons are fixed.}
-    \label{fig:htt_ps}
+	\centering
+	\includegraphics[width=\textwidth]{fig/simulation/ltt_bands.pdf}
+	\caption[LTT Bands]{Phonon band structure of LCO in the LTT phase using the PBESol functional and an 800 eV plane-wave cut-off. The high-symmetry lines are with respect to the primitive tetragonal BZ (See Figure \ref{fig:band_paths})}
+	\label{fig:ltt_bands}
 \end{figure}
 
-\begin{figure}
-    \centering
-    \includegraphics[width=\textwidth]{fig/simulation/band_dos_htt_metal.pdf}
-    \caption[HTT Phonons (PBESol, Metal)]{Metallic Phonons in HTT phase with PBESol functional. Units are meV (the label is wrong). Note $\Gamma$ phonons are fixed.}
-    \label{fig:htt_metal_ph}
-\end{figure}
+\section{Phonon DOS}
+The phonon density-of-states is formally defined as
+
+\[ g(\omega) = \frac{1}{N} \sum_\lambda \delta(\omega - \omega _\lambda) \]
+
+\noindent where $\omega$ is the phonon frequency, $N$ is the number of unit cells and $\omega _\lambda$ is the energy of a phonon $\lambda=(\nu,\bm{q})$ parametrized by a band index $\nu$ and a wave vector $\bm{q}$. In practice, $g(\omega)$ is found by integrating the phonon branches in the FBZ on a mesh of $N$ equally spaced points. The $\delta$-function is handled by either replacing it with a Gaussian of finite width $\sigma$ or by performing an integration using the tetrahedron method \cite{Blochl1994} (or both)\todo{sill not sure how it is ACTUALLY done in phonopy}. The partial density of states an atom $j$ can similarly be defined as:
+
+\[ g^j (\omega) = \sum_{\bm{\hat{n}}=\{x,y,z\}} \frac{1}{N} \sum_\lambda \sigma(\omega - \omega_\lambda) \left| \bm{\hat{n}} \cdot \bm{e}^j_\lambda \right| ^2 \]
+
+\noindent where $\bm{\hat{n}}$ is the unit projection vector direction and $\bm{e}^j_\lambda$ is the phonon eigenvector of atom $j$ at $\lambda=(\nu,\bm{q})$. The neutron-weighted partial density of states of atom $j$ is then simply $b_j g^j(\omega)$, where $b_j$ is the total scattering cross-section of atom $j$.
 
 \begin{figure}
-    \centering
-    \includegraphics[width=\textwidth]{fig/simulation/band_dos_lto.pdf}
-    \caption[LTO Phonons (PBESol)]{Phonons in LTO phase with PBESol functional. Units are meV (the label is wrong).}
-    \label{fig:lto_ps}
+	\centering
+	\includegraphics[width=\textwidth]{fig/simulation/dos_all.pdf}
+	\caption[Neutron DOS (frozen-phonons)]{Neutron-weighted phonon density of states in the various structural and electronic phases of LCO. Both the partial and total density of states is shown in the plot.}
+	\label{fig:dos_all}
 \end{figure}
 
-\begin{figure}
-    \centering
-    \includegraphics[width=\textwidth]{fig/simulation/band_dos_ltt.pdf}
-    \caption[LTT Phonons (PBESol)]{Phonons in LTT phase with PBESol functional. Units are meV (the label is wrong).}
-    \label{fig:ltt_ps}
-\end{figure}
+Figure \ref{fig:dos_all} shows the neutron weighted partial and total density of states due to the 6 different phonon calculations we performed. The density of states was evaluated on a $48 \times 48 \times 48$ grid, integrated using the tetrahedron method and an applied Gaussian smearing of $\sigma=\SI{1}{\milli\eV}$ (\SI{2.35}{\milli\eV} FWHM). To get comparable values of $g(\omega)$, the plots are normalized to the BZ volume ($4V^\text{BZ}_\text{HTT} = 2 V^\text{BZ}_\text{LTO} = V^\text{BZ}_\text{LTT}$).
+
+\section{Validation of simulations}
+Since LSCO is such an extensively studied system, there is data available in the literature to compare our band structures. By inspection of the band structure plots in the previous section, it seems like a difficult task to actually separate the bands in a neutron scattering experiment. Luckily, there are a few LO modes that can be distinguished. Figure \ref{fig:htt_phonons_lit} compares our HTT band phonons band structures along $\Gamma$-$X$ with experimental data from a range of LSCO samples. The highlighted modes is the Cu-O half-breathing mode ($\approx \SI{80}{\milli\eV}$) and the apical oxygen stretching mode ($\approx \SI{60}{\milli\eV}$).
 
 \begin{figure}
-    \centering
-    \includegraphics[width=\textwidth]{fig/simulation/giu_compare.png}
-    \caption{Comparison of our AFM I4/mmm phonon dispersion with giustino et al. metallic phonons including e-ph coupling.}
-    \label{fig:giu_compare}
+	\centering
+	\includegraphics[width=0.7\textwidth]{fig/simulation/htt_phonons_lit.pdf}
+	\caption[phonon bands: comparison with literature]{Comparison of phonon band structures in the HTT structural phase along the $\Gamma$-X path with data from literature. Modes associated with data are highlighted in red.\todo[inline]{references to data + giustino}}
+	\label{fig:htt_phonons_lit}
 \end{figure}
+
+Similarly, we can compare the phonon density of states to time of flight powder measurements. Figure \ref{fig:dos_comparison} shows the LTT simulations along with data from IN4c on the parent compound LCO.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{fig/simulation/dos_comparison.pdf}
+	\caption[phonon dos: comparison with IN4]{Comparison of the neutron-weighted phonon density of states as calculated for the LTT (AFM) phase with neutron data from IN4. Simulation data has been smeared by a width of $\sigma=\SI{1}{\milli\eV}$.\todo[inline]{maybe a scaling that depends on energy?}}
+	\label{fig:dos_comparison}
+\end{figure}
+
+\section{Molecular Dynamics}
+\todo[inline]{in progress... Data from LTO and LTT exists...}
+
+\section{LCO+O Phonos}
+Since the introduction of interstitials breaks the local crystal symmetry, we cannot perform phonon calculations using the direct method without making an excessive amount of displacement calculations. For this reason, we are forces to use ab-initio molecular dynamics.
+
+Before thinking about molecular dynamics, we need to place the interstitial. Figure \ref{fig:oint_location} shows possible interstitial positions for the LTO and LTT phase. We ignore the HTT phase for molecular dynamics since the symmetry is broken and, in some sense, LTT and HTT are identical (volume and a/c ratio are very similar).
 
 
 
@@ -346,12 +428,17 @@ To further illustrate this point, Figure \ref{fig:bs_afm2} and \ref{fig:bs_metal
     \label{fig:oint_location}
 \end{figure}
 
+To see how the symmetry is broken, Table \ref{tab:oint_locations} shows the resulting space groups as a function of interstitial $z$-component and various defect structures in a $2 \times 2 \times 1$ supercell based on the orthorhombic crystallographic cell. 
+
 \begin{table}[b]
     \centering
     \input{tab/oint.tex}
     \caption[Oxygen interstitial phases]{Space group symmetry due to the introduction of an interstitial oxygen in various structures all described in a $2 \times 2 \times 1$ supercell of the Bmab (conventional) coordinate system. HTT, LTO and LTT are the usual phases as described in litterature \cite{Hucker2012}. The structures labeled defect is (A) in the LTO case: A stacking fault where the middle layer has its tilts reversed and (B) in the LTT case: A line along [110] with reversed tilts. Both are described in \cite{Tranquada1994} and are designed in order to `make room' for the interstitial oxygen (see Figure \ref{fig:oint_location}).}
     \label{tab:oint_locations}
 \end{table}
+
+We performed high-precision geometry optimizations (with symmetry turned off) on these structures (including a test of HTT) resulting in the table of energies as shown in Table \ref{tab:oint_en}. While the defect structures intuitively would make more room for oxygen interstitials, the energy cost of forming the defect is higher in the, relatively small, supercell that we use. It is worth noting, however, that they move to very similar energies during the optimization\todo{not so surprising, since they probably move towards the same structure. I need to check this more closely}.
+
 
 \begin{table}[b]
     \centering

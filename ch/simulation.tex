@@ -412,9 +412,10 @@ Similarly, we can compare the phonon density of states to time of flight powder 
 \end{figure}
 
 \section{Molecular Dynamics}
+\[ T = \frac{1}{3 k_\text{B} (N_\text{ions}-1)} \sum_n M_n |\bm{v}_n|^2 \]
 \todo[inline]{in progress... Data from LTO and LTT exists...}
 
-\section{LCO+O Phonos}
+\section{LCO+O Phonons}
 Since the introduction of interstitials breaks the local crystal symmetry, we cannot perform phonon calculations using the direct method without making an excessive amount of displacement calculations. For this reason, we are forces to use ab-initio molecular dynamics.
 
 Before thinking about molecular dynamics, we need to place the interstitial. Figure \ref{fig:oint_location} shows possible interstitial positions for the LTO and LTT phase. We ignore the HTT phase for molecular dynamics since the symmetry is broken and, in some sense, LTT and HTT are identical (volume and a/c ratio are very similar).
@@ -454,4 +455,33 @@ We performed high-precision geometry optimizations (with symmetry turned off) on
     \caption[Oxygen interstital phases: Energy]{Oxygen interstital phases: Energy. $E_0$ corresponds to the energy after inserting the interstitial oxygen, but before geometry optimization. $E_1$ is the total energy after optimization. Geomtry optimization performed on ionic positions only. Conclusion: It costs more energy to create the defect structure than you gain by making room for the interstitial.}
     \label{tab:oint_en}
 \end{table}
+
+\section{Neutron-weighted phonon bands}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{fig/simulation/lto_neutron_bands.pdf}
+	\caption[LTO band structure with neutron intensities]{LTO band structure with neutron intensities. $l=0$ so no intensity at $Z$. The wo paths are with respect to Figure \ref{fig:band_paths}. but in the two inequivalent directions due to orthorhombic strain. A real neutron scattering image would correspond to the superposition of these two band structures due to twinning.}
+	\label{fig:lco_lto_netron_bands}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{fig/simulation/lco_soft_modes.pdf}
+	\caption[LCO, LTO: soft mode simulation]{Neutron-weighted phonon bands of the LTO taken in the (104) and (014) BZ along the $M$-$\Gamma$-$X$-$M$ (left to right) path with respect to the coordinate system defined in Figure \ref{fig:band_paths}. Due to the larger BZ of the LTO primitive cell, the high symmetry points changes their labels as shown on the horizontal axis of the figure. This illustrates the fact that neutron scattering measurements at (104)/(014) will be measuring at the primitive $\Gamma$- and $Z$-point, respectively. Note that an $l$-component is required to get any neutron weight at $Z$.}
+	\label{fig:lco_soft_sim}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.45\textwidth]{fig/simulation/qxqy_neutron.pdf}
+	\hspace{2em}
+	\includegraphics[width=0.45\textwidth]{fig/simulation/flatcone_data.png}
+	\caption[flatcone 9 meV compared to simulation]{Simulation of neutron intensities compared to flatcone data at 9 meV.}
+	\label{fig:qxqy_neutron}
+	
+\end{figure}
+
+
+
 

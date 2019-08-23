@@ -411,9 +411,70 @@ Similarly, we can compare the phonon density of states to time of flight powder 
 	\label{fig:dos_comparison}
 \end{figure}
 
+\clearpage
+
 \section{Molecular Dynamics}
 \[ T = \frac{1}{3 k_\text{B} (N_\text{ions}-1)} \sum_n M_n |\bm{v}_n|^2 \]
 \todo[inline]{in progress... Data from LTO and LTT exists...}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{fig/simulation/stitch.pdf}
+	\caption[stitched md runs]{sticthed md runs and comparison}
+	\label{fig:stitch}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{fig/simulation/md_dos_pdf.pdf}
+	\caption[MD: DOS and PDF]{MD: DOS and PDF}
+	\label{fig:dos_pdf}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{fig/simulation/dist_hist.pdf}
+	\caption[MD: distance histograms]{MD: distance histograms}
+	\label{fig:md_distances}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{fig/simulation/prm_q1q2.pdf}
+	\caption[MD Q1 Q2]{MD Q1 Q2}
+	\label{fig:md_q1_q2}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{fig/simulation/diffusion1.pdf}
+	\caption[MD Oint Diffusion Oi]{MD Oint Diffusion Oi}
+	\label{fig:md_diffusion1}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{fig/simulation/diffusion2.pdf}
+	\caption[MD Oint Diffusion Oap 1]{MD Oint Diffusion Oap 1}
+	\label{fig:md_diffusion2}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{fig/simulation/diffusion3.pdf}
+	\caption[MD Oint Diffusion Oap 2]{MD Oint Diffusion Oap 2}
+	\label{fig:md_diffusion3}
+\end{figure}
+
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{fig/simulation/md_phonopy_comparison.pdf}
+	\caption[MD Phonopy Comparison]{MD Phonopy Comparison}
+	\label{fig:md_phonopy_comparison}
+\end{figure}
+
+\clearpage
 
 \section{LCO+O Phonons}
 Since the introduction of interstitials breaks the local crystal symmetry, we cannot perform phonon calculations using the direct method without making an excessive amount of displacement calculations. For this reason, we are forces to use ab-initio molecular dynamics.
@@ -481,6 +542,10 @@ We performed high-precision geometry optimizations (with symmetry turned off) on
 	\label{fig:qxqy_neutron}
 	
 \end{figure}
+
+\section{LSCO}
+
+In order to dope with strontium, we chose an equivalent doping of LCO+O (assuming that each oxygen atom adds two holes which is disputed). We thus replace two lanthanum atoms with strontium. With the assumption that strontium atoms are randomly, homogeneously distributed, we chose two sites where the distance is maximized. Inspection of the 2x2x1 supercell reveals that there are 4 reasonable choices of which one is chosen at random. The distance between the Sr ions is roughly \SI{8.85}{\angstrom}
 
 
 

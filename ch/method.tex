@@ -225,11 +225,11 @@ As mentioned in section \ref{sec:phononpractical}, we need a large number of for
 
 \section{Molecular Dynamics}
 Temperature fluctuations in a closed system:
-
+%
 \[ \frac{\Delta T}{T} = \sqrt{\frac{2}{3N}} \quad \Rightarrow \quad \Delta T(T=\SI{300}{\kelvin}) = \SI{23.1}{\kelvin} \]
-
-\noindent Nose-Hover algorithm:
-
+%
+Nose-Hover algorithm:
+%
 \begin{align*}
 v_i^\text{scaled} &= \frac{\bm{p}_i}{m_i} \\
 \text{d}\bm{p}_i &= (\bm{F}_i - \zeta \bm{p}_i) \text{d}t \\
@@ -237,6 +237,8 @@ v_i^\text{scaled} &= \frac{\bm{p}_i}{m_i} \\
 \end{align*}
 
 \subsection{MD Observables}
+
+\subsubsection{VACF and gDOS}
 It turns out [dove] that the phonon density of states can be found from the power spectrum of the mass-weighted velocity autocorrelation function (VACF). The VACF is, as the name implies, an expression of the correlation between velocites at different. In liquids, the VACF will rapidly decay to zero and in solids the VACF will fluctuate due to coherent vibrations around equilibrium positions. The VACF for a single atomic species $\alpha$ is defined as
 
 \[ C_\alpha(t) = \frac{1}{3} \langle \bm{v}_\alpha(t_0) \cdot \bm{v}_\alpha(t) \rangle \]
@@ -247,10 +249,72 @@ It turns out [dove] that the phonon density of states can be found from the powe
 
 \noindent where $T$ is the total simulation time and $v_{\alpha\beta}$ is the velocity of atom $\alpha$ in direction $\beta$. The total VACF is defined as
 
-\[ C(t) = \sum_\alpha w_\alpha C_\alpha(t) \]
+\[ C(t) = \sum_\alpha m_\alpha C_\alpha(t) \]
 
-\noindent where $w_\alpha$ is a weight depending on the atomic species. To get the mass-weighted VACF $w_\alpha$ is equal to the atomic weight of species $\alpha$.
+\noindent where $m_\alpha$ is a weight depending on the atomic species and the terms of the sum are the \emph{partial} VACFs. To get the mass-weighted VACF $m_\alpha$ is equal to the atomic weight of species $\alpha$ divided by the average weight of atomic species. The density of states is obtained as the power spectrum of the mass-weighted velocity autocorrelation function:
+%
+\[ \text{DOS}(\omega) = \sum_\alpha w_\alpha \frac{1}{2\pi} \int^{+\infty}_{-\infty} \mathrm{d}t \exp[-i\omega t] m_\alpha C_\alpha(t) \, , \]
+%
+where the terms of the sum, once again, determines the \emph{partial} density of states for atomic species $\alpha$. To get the neutron-weighted DOS, we set $m_\alpha$ equal to the coherent neutron cross-section of species $\alpha$. In practice both the VACF and DOS is found numerically by FFT methods.\todo{some details on this since I actually did it myself}
 
+\subsubsection{Radial distribution function}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.4\textwidth]{fig/temp/gr.png}
+	\label{fig:rdf}
+	\caption[RDF visualization]{Visualization of the radial distribution function}
+\end{figure}
+
+The radial distribution function is defined as
+%
+\[ g(r) = \frac{\rho(r)}{\rho} \, , \]
+%
+where $\rho(r)$ is the particle number density at a distance $r$ from an arbitrary atomic origin and $\rho = \frac{N}{V}$ is the number density of the unit cell. A visual representation of this quantity is shown in Figure \ref{fig:rdf} Formally this can be found from atomic positions
+%
+\[ g(r) = \frac{1}{N\rho} \left\langle \sum_i^N \sum_{i \neq j} \delta(r - r_{ij})  \right\rangle \]
+%
+where $i$ and $j$ are particle indices and $r_{ij}$ is the distance between particle $i$ and $j$. $N$ is the total number of particles and the brackets denote an ensemble average. Due to the delta function, this expression is not particularly useful when analysing MD trajectories of discrete particle positions. To overcome this, we define $n(r,\mathrm{d}r)$ as a function that counts the number of particles at a distance $r$ within a spherical shell of thickness $\mathrm{d}r$.
+%
+\begin{equation}\label{eq:g_of_r}
+g(r) = \frac{2 \left\langle n(r,\mathrm{d}r) \right\rangle}{N \rho V_\text{s}(r,\mathrm{d}r)} \, ,
+\end{equation}
+%
+where $V_\text{s}(r,\mathrm{d}r) \approx 4 \pi r^2 \mathrm{d}r$ is the thickness of the spherical shell. Due to the ergodic hypothesis, the ensemble average is replaced with a time average, so that 
+%
+\[ \left\langle n(r,\mathrm{d}r) \right\rangle = \frac{1}{M} \sum_{k=1}^M n_k(r,\mathrm{d}r) \, \]
+%
+where $M$ is the number of time steps. In practice $n_k$ is evaluated by creating a list of all particle-particle distances in the frame $k$ and generating a histogram with bin size $\mathrm{d}r$. The factor of two in equation \eqref{eq:g_of_r} comes from the fact that $n_k$ only counts each pair once.
+
+The $g(r)$ we just defined treats all particle pairs on an equal footing. In order to compare simulations with neutron scattering data it is necessary to weigh distinct particle pairs by the product of their neutron cross sections. First, we define the partial radial distribution function $g_{\alpha\beta}(r)$ as the probability of finding a particle with label $\beta$ at a distance $r$ away from a particle with label $\alpha$ plus the probability of finding a particle with label $\alpha$ at a distance $r$ away from a particle with label $\beta$.
+%
+\begin{align*}
+g_{\alpha\beta}(r) &= \frac{ \left\langle n_{\alpha\beta}(r,\mathrm{d}r) \right\rangle}{N_\alpha  \rho_\beta V_\text{s}(r,\mathrm{d}r)} + \frac{ \left\langle n_{\alpha\beta}(r,\mathrm{d}r) \right\rangle}{N_\beta \rho_\alpha V_\text{s}(r,\mathrm{d}r)} \\
+&= \frac{2V}{N_\alpha N_\beta} \frac{ \left\langle n_{\alpha\beta}(r,\mathrm{d}r) \right\rangle}{V_\text{s}(r,\mathrm{d}r)} \, ,
+\end{align*}
+%
+where $N_i$ is the number and $\rho_i$ is the density of particle species $i$. The reason to define it in `both directions' is that $n_{\alpha\beta}$ is symmetric to exchange of particles. From the partial pair distribution functions, $g(r)$ can be trivially computed and optionally weighted by neutron cross sections :
+%
+\[ g(r) = \frac{1}{b_\text{avg}} \sum_{\alpha=1,\beta\geq\alpha} c_\alpha c_\beta \bar{b_\alpha} \bar{b_\beta} g_{\alpha\beta}(r) \, , \]
+%
+where $c_i = \frac{N_i}{N}$ is the number concentration and $\bar{b_i}$ is the coherent neutron cross section of species $i$ and $b_\text{avg} = \langle \bar{b}_\alpha \bar{b}_\beta \rangle$.
+%
+
+\subsubsection{Atomic distance histograms}
+If our MD simulations fulfills the ergodic hypothesis, it is useful to look at various distributions that can be extracted from the simulation. While a lot of this information is contained in the radial distribution function, the system studied in this thesis is not isotropic. In fact, the 2-dimensional nature of the cuprates appears to be essential for the electronic properties. By generating histograms for certain atoms, we can ask a few pertinent questions such as:
+%
+\begin{itemize}
+	\item What is the distribution of Cu-O$_\text{eq}$ distance?
+	\item What is the distribution of Cu-O$_\text{ap}$ distance?
+	\item What is the distribution of octahedral tilts ($Q_1$, $Q_2$)?
+	\item What is the nature of O$_\text{int}$ diffusion?
+\end{itemize}
+%
+All of these questions are well-defined in the context of molecular dynamics trajectories, but it can be tedious for large systems to label all the relevant atoms. To overcome this, we generate pairs of atomic species based on certain conditions. For example, if we want to find pairs of Cu and O$_\text{eq}$, we loop over all Cu-O pairs and only list the pairs where the distance vector is less than $\bm{r} = (2.1, 2.1, 1)\,\si{\angstrom}$. After building the pair-lists it is trivial to generate histograms of certain distances.
+
+Similarly, we can build the CuO$_6$ octahedra by applying the same idea to both equatorial and apical oxygen atoms. We can identify the 6 corners of the octahedron simply by checking the signs of the 6 distance vectors (e.g. the `top' apical oxygen will have a positive $z$ component). $Q_1$ and $Q_2$ can then be computed and we can generate histograms of the octahedral tilts.
+
+Finally, we can also use these pairs to generate symmetry operations in a fairly simple way. Since we know that the octahedra have alternating tilt patterns, we can check the tilt pattern at frame 1 and generate a list of the 4 different combinations of $Q_1$ and $Q_2$ ((+,+),(+,-),(-,+),(-,-)). Applying these symmetry operations to our calculations then lets us obtain a histogram of the symmetry-adapted octahedral tilts.
 
 \chapter{Experimental Methods}
 \section{Neutron Scattering}

@@ -39,7 +39,7 @@ The theory and principles behind Density Functional Theory (DFT) is presented in
 	\texttt{Cu\_pv} & 29 & 1s$^2$2s$^2$2p$^6$3s$^2$ (12) & 3p$^6$3d$^{10}$4s$^1$ (17)      \\
 	\texttt{O} & 8 & 1s$^2$ (2) & 2s$^2$2p$^4$ (6) \\ \bottomrule
 	\end{tabular}
-	\caption[VASP Pseudopotentials]{PAW psedopotenial electronic configuration used in VASP calculations. While lanthanum is typically placed in the f-block on periodic tables it's electronic configuration has no f-electrons. This is fortunate since DFT famously struggles with highly localized ortbitals.}
+	\caption[VASP Pseudopotentials]{PAW psedopotenial electronic configuration used in VASP calculations. While lanthanum is typically placed in the f-block on periodic tables it's electronic configuration has no f-electrons. This is fortunate since DFT famously struggles with highly localized orbitals.}
 	\label{tab:vasp_pseudo}
 \end{table}	
 
@@ -48,21 +48,38 @@ The choice of crystal lattice and atomic positions are typically taken from expe
 Finally, there is a large number of computational parameters that can be tweaked depending on the desired type of calculation. The VASP \texttt{INCAR} file has more than 300 optional tags \cite{zotero-1437}, but usually only a few needs to be tweaked depending on the desired type of simulation. For the simulations performed in this thesis the following keywords are important:
 
 \begin{itemize}
-	\item \texttt{ENCUT}: The plane-wave cut-off and thus the size of the basis set. Usually the default performs well, but for accurate forces, which are needed for phonons, this needs to be increased.
+	\item \texttt{ENCUT}: The plane-wave cut-off and thus the size of the basis set. Usually the default performs well, but for accurate forces, this needs to be increased. In the manual they recommend 1.3 times the default cut-off, but there are cases where even this is insufficient \cite{DaSilva2015}.
 	\item \texttt{EDIFF}: The threshold for the the self-consistent cycle to terminate. For accurate forces this needs to be increased.
 	\item \texttt{PREC}: A tag that defines the `precision' by setting new defaults for certain parameters. I generally increase this to `Accurate' for all simulations. `Normal' is the default.
-	\item \texttt{LREAL}: A PAW pseudopotential specific tag which determines if a certain evaluation is performed in real or reciprocal space. This operation is faster in real space, but at the cost of accuracy. For phonons we want to perform the operation in reciprocal space.
+	\item \texttt{LREAL}: A PAW pseudopotential specific tag which determines if an evaluation of a certain projection operator is performed in real or reciprocal space. This operation is faster in real space, but at the cost of accuracy. For phonons we want to perform the operation in reciprocal space.
 	\item \texttt{GGA}: Sets the exchange-correlation functional (see section \ref{sec:dft}). Usually the default (PBE) is a good starting point, but experimentation is encouraged!
 	\item \texttt{ISPIN} and \texttt{MAGMOM}: Turns on a spin-polarized calculation.
-	\item \texttt{IBRION}: How and when to update the ionic positions. This can be used to perform molecular dynamics and structural optimizations in different ways.
+	\item \texttt{IBRION} and \texttt{ISIF}: How and when to update the ionic positions. This can be used to perform molecular dynamics and structural optimizations in different ways.
 	\item \texttt{ISMEAR} and \texttt{SIGMA}: A tag that controls `fermi surface smearing', which is important for metallic systems where we need to evaluate a discontinuous function at the fermi level due to partial occupancies. This can be done in several ways, and it is usually good practice to test the convergence and performance of these methods.
 	\item \texttt{LDAU}: Switches on LDA+U (see section \ref{sec:dft}) which can alleviate the intrinsic problem of DFT when dealing with localized d- and f-orbitals. This is needed in our simulations if we want to describe the anti-ferromagnetic structure of La$_2$CuO$_4$.
+	\item \texttt{ISYM}: Controls how VASP deals with space group symmetry. 
 \end{itemize}
 
-\section{Strategy}
+\noindent Some examples of VASP input files can be found in appendix \ref{app:vasp}. The take-home message here is that phonon calculations generally needs increased precision with respect to the recommended default values. When one is mainly concerned with the electronic band structure the dominant energies are typically on the order of eV, where typical phonon energies are on the order of meV, 3 orders of magnitude smaller. In addition, forces are evaluated as derivatives of the total energy (per the Hellmann-Feynmann Theorem, see section \ref{sec:forceDFT}) so numerical noise is amplified\todo{This seems Intuitively true, but is it true???}. For molecular dynamics this precision is less crucial since the many time steps will average out this numerical noise.
 
-\section{Crystal Structure}
-The structural phases of lanthanum based cuprates fall into a moderate number of space groups as listed in Table \ref{tab:crystalstructures}. All of the structural phases can be described with reference to Figure \ref{fig:lscocrystal} where we define $Q_1$ as a rotation around the $[010]_o$ and $Q_2$ as a rotation around the $[100]_o$ axis. In our simulations we have chosen to focus mainly on the HTT, LTO and LTT phases, since they are the most common and give a good compromise when investigating the role of tilts $Q_1$, $Q_2$ and orthorhombic strain $\eta$.
+\section{Electronic and Structural Phases}
+With an understanding of the functionality and limitations of DFT, and in particular VASP, we can begin to formulate a strategy to investigate the La$_2$CuO$_4$ (LCO) system. From diffraction studies, we know that LCO can exist in (at least) three structural phases depending on doping and temperature (see section XX). While the electronic structure of superconducting cuprates cannot be accurately described within DFT, undoped and overdoped La$_2$CuO$_4$ can be described as Mott-Insulator and Fermi-Liquid, respectively. Both of these electronic phases can be approximately described with DFT.
+
+In order to say anything about the superconducting cuprates with DFT, we are thus limited to a study of boundary cases in terms of the electronic structure. On the other hand, if we want to study phonons through atomic forces, many-body theories will struggle with realistic system sizes. Quantum Monte Carlo methods are making progress, but accurate forces are still a significant limitation \cite{Wagner2016}. Since we are working with the knowledge that the exact behaviour of the electrons are poorly described in our theory, our simulations must be carefully evaluated against experiments to ensure that our simulations are capturing the dominating contributions to atomic forces.
+
+\subsection{Electronic Structure}
+Since `electronic structure' is the output of a DFT calculation, one might object to the statement that we want to investigate different electronic structures of LCO. Without any additional constrains, DFT at the GGA level of theory generally results in a metallic state \cite{Pickett1989}, where a magnetic solution requires a non-local theory \cite{Lane2018}. Some authors have reported a magnetic solution using certain GGA functionals \cite{Giustino2008}, but I have not been able to reproduce this result in a consistent way. If a magnetic solution is found, the magnetic moment usually vanishes by small changes to the $k$-point mesh or energy cut-off, suggesting a local minimum.
+
+A compromise developed specifically for correlated electron systems is the LDA+U (or DFT+U or GGA+U) method \cite{Anisimov1997} described in section \ref{sec:ldau}. This ad-hoc method treats the strong on-site Coulomb interaction of localized electrons with a Hubbard-like term parametrized through an on-site repulsion $U$ and an exchange parameter $J$. In the method by \citeauthor{Dudarev1998} \cite{Dudarev1998} these are reduced to one parameter $U_\text{eff} = U - J$. The LDA+U method was developed specifically to treat Mott-Insulators, but has been used to calculate hole doped La$_2$CuO$_4$ and La$_2$NiO$_4$ \cite{Anisimov1997}. Some recent studies have even looked at stripe ordered phases of La$_{2-x}$Sr$_x$CuO$_4$ \cite{Anisimov2004, Pesant2011}. In these studies, hole doping is done by removing electrons and adding a neutralizing background, rather than the introduction of actual dopant species.
+
+\subsection{Crystal Structure}
+The observed structural phases of lanthanum based cuprates fall into a moderate number of space groups as listed in Table \ref{tab:crystalstructures} and discussed in section [REF]. All of the structural phases can be described with reference to Figure \ref{fig:lscocrystal} where we define three parameters: $Q_1$ as a rotation around the $[010]_o$, $Q_2$ as a rotation around the $[100]_o$ axis and the orthorhombic strain $\eta=\frac{b-a}{b+a}$. In our simulations we have chosen to focus on three structural phases
+
+\begin{itemize}
+	\item HTT: The parent high-symmetry phase observed at high temperatures and/or overdoped samples.
+	\item LTO: The most common structural phase at low temperatures for relevant superconducting samples.
+	\item LTT: A lower symmetry phase than LTO observed in La$_{2-x}$Ba$_x$CuO$_4$ and La$_{1.6-x}$Nd$_{0.4}$Sr$_x$CuO$_4$. Appears to supress superconductivity with the notable exception of La$_{1.88}$Ba$_{0.12}$CuO$_4$ ($T_\text{c} \approx \SI{5}{\kelvin}$)
+\end{itemize}
 
 \begin{table}
 	\centering
@@ -82,12 +99,15 @@ The structural phases of lanthanum based cuprates fall into a moderate number of
 \begin{figure}
 	\centering
 	\includegraphics[width=0.8\textwidth]{fig/simulation/crystal_hucker.png}
-	\caption[LSCO crystal]{Crystal structure of lanthanum based cuprates. From \cite{Hucker2012}. \todo[inline]{redo figure in orthorhombic coordinates with Q1 and Q2 as tilts}}
+	\caption[LSCO crystal]{Crystal structure of lanthanum based cuprates. From \cite{Hucker2012}}
 	\label{fig:lscocrystal}
 \end{figure}
 
-\subsection{Octahedral tilts}
-In order to quantify the octahedral tilts, we use the coordinate system sketched in Figure \ref{fig:tilt}. All possible tilts can be described with reference to the LTLO (Pccn) phase. The octahedra are described with two in-plane oxygens (O$_1$, O$_2$) and one apical oxygen $O_3$. Due to symmetry constrains, a rotation of this octahedron will cause a displacements in the $c$-direction of the in-plane oxygen and in the $a$- and $b$-directions of the apical oxygen. Following \cite{Axe1989}, we define $Q_1$ as a rotation around the (010) axis and $Q_2$ as a rotation around the (100) axis in orthorhombic notation. In more intuitive terms, $Q_1$ `tilts' the octahedron along $x$, while $Q_2$ `tilts' along $y$.
+\section{Coordinate systems}
+With an outlined simulation strategy, we take a short detour to describe the coordinate systems used in real and reciprocal space. Since we are dealing with several electronic and structural phases, we need a common description to compare between phases. In real space, we use the $Q_1$, $Q_2$, $\eta$ description from above and in reciprocal space we use the HTT Brillouin Zone.
+
+\subsection{Octahedral Tilts}
+In order to quantify the octahedral tilts for use in simulations, we use the coordinate system sketched in Figure \ref{fig:tilt}. All possible tilts can be described with reference to the lowest LTLO (Pccn) symmetry. The octahedra are described with two in-plane oxygens (O$_1$, O$_2$) and one apical oxygen $O_3$. Due to symmetry constrains, a rotation of this octahedron will cause a displacements in the $c$-direction of the in-plane oxygen and in the $a$- and $b$-directions of the apical oxygen. Following \cite{Axe1989}, we define $Q_1$ as a rotation around the (010) axis and $Q_2$ as a rotation around the (100) axis in orthorhombic notation. In more intuitive terms, $Q_1$ `tilts' the octahedron along $x$, while $Q_2$ `tilts' along $y$.
 
 \begin{figure}
 	\centering
@@ -161,8 +181,8 @@ While this construction is useful for our intuitive understanding of the differe
 
 \noindent these matrices can be used to generate $k$-points starting from the more `intuitive' notation outlined in Figure \ref{fig:band_paths}. For example, the $X$-point ($(\frac{1}{2} \frac{1}{2} 0)$ with respect to LTT) in the HTT phase becomes $(\frac{1}{2} \frac{1}{2} 0) \cdot \text{PA(HTT)} = (\frac{1}{4} \bar{\frac{1}{4}} \frac{1}{4})$.\todo{Double-check this. It works for the band structures, but still not sure why. Relation to real-space transformation matrices?}
 
-\section{VASP Simulation details}
-
+\section{Strategy}
+What structures we generate, what parameters we use to start the simulations etc.
 
 \section{Benchmarking}
 When performing DFT calculations in VASP there are a few parameters that have significant impact on the precision of the calculation. Increasing the precision also results in significantly longer computation time, so it is important to find a compromise. 

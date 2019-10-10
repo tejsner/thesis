@@ -70,3 +70,36 @@ Conventional Cells (Bmab and P4$_2$/ncm are identical so this transformation is 
 
 \chapter{Additional Data}
 This appendix contains plots and analysis that would be distracting in the main text, but are important to reference in any thorough investigation.
+
+\chapter{VASP Inputs}
+
+\begin{figure}
+    \centering
+    \begin{lstlisting}[basicstyle=\footnotesize\ttfamily, frame=single]
+    ENCUT = 520 # 1.3x suggested value from O POTCAR, 800 for phonons
+    EDIFF = 1E-5 # 1E-8 for phonons
+    ALGO = NORMAL
+    PREC = Accurate
+    ADDGRID = .FALSE.
+    LREAL = Auto # Switch to .FALSE. for phonons
+    
+    GGA = PS # PBESol functional, PE switches to default PBE
+    
+    ISPIN = 2
+    MAGMOM = 1 -1 1 -1 24*0 # AFM structure
+    
+    IBRION = -1 # Single point calculation
+    NSW = 0     # Number of ionic steps
+    
+    ISMEAR = 0
+    SIGMA = 0.1
+    
+    LDAU= .TRUE. # Enable LDA+U with U=8eV and J=0.8eV
+    LDAUTYPE = 4 # No exchange splitting
+    LDAUL = 2 -1 -1 # only on Cu d states
+    LDAUU = 8 0 0 
+    LDAUJ = 0.8 0 0
+    \end{lstlisting}
+    \caption[VASP: Typical INCAR]{Typical INCAR for VASP simulations.}
+    \label{fig:incar}
+\end{figure}

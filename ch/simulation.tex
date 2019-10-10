@@ -20,54 +20,46 @@ In this chapter, results from ab-initio simulations are presented independent of
 One example of such a deviation is shown in Chapter \ref{ch:anomaly}, where we can detect potentially interesting physics by following how a certain phonon mode diverges from our otherwise robust simulation results. In this chapter we perform DFT simulations based on the La$_2$CuO$_4$ parent compound across three structural and two electronic phases, all of which have been observed experimentally in the lanthanum-based cuprates. We then calculate phonons within the `Frozen-Phonon' approach and obtain the neutron-weighted phonon band structure. Since the computational requirements of phonon calculations are heavily influenced by symmetries, we do not consider defects such as interstitials in this chapter as this would make the computational effort unmanageable. To understand the dynamics due to dopant species, molecular dynamics simulations based on the results of this chapter are presented in Chapter \ref{ch:md}.
 
 \section{Computational Details}
-The theory and principles behind Density Functional Theory (DFT) is presented in chapter \ref{ch:method}, section \ref{sec:dft}. DFT simulations in this thesis are performed using the Vienna Ab-Initio Simulation Package (VASP) \cite{Kresse1993a, Kresse1994, Kresse1996, Kresse1996a} using Projector Augmented-Wave Pseudopotentials (PAW) \cite{Blochl1994a, Kresse1999} to describe the atomic wavefunctions. While ab-initio loosely translates to `from the beginning', There are several choices to be made with regards to computational parameters. First, we need to define the pseudo-potentials that describes the valence electrons of each atomic species in our system. For L(S)CO(+O), the relevant pseudo-potentials are listed in Table \ref{tab:vasp_pseudo} along with their electronic configuration. For both La and O we used the recommended potentials, while for Cu we used a more accurate version where all 6 3p electrons are included (\verb|_pv| is short for `p in valence'). The reason for this is simply because it was difficult to have the simulations converge with the standard potential -- not because we believe the Cu 3p states are necessarily important for the chemistry of our system.
+The theory and principles behind Density Functional Theory (DFT) is presented in chapter \ref{ch:method}, section \ref{sec:dft}. DFT simulations in this thesis are performed using the Vienna Ab-Initio Simulation Package (VASP) \cite{Kresse1993a, Kresse1994, Kresse1996, Kresse1996a} using Projector Augmented-Wave Pseudopotentials (PAW) \cite{Blochl1994a, Kresse1999} to describe the atomic wavefunctions. While ab-initio loosely translates to `from the beginning', There are several choices to be made with regards to computational parameters. First, we need to define the pseudo-potentials that describes the valence electrons of each atomic species in our system. For L(S)CO(+O), the relevant pseudo-potentials are listed in Table \ref{tab:vasp_pseudo} along with their electronic configuration. For both La and O we used the recommended potentials, while for Cu we used a more accurate version where all 6 3p electrons are included (\verb|_pv| is short for `p in valence'). The reason for this is simply because it was difficult to have the simulations converge with the standard potential -- not because we necessarily believe that the Cu 3p states are important for the chemistry of our system. To run a simulation in VASP, or in any DFT software, the following information (files) is required:
+
+\begin{itemize}
+	\item Crystal lattice and atomic coordinates (\texttt{POSCAR})
+	\item Pseudopotential configuration (\texttt{POTCAR})
+	\item $k$-point mesh (\texttt{KPOINTS})
+	\item Computational parameters (\texttt{INCAR})
+\end{itemize}
 
 \begin{table}[b]
-\centering
-\begin{tabular}{@{}llll@{}}
-\toprule
- & Z & Core (\# electrons) & Valence (\# electrons)                        \\ \midrule
-\texttt{La} & 57 & 1s$^2$2s$^2$2p$^6$3s$^2$3p$^6$3d$^{10}$4s$^2$4p$^6$4d$^{10}$ (46) & 5s$^2$5p$^6$5d$^1$6s$^2$ (11) \\
-\texttt{Sr\_sv} & 38 & 1s$^2$2s$^2$2p$^6$3s$^2$3p$^6$3d$^{10}$ (28) & 4s$^2$4p$^6$5s$^2$ (10) \\
-\texttt{Cu\_pv} & 29 & 1s$^2$2s$^2$2p$^6$3s$^2$ (12) & 3p$^6$3d$^{10}$4s$^1$ (17)      \\
-\texttt{O} & 8 & 1s$^2$ (2) & 2s$^2$2p$^4$ (6) \\ \bottomrule
-\end{tabular}
-\caption[VASP Pseudopotentials]{Psedopotenial electronic configuration used in VASP calculations. For }
-\label{tab:vasp_pseudo}
-\end{table}
+	\centering
+	\begin{tabular}{@{}llll@{}}
+	\toprule
+	 & Z & Core (\# electrons) & Valence (\# electrons)                        \\ \midrule
+	\texttt{La} & 57 & 1s$^2$2s$^2$2p$^6$3s$^2$3p$^6$3d$^{10}$4s$^2$4p$^6$4d$^{10}$ (46) & 5s$^2$5p$^6$5d$^1$6s$^2$ (11) \\
+	\texttt{Sr\_sv} & 38 & 1s$^2$2s$^2$2p$^6$3s$^2$3p$^6$3d$^{10}$ (28) & 4s$^2$4p$^6$5s$^2$ (10) \\
+	\texttt{Cu\_pv} & 29 & 1s$^2$2s$^2$2p$^6$3s$^2$ (12) & 3p$^6$3d$^{10}$4s$^1$ (17)      \\
+	\texttt{O} & 8 & 1s$^2$ (2) & 2s$^2$2p$^4$ (6) \\ \bottomrule
+	\end{tabular}
+	\caption[VASP Pseudopotentials]{PAW psedopotenial electronic configuration used in VASP calculations. While lanthanum is typically placed in the f-block on periodic tables it's electronic configuration has no f-electrons. This is fortunate since DFT famously struggles with highly localized ortbitals.}
+	\label{tab:vasp_pseudo}
+\end{table}	
 
-A VASP simulations requires 4 distinct files to run. The \texttt{POSCAR} file defines the lattice and fractional coordinates. The \texttt{POTCAR} files contains the pseudo-potentials. The \texttt{KPOINTS} file determines the $k$-point sampling mesh. Finally \texttt{INCAR} gives the computational parameters. A minimal \texttt{INCAR} file for VASP is shown in Figure \ref{fig:incar}. Depending on the type of simulation, parameters may be added or changed. It is not always straightforward to chose an optimal set of parameters since it depends heavily on the type of problem, system size and available computational resources.
+The choice of crystal lattice and atomic positions are typically taken from experiment, but it is important to realize that the simulation might not `agree' completely. This is especially important if we want to calculate phonons through the evaluation of forces due to displacements away from equilibrium positions. The pseudopotentials configuration is usually taken from a database since the generation of consistent, transferable potentials is a difficult, time-consuming task. In fact, the main selling point of VASP is their high-quality pseudopotentials. The $k$-point mesh defines the number of $k$-points where the wavefunctions and density is evaluated and has a huge impact on computational effort (going from e.g. a $2 \times 2 \times 2$ grid to a $4 \times 4 \times 4$ takes 8 times as many evaluations). Luckily, the amount of $k$-points needed for an accurate calculation usually converges rapidly and we often check this convergence explicitly. Since the density of the k-point mesh depends on the system size, it is common to state the $k$-point density which is defined as the number of $k$-points per reciprocal atom (or simply \#kpoints $\times$ \#atoms).
 
-\begin{figure}
-    \centering
-    \begin{lstlisting}[basicstyle=\footnotesize\ttfamily, frame=single]
-    ENCUT = 520 # 1.3x suggested value from O POTCAR, 800 for phonons
-    EDIFF = 1E-5 # 1E-8 for phonons
-    ALGO = NORMAL
-    PREC = Accurate
-    ADDGRID = .FALSE.
-    LREAL = Auto # Switch to .FALSE. for phonons
-    
-    GGA = PS # PBESol functional, PE switches to default PBE
-    
-    ISPIN = 2
-    MAGMOM = 1 -1 1 -1 24*0 # AFM structure
-    
-    IBRION = -1 # Single point calculation
-    NSW = 0     # Number of ionic steps
-    
-    ISMEAR = 0
-    SIGMA = 0.1
-    
-    LDAU= .TRUE. # Enable LDA+U with U=8eV and J=0.8eV
-    LDAUTYPE = 4 # No exchange splitting
-    LDAUL = 2 -1 -1 # only on Cu d states
-    LDAUU = 8 0 0 
-    LDAUJ = 0.8 0 0
-    \end{lstlisting}
-    \caption[VASP: Typical INCAR]{Typical INCAR for VASP simulations.}
-    \label{fig:incar}
-\end{figure}
+Finally, there is a large number of computational parameters that can be tweaked depending on the desired type of calculation. The VASP \texttt{INCAR} file has more than 300 optional tags \cite{zotero-1437}, but usually only a few needs to be tweaked depending on the desired type of simulation. For the simulations performed in this thesis the following keywords are important:
+
+\begin{itemize}
+	\item \texttt{ENCUT}: The plane-wave cut-off and thus the size of the basis set. Usually the default performs well, but for accurate forces, which are needed for phonons, this needs to be increased.
+	\item \texttt{EDIFF}: The threshold for the the self-consistent cycle to terminate. For accurate forces this needs to be increased.
+	\item \texttt{PREC}: A tag that defines the `precision' by setting new defaults for certain parameters. I generally increase this to `Accurate' for all simulations. `Normal' is the default.
+	\item \texttt{LREAL}: A PAW pseudopotential specific tag which determines if a certain evaluation is performed in real or reciprocal space. This operation is faster in real space, but at the cost of accuracy. For phonons we want to perform the operation in reciprocal space.
+	\item \texttt{GGA}: Sets the exchange-correlation functional (see section \ref{sec:dft}). Usually the default (PBE) is a good starting point, but experimentation is encouraged!
+	\item \texttt{ISPIN} and \texttt{MAGMOM}: Turns on a spin-polarized calculation.
+	\item \texttt{IBRION}: How and when to update the ionic positions. This can be used to perform molecular dynamics and structural optimizations in different ways.
+	\item \texttt{ISMEAR} and \texttt{SIGMA}: A tag that controls `fermi surface smearing', which is important for metallic systems where we need to evaluate a discontinuous function at the fermi level due to partial occupancies. This can be done in several ways, and it is usually good practice to test the convergence and performance of these methods.
+	\item \texttt{LDAU}: Switches on LDA+U (see section \ref{sec:dft}) which can alleviate the intrinsic problem of DFT when dealing with localized d- and f-orbitals. This is needed in our simulations if we want to describe the anti-ferromagnetic structure of La$_2$CuO$_4$.
+\end{itemize}
+
+\section{Strategy}
 
 \section{Crystal Structure}
 The structural phases of lanthanum based cuprates fall into a moderate number of space groups as listed in Table \ref{tab:crystalstructures}. All of the structural phases can be described with reference to Figure \ref{fig:lscocrystal} where we define $Q_1$ as a rotation around the $[010]_o$ and $Q_2$ as a rotation around the $[100]_o$ axis. In our simulations we have chosen to focus mainly on the HTT, LTO and LTT phases, since they are the most common and give a good compromise when investigating the role of tilts $Q_1$, $Q_2$ and orthorhombic strain $\eta$.

@@ -1,7 +1,73 @@
 \chapter{Simulation}
-In this chapter, results from ab-initio simulations are presented independent of experimental data. It turns out that a careful investigation of various phases of LSCO+O presents us with valuable clues regarding the average and local structure. The general strategy is to investigate the structure and dynamics within the DFT framework and use the results to discuss how and why DFT fails to describe the strongly correlated nature of cuprates.
 
-One example of such comparison is shown in Chapter \ref{ch:anomaly}, where we can detect potentially interesting physics by following how experiments diverge from simulation. In this chapter we do a full suite of simulations including various dopants and electronic ground states in order to have a starting point for experimental studies.
+\begin{framed}
+	\begin{itemize}
+		\item An independent chapter on the structural phases of LSCO
+		\item Software details
+		\item Coordinate systems (reminder of HTT/LTO/LTT/LTLO)
+		\item Convergence tests (Benchmarking)
+		\item Electronic bands (Metal/AFM)
+		\item Geometry optimization
+		\item Phonon bands (PBESol seems to be neccesary)
+		\item Molecular dynamics of defect Structures
+		\item Validation against experiment.
+		\item Discussion/conclusion
+	\end{itemize}	
+\end{framed}
+
+In this chapter, results from ab-initio simulations are presented independent of experimental data. It turns out that a careful investigation of various phases of LSCO+O presents us with valuable clues regarding the average and local structure. While DFT is unable to capture the strongly correlated nature of the cuprates, it turns out to be a reasonable description with regards to intermolecular forces. The subsequent strategy is to carefully validate our simulations and establish a `one-electron baseline' for the studied systems. Experimental deviations from this baseline can then be analysed for clues possibly pertaining to superconductivity or other phenomena not captured at the DFT level of theory.
+
+One example of such a deviation is shown in Chapter \ref{ch:anomaly}, where we can detect potentially interesting physics by following how a certain phonon mode diverges from our otherwise robust simulation results. In this chapter we perform DFT simulations based on the La$_2$CuO$_4$ parent compound across three structural and two electronic phases, all of which have been observed experimentally in the lanthanum-based cuprates. We then calculate phonons within the `Frozen-Phonon' approach and obtain the neutron-weighted phonon band structure. Since the computational requirements of phonon calculations are heavily influenced by symmetries, we do not consider defects such as interstitials in this chapter as this would make the computational effort unmanageable. To understand the dynamics due to dopant species, molecular dynamics simulations based on the results of this chapter are presented in Chapter \ref{ch:md}.
+
+\section{Computational Details}
+The theory and principles behind Density Functional Theory (DFT) is presented in chapter \ref{ch:method}, section \ref{sec:dft}. DFT simulations in this thesis are performed using the Vienna Ab-Initio Simulation Package (VASP) \cite{Kresse1993a, Kresse1994, Kresse1996, Kresse1996a} using Projector Augmented-Wave Pseudopotentials (PAW) \cite{Blochl1994a, Kresse1999} to describe the atomic wavefunctions. While ab-initio loosely translates to `from the beginning', There are several choices to be made with regards to computational parameters. First, we need to define the pseudo-potentials that describes the valence electrons of each atomic species in our system. For L(S)CO(+O), the relevant pseudo-potentials are listed in Table \ref{tab:vasp_pseudo} along with their electronic configuration. For both La and O we used the recommended potentials, while for Cu we used a more accurate version where all 6 3p electrons are included (\verb|_pv| is short for `p in valence'). The reason for this is simply because it was difficult to have the simulations converge with the standard potential -- not because we believe the Cu 3p states are necessarily important for the chemistry of our system.
+
+\begin{table}[b]
+\centering
+\begin{tabular}{@{}llll@{}}
+\toprule
+ & Z & Core (\# electrons) & Valence (\# electrons)                        \\ \midrule
+\texttt{La} & 57 & 1s$^2$2s$^2$2p$^6$3s$^2$3p$^6$3d$^{10}$4s$^2$4p$^6$4d$^{10}$ (46) & 5s$^2$5p$^6$5d$^1$6s$^2$ (11) \\
+\texttt{Sr\_sv} & 38 & 1s$^2$2s$^2$2p$^6$3s$^2$3p$^6$3d$^{10}$ (28) & 4s$^2$4p$^6$5s$^2$ (10) \\
+\texttt{Cu\_pv} & 29 & 1s$^2$2s$^2$2p$^6$3s$^2$ (12) & 3p$^6$3d$^{10}$4s$^1$ (17)      \\
+\texttt{O} & 8 & 1s$^2$ (2) & 2s$^2$2p$^4$ (6) \\ \bottomrule
+\end{tabular}
+\caption[VASP Pseudopotentials]{Psedopotenial electronic configuration used in VASP calculations. For }
+\label{tab:vasp_pseudo}
+\end{table}
+
+A VASP simulations requires 4 distinct files to run. The \texttt{POSCAR} file defines the lattice and fractional coordinates. The \texttt{POTCAR} files contains the pseudo-potentials. The \texttt{KPOINTS} file determines the $k$-point sampling mesh. Finally \texttt{INCAR} gives the computational parameters. A minimal \texttt{INCAR} file for VASP is shown in Figure \ref{fig:incar}. Depending on the type of simulation, parameters may be added or changed. It is not always straightforward to chose an optimal set of parameters since it depends heavily on the type of problem, system size and available computational resources.
+
+\begin{figure}
+    \centering
+    \begin{lstlisting}[basicstyle=\footnotesize\ttfamily, frame=single]
+    ENCUT = 520 # 1.3x suggested value from O POTCAR, 800 for phonons
+    EDIFF = 1E-5 # 1E-8 for phonons
+    ALGO = NORMAL
+    PREC = Accurate
+    ADDGRID = .FALSE.
+    LREAL = Auto # Switch to .FALSE. for phonons
+    
+    GGA = PS # PBESol functional, PE switches to default PBE
+    
+    ISPIN = 2
+    MAGMOM = 1 -1 1 -1 24*0 # AFM structure
+    
+    IBRION = -1 # Single point calculation
+    NSW = 0     # Number of ionic steps
+    
+    ISMEAR = 0
+    SIGMA = 0.1
+    
+    LDAU= .TRUE. # Enable LDA+U with U=8eV and J=0.8eV
+    LDAUTYPE = 4 # No exchange splitting
+    LDAUL = 2 -1 -1 # only on Cu d states
+    LDAUU = 8 0 0 
+    LDAUJ = 0.8 0 0
+    \end{lstlisting}
+    \caption[VASP: Typical INCAR]{Typical INCAR for VASP simulations.}
+    \label{fig:incar}
+\end{figure}
 
 \section{Crystal Structure}
 The structural phases of lanthanum based cuprates fall into a moderate number of space groups as listed in Table \ref{tab:crystalstructures}. All of the structural phases can be described with reference to Figure \ref{fig:lscocrystal} where we define $Q_1$ as a rotation around the $[010]_o$ and $Q_2$ as a rotation around the $[100]_o$ axis. In our simulations we have chosen to focus mainly on the HTT, LTO and LTT phases, since they are the most common and give a good compromise when investigating the role of tilts $Q_1$, $Q_2$ and orthorhombic strain $\eta$.
@@ -104,55 +170,7 @@ While this construction is useful for our intuitive understanding of the differe
 \noindent these matrices can be used to generate $k$-points starting from the more `intuitive' notation outlined in Figure \ref{fig:band_paths}. For example, the $X$-point ($(\frac{1}{2} \frac{1}{2} 0)$ with respect to LTT) in the HTT phase becomes $(\frac{1}{2} \frac{1}{2} 0) \cdot \text{PA(HTT)} = (\frac{1}{4} \bar{\frac{1}{4}} \frac{1}{4})$.\todo{Double-check this. It works for the band structures, but still not sure why. Relation to real-space transformation matrices?}
 
 \section{VASP Simulation details}
-All DFT simulations (see section \ref{sec:dft}) are performed using the Vienna Ab-Initio Simulation Package (VASP)\todo{several refs}. While ab-initio loosely translates to `from the beginning', There are several choices to be made with regards to computational parameters. First, we need to define the pseudo-potentials that describes the valence electrons of each atomic species in our system. For LCO, the relevant pseudo-potentials are listed in Table \ref{tab:vasp_pseudo} along with their electronic configuration. For both La and O we used the recommended potentials, while for Cu we used a more accurate version where 3p electrons are included (\verb|_pv| is short for `p in valence').\todo{functional discussion here?}
 
-
-\begin{table}[b]
-\centering
-\begin{tabular}{@{}lll@{}}
-\toprule
- & Core (\# electrons) & Valence (\# electrons)                        \\ \midrule
-\texttt{La}                 & Kr4d$^{10}$ (46)                & 5s$^1$6s$^2$5p$^6$5d$^1$ (11) \\
-\texttt{Sr\_sv} & (28) & 4s$^2$4p$^6$5s$^2$ (10) \\
-\texttt{Cu\_pv}                 & 1s$^2$2s$^2$2p$^6$3s$^2$ (12) & 3p$^6$3d$^{10}$4s$^1$ (17)      \\
-\texttt{O}                  & 1s$^2$ (2)                    & 2s$^2$2p$^4$ (6)              \\ \bottomrule
-\end{tabular}
-\caption[VASP Pseudopotentials]{Psedopotenial electronic configuration used in VASP calculations.\todo[inline]{Check Sr potential}}
-\label{tab:vasp_pseudo}
-\end{table}
-
-A VASP simulations requires 4 distinct files to run. The \texttt{POSCAR} file defines the lattice and fractional coordinates. The \texttt{POTCAR} files contains the pseudo-potentials. The \texttt{KPOINTS} file determines the $k$-point sampling mesh. Finally \texttt{INCAR} gives the computational parameters. A minimal \texttt{INCAR} file for VASP is shown in Figure \ref{fig:incar}. Depending on the type of simulation, parameters may be added or changed. It is not always straightforward to chose an optimal set of parameters since it depends heavily on the type of problem, system size and available computational resources.
-
-\begin{figure}
-    \centering
-    \begin{lstlisting}[basicstyle=\footnotesize\ttfamily, frame=single]
-    ENCUT = 520 # 1.3x suggested value from O POTCAR, 800 for phonons
-    EDIFF = 1E-5 # 1E-8 for phonons
-    ALGO = NORMAL
-    PREC = Accurate
-    ADDGRID = .FALSE.
-    LREAL = Auto # Switch to .FALSE. for phonons
-    
-    GGA = PS # PBESol functional, PE switches to default PBE
-    
-    ISPIN = 2
-    MAGMOM = 1 -1 1 -1 24*0 # AFM structure
-    
-    IBRION = -1 # Single point calculation
-    NSW = 0     # Number of ionic steps
-    
-    ISMEAR = 0
-    SIGMA = 0.1
-    
-    LDAU= .TRUE. # Enable LDA+U with U=8eV and J=0.8eV
-    LDAUTYPE = 4 # No exchange splitting
-    LDAUL = 2 -1 -1 # only on Cu d states
-    LDAUU = 8 0 0 
-    LDAUJ = 0.8 0 0
-    \end{lstlisting}
-    \caption[VASP: Typical INCAR]{Typical INCAR for VASP simulations.}
-    \label{fig:incar}
-\end{figure}
 
 \section{Benchmarking}
 When performing DFT calculations in VASP there are a few parameters that have significant impact on the precision of the calculation. Increasing the precision also results in significantly longer computation time, so it is important to find a compromise. 
@@ -385,7 +403,7 @@ The phonon density-of-states is formally defined as
 
 \begin{figure}
 	\centering
-	\includegraphics[width=\textwidth]{fig/simulation/dos_all.pdf}
+	\includegraphics[width=\textwidth]{fig/simulation/phonopy_pdos.pdf}
 	\caption[Neutron DOS (frozen-phonons)]{Neutron-weighted phonon density of states in the various structural and electronic phases of LCO. Both the partial and total density of states is shown in the plot.}
 	\label{fig:dos_all}
 \end{figure}
@@ -410,112 +428,6 @@ Similarly, we can compare the phonon density of states to time of flight powder 
 	\caption[phonon dos: comparison with IN4]{Comparison of the neutron-weighted phonon density of states as calculated for the LTT (AFM) phase with neutron data from IN4. Simulation data has been smeared by a width of $\sigma=\SI{1}{\milli\eV}$.\todo[inline]{maybe a scaling that depends on energy?}}
 	\label{fig:dos_comparison}
 \end{figure}
-
-\clearpage
-
-\section{Molecular Dynamics}
-\[ T = \frac{1}{3 k_\text{B} (N_\text{ions}-1)} \sum_n M_n |\bm{v}_n|^2 \]
-\todo[inline]{in progress... Data from LTO and LTT exists...}
-
-\begin{figure}
-	\centering
-	\includegraphics[width=\textwidth]{fig/simulation/stitch.pdf}
-	\caption[stitched md runs]{sticthed md runs and comparison}
-	\label{fig:stitch}
-\end{figure}
-
-\begin{figure}
-	\centering
-	\includegraphics[width=\textwidth]{fig/simulation/md_dos_pdf.pdf}
-	\caption[MD: DOS and PDF]{MD: DOS and PDF}
-	\label{fig:dos_pdf}
-\end{figure}
-
-\begin{figure}
-	\centering
-	\includegraphics[width=\textwidth]{fig/simulation/dist_hist.pdf}
-	\caption[MD: distance histograms]{MD: distance histograms}
-	\label{fig:md_distances}
-\end{figure}
-
-\begin{figure}
-	\centering
-	\includegraphics[width=\textwidth]{fig/simulation/prm_q1q2.pdf}
-	\caption[MD Q1 Q2]{MD Q1 Q2}
-	\label{fig:md_q1_q2}
-\end{figure}
-
-\begin{figure}
-	\centering
-	\includegraphics[width=\textwidth]{fig/simulation/diffusion1.pdf}
-	\caption[MD Oint Diffusion Oi]{MD Oint Diffusion Oi}
-	\label{fig:md_diffusion1}
-\end{figure}
-
-\begin{figure}
-	\centering
-	\includegraphics[width=\textwidth]{fig/simulation/diffusion2.pdf}
-	\caption[MD Oint Diffusion Oap 1]{MD Oint Diffusion Oap 1}
-	\label{fig:md_diffusion2}
-\end{figure}
-
-\begin{figure}
-	\centering
-	\includegraphics[width=\textwidth]{fig/simulation/diffusion3.pdf}
-	\caption[MD Oint Diffusion Oap 2]{MD Oint Diffusion Oap 2}
-	\label{fig:md_diffusion3}
-\end{figure}
-
-
-\begin{figure}
-	\centering
-	\includegraphics[width=\textwidth]{fig/simulation/md_phonopy_comparison.pdf}
-	\caption[MD Phonopy Comparison]{MD Phonopy Comparison}
-	\label{fig:md_phonopy_comparison}
-\end{figure}
-
-\clearpage
-
-\section{LCO+O Phonons}
-Since the introduction of interstitials breaks the local crystal symmetry, we cannot perform phonon calculations using the direct method without making an excessive amount of displacement calculations. For this reason, we are forces to use ab-initio molecular dynamics.
-
-Before thinking about molecular dynamics, we need to place the interstitial. Figure \ref{fig:oint_location} shows possible interstitial positions for the LTO and LTT phase. We ignore the HTT phase for molecular dynamics since the symmetry is broken and, in some sense, LTT and HTT are identical (volume and a/c ratio are very similar).
-
-
-
-\begin{figure}
-    \centering
-    \includegraphics[width=\textwidth]{fig/simulation/oint.png}
-    \caption[Illustration of interstitial positions]{Illustration of interstitial oxygen in-plane ($a$-$b$) location with respect to the apical oxygen displacements in the rock-salt layer. Open squares represent apical oxygens `hanging down' while closed squares represent apical oxygens `sticking up'. Interstitial oxygen are red circles. Adapted from \cite{Tranquada1995}.}
-    \label{fig:oint_location}
-\end{figure}
-
-To see how the symmetry is broken, Table \ref{tab:oint_locations} shows the resulting space groups as a function of interstitial $z$-component and various defect structures in a $2 \times 2 \times 1$ supercell based on the orthorhombic crystallographic cell. 
-
-\begin{table}[b]
-    \centering
-    \input{tab/oint.tex}
-    \caption[Oxygen interstitial phases]{Space group symmetry due to the introduction of an interstitial oxygen in various structures all described in a $2 \times 2 \times 1$ supercell of the Bmab (conventional) coordinate system. HTT, LTO and LTT are the usual phases as described in litterature \cite{Hucker2012}. The structures labeled defect is (A) in the LTO case: A stacking fault where the middle layer has its tilts reversed and (B) in the LTT case: A line along [110] with reversed tilts. Both are described in \cite{Tranquada1994} and are designed in order to `make room' for the interstitial oxygen (see Figure \ref{fig:oint_location}).}
-    \label{tab:oint_locations}
-\end{table}
-
-We performed high-precision geometry optimizations (with symmetry turned off) on these structures (including a test of HTT) resulting in the table of energies as shown in Table \ref{tab:oint_en}. While the defect structures intuitively would make more room for oxygen interstitials, the energy cost of forming the defect is higher in the, relatively small, supercell that we use. It is worth noting, however, that they move to very similar energies during the optimization\todo{not so surprising, since they probably move towards the same structure. I need to check this more closely}.
-
-
-\begin{table}[b]
-    \centering
-    \begin{tabular}{@{}lll@{}}
-    \toprule
-     & $E_0$ [eV] & $E_1$ [eV]            \\ \midrule
-    HTT                     & -827.27669             & -829.76250 \\
-    LTO                     & -828.29890             & -830.39658 \\
-    LTO\_sfault              & -823.09516             & -830.03588 \\
-    LTT                     & -828.04663             & -830.08248 \\
-    LTT\_defect              & -826.03173             & -829.94243 \\ \bottomrule
-    \end{tabular}
-    \caption[Oxygen interstital phases: Energy]{Oxygen interstital phases: Energy. $E_0$ corresponds to the energy after inserting the interstitial oxygen, but before geometry optimization. $E_1$ is the total energy after optimization. Geomtry optimization performed on ionic positions only. Conclusion: It costs more energy to create the defect structure than you gain by making room for the interstitial.}
-    \label{tab:oint_en}
-\end{table}
 
 \section{Neutron-weighted phonon bands}
 

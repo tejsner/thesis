@@ -18,6 +18,9 @@
 \usepackage{booktabs}
 \usepackage[version=4]{mhchem}
 \usepackage{listings}
+%\usepackage{pdfpages}
+\usepackage{framed}
+\usepackage{float}
 
 % some commands for making tables with alternating colors (replaces tabular environment)
 \definecolor{tablegrey}{gray}{0.9}
@@ -36,10 +39,11 @@
 \title{Oxygen Dynamics in the High-Temperature Superconductor LSCO+O}
 \date{\today}
 
-%\includeonly{ch/simulation}
+%\includeonly{ch/samples}
 
 \begin{document}
-%\maketitle
+
+\maketitle
 \tableofcontents
 
 \clearpage
@@ -51,14 +55,16 @@
 \include{ch/introduction}
 \include{ch/lsco}
 \include{ch/method}
-\include{ch/samples}
 \include{ch/simulation}
+\include{ch/md}
+\include{ch/pdf}
+\include{ch/tilts}
 \include{ch/gdos}
 \include{ch/anomaly}
-\include{ch/arpes}
-\include{ch/pdf}
+%\include{ch/arpes}
 \include{ch/discussion}
 \include{ch/conclusion}
+
 \appendix
 
 \include{ch/appendix}

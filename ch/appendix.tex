@@ -31,6 +31,11 @@ phonopy -f 01/vasprun.xml 02/vasprun.xml 03/vasprun.xml ...
 \section{Saving and Distributing}
 At this point, we can generate phonon band structures, density of states, thermodynamic properties and visualize phonon modes. For details, I will refer to the Phonopy website [REF\footnote{https://atztogo.github.io/phonopy/}] and the excellent phonon visualization website [REF\footnote{http://henriquemiranda.github.io/phononwebsite/index.html}]. The data needed to construct the dynamical matrix is fully contained in the \texttt{FORCE\_SETS} and \texttt{phonopy\_disp.yaml} files. While these files are sufficient to distribute phonon data, it is useful to include the computational parameters geometry optimization and phonon calculations.
 
+\chapter{PhononNeutron - Comparing Simulation and Experiment}
+During the thesis, a selection of python classes were developed with the intention of generalizing some of the tasks required to get the correct neutron weights out of simulations. While software such as MDANSE does a good job with respect to molecular dynamics, I wanted something focussed on analysing phonons specifically from different levels of theory (MD and `Frozen Phonons').
+
+The code be found at \url{https://github.com/tejsner/phonon_neutron} along with installation instruction. The intention of this appendix is to explain some of the functionality and to serve as a tutorial for anyone interested in performing the same kind of analysis.
+
 \chapter{Structural Transformation Matrices}
 
 Conventional Cells (Bmab and P4$_2$/ncm are identical so this transformation is the identity)
@@ -62,3 +67,6 @@ Conventional Cells (Bmab and P4$_2$/ncm are identical so this transformation is 
 \end{pmatrix} 
 \quad \text{P4}_2\text{/ncm}
 \]
+
+\chapter{Additional Data}
+This appendix contains plots and analysis that would be distracting in the main text, but are important to reference in any thorough investigation.

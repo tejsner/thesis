@@ -31,10 +31,16 @@ phonopy -f 01/vasprun.xml 02/vasprun.xml 03/vasprun.xml ...
 \section{Saving and Distributing}
 At this point, we can generate phonon band structures, density of states, thermodynamic properties and visualize phonon modes. For details, I will refer to the Phonopy website [REF\footnote{https://atztogo.github.io/phonopy/}] and the excellent phonon visualization website [REF\footnote{http://henriquemiranda.github.io/phononwebsite/index.html}]. The data needed to construct the dynamical matrix is fully contained in the \texttt{FORCE\_SETS} and \texttt{phonopy\_disp.yaml} files. While these files are sufficient to distribute phonon data, it is useful to include the computational parameters geometry optimization and phonon calculations.
 
-\chapter{PhononNeutron - Comparing Simulation and Experiment}
+\chapter{PhononNeutron - Comparing Simulation and Experiment}\label{app:software}
 During the thesis, a selection of python classes were developed with the intention of generalizing some of the tasks required to get the correct neutron weights out of simulations. While software such as MDANSE does a good job with respect to molecular dynamics, I wanted something focussed on analysing phonons specifically from different levels of theory (MD and `Frozen Phonons').
 
-The code be found at \url{https://github.com/tejsner/phonon_neutron} along with installation instruction. The intention of this appendix is to explain some of the functionality and to serve as a tutorial for anyone interested in performing the same kind of analysis.
+The code be found at \url{https://github.com/tejsner/phonon_neutron} along with installation instructions. The intention of this appendix is to explain some of the functionality and to serve as a tutorial for anyone interested in performing the same kind of analysis.
+
+\begin{itemize}
+    \item md\_tools.py
+    \item phonopy\_tools.py
+    \item cuprate.py
+\end{itemize}
 
 \chapter{Structural Transformation Matrices}
 
@@ -103,3 +109,35 @@ This appendix contains plots and analysis that would be distracting in the main 
     \caption[VASP: Typical INCAR]{Typical INCAR for VASP simulations.}
     \label{fig:incar}
 \end{figure}
+
+\chapter{Temp}
+
+\section{Neutron-weighted phonon bands}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{fig/simulation/lto_neutron_bands.pdf}
+	\caption[LTO band structure with neutron intensities]{LTO band structure with neutron intensities. $l=0$ so no intensity at $Z$. The wo paths are with respect to Figure \ref{fig:band_paths}. but in the two inequivalent directions due to orthorhombic strain. A real neutron scattering image would correspond to the superposition of these two band structures due to twinning.}
+	\label{fig:lco_lto_netron_bands}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{fig/simulation/lco_soft_modes.pdf}
+	\caption[LCO, LTO: soft mode simulation]{Neutron-weighted phonon bands of the LTO taken in the (104) and (014) BZ along the $M$-$\Gamma$-$X$-$M$ (left to right) path with respect to the coordinate system defined in Figure \ref{fig:band_paths}. Due to the larger BZ of the LTO primitive cell, the high symmetry points changes their labels as shown on the horizontal axis of the figure. This illustrates the fact that neutron scattering measurements at (104)/(014) will be measuring at the primitive $\Gamma$- and $Z$-point, respectively. Note that an $l$-component is required to get any neutron weight at $Z$.}
+	\label{fig:lco_soft_sim}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.45\textwidth]{fig/simulation/qxqy_neutron.pdf}
+	\hspace{2em}
+	\includegraphics[width=0.45\textwidth]{fig/simulation/flatcone_data.png}
+	\caption[flatcone 9 meV compared to simulation]{Simulation of neutron intensities compared to flatcone data at 9 meV.}
+	\label{fig:qxqy_neutron}
+	
+\end{figure}
+
+\section{LSCO}
+
+In order to dope with strontium, we chose an equivalent doping of LCO+O (assuming that each oxygen atom adds two holes which is disputed). We thus replace two lanthanum atoms with strontium. With the assumption that strontium atoms are randomly, homogeneously distributed, we chose two sites where the distance is maximized. Inspection of the 2x2x1 supercell reveals that there are 4 reasonable choices of which one is chosen at random. The distance between the Sr ions is roughly \SI{8.85}{\angstrom}

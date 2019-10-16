@@ -246,7 +246,7 @@ As mentioned in section \ref{sec:phononpractical}, we need a large number of for
 
 \noindent which can be solved by a Moore-Penrose pseudo-inverse matrix (in Numpy: \texttt{numpy.linalg.pinv}) given a sufficient number of displacements. Since $\bm{U}$ only depends on $(jl)$, we can build up the full force constant matrix by iterating this procedure over $(\jp \lp)$. The minimum number of displacements is equal to the number of non-equivalent atoms in the crystal primitive unit cell multiplied by a number of independent x,y,z coordinates in the site symmetry of a given atom \cite{Parlinski1997}. For this reason, software such as \texttt{Phonopy} and \texttt{PHONON} determines the primitive unit cell, the supercell expansion matrix and all the symmetry operations before generating displacements.
 
-\section{Molecular Dynamics}
+\section{Molecular Dynamics}\label{sec:method_md}
 Temperature fluctuations in a closed system:
 %
 \[ \frac{\Delta T}{T} = \sqrt{\frac{2}{3N}} \quad \Rightarrow \quad \Delta T(T=\SI{300}{\kelvin}) = \SI{23.1}{\kelvin} \]

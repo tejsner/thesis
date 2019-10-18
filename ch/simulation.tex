@@ -1,4 +1,4 @@
-\chapter{Simulation}\label{ch:simulation}
+\chapter{Phonon Calculations of LCO}\label{ch:simulation}
 
 \begin{framed}
 	\begin{itemize}
@@ -201,7 +201,7 @@ The structure is then optimized and we calculate the electronic and phonon band 
 
 All calculations in this chapter is performed on La$_2$CuO$_4$ in the conventional orthorhombic unit cell, which corresponds to the primitive Pccn lattice that we use to generate the structures. This cell contains four formula units and is large enough to accommodate anti-ferromagnetism. Since VASP can handle symmetry through the \texttt{ISYM} keyword, we don't need an input cell corresponding to the primitive cell of the considered structural phase. Before starting any `production' DFT calculation, it is advantageous to benchmark certain computational parameters in order to get an idea of how well-behaved the SCF convergence is and what energy scales we can expect to probe.
 
-\section{Benchmarking}
+\section{Benchmarking}\label{sec:sim_benchmark}
 When performing DFT calculations in VASP there are a few parameters that have significant impact on the precision of the calculation. Increasing the precision also results in significantly longer computation time, so it is important to find a compromise. 
 
 Figure \ref{fig:sim_bench_afm} shows a benchmark of AFM LCO with respect to the $k$-point mesh and smearing width $\sigma$. Since there are no states at the Fermi level, the smearing width converges rather quickly, and we can safely use a value of $\sigma = \SI{0.1}{\eV}$. The $k$-point density also converges rather quickly, and we achieve a precision of \SI{0.1}{\milli\eV} using a fairly coarse MP-grid of $8\times 8 \times 4$. In AFM LCO we also checked the effect on electronic structure due to the on-site repulsion $U$. The result is shown in Table \ref{tab:ldau} and the values of $U=\SI{8}{\eV}$, $J=\SI{0.8}{\eV}$ are chosen based on the proximity to experimental evidence \cite{Vaknin1987, Uchida1991} and previous theoretical studies of the La$_2$CuO$_4$ system, where the values of $U$ and $J$ where found self-consistently \cite{Anisimov2004,Anisimov1991}.
@@ -290,7 +290,7 @@ To further illustrate this point, Figure \ref{fig:bs_afm1} and \ref{fig:bs_metal
     \label{fig:bs_metal}
 \end{figure}
 
-\section{Geometry optimization}
+\section{Geometry optimization}\label{sec:sim_geomopt}
 Having settled on a set of appropriate computational parameters, we can proceed with the original goal of optimizing the geometry of the various structural phases. Optimizing geometry in VASP can be performed with 3 different algorithms controlled by the \texttt{IBRION} tag:
 
 \begin{enumerate}
@@ -421,7 +421,7 @@ While there, in principle, are a huge number of functionals one could try, phono
 	\label{fig:ltt_bands}
 \end{figure}
 
-\subsection{Density of states}
+\subsection{Density of states}\label{sec:sim_dos}
 As discussed in section [REF], the the calculation of phonon bands makes it trivial to compute the (partial) phonon DOS by evaluating the bands on a grid and integrating onto the energy axis. By evaluating the partial DOS and weighing each partial by scattering cross section ($\sigma^\text{total}$) and ionic mass, we obtain the generalized phonon DOS as seen by a time-of-flight neutron spectrometer in the incoherent approximation. 
 
 \begin{figure}
@@ -438,11 +438,11 @@ Qualitatively, the main difference between the structural phases is a modificati
 \begin{enumerate}
 	\item \SI{26.3}{\milli\eV}: An in-plane oxygen mode where the oxygens move along $c$ and the two diagonals of the octahedra is out of phase.
 	\item \SI{27.2}{\milli\eV}: An apical oxygen mode where apical of the same `plane' move together with the direction alternating between each plane
-	\item \SI{27.9}{\milli\eV}: A mode where every oxygen-atom moves in-phase, keeping the rest of the lattice still.
+	\item \SI{27.9}{\milli\eV}: A mode where every oxygen-atom moves in-phase along $c$, keeping the rest of the lattice still.
 	\item \SI{28.6}{\milli\eV}: A lanthanum mode where the atoms move out of phase along $c$.
 \end{enumerate}
 
-The metallic simulations mainly have the effect of generally pushing phonon energies down and a smoothing of high-energy modes. IN the HTT phase this is directly linked to the softening of the Cu-O bond-stretching mode at the zone boundary, as discussed in chapter \ref{ch:anomaly}. In addition, the two peaks at \SI{50}{\milli\eV} and \SI{60}{\milli\eV} have weight shifted towards the latter. The mode at \SI{50}{\milli\eV} is a bond-stretching mode of the apical oxygen, while the mode at \SI{60}{\milli\eV} involves vibration of all oxygen-atoms along the $c$ axis, with in-plane and apical oxygen atoms being relatively out of phase.
+The metallic simulations mainly have the effect of generally pushing phonon energies down and a `smoothing' of high-energy modes. In the HTT phase this is directly linked to the softening of the Cu-O bond-stretching mode at the zone boundary, as discussed in chapter \ref{ch:anomaly}. In addition, the two peaks at \SI{50}{\milli\eV} and \SI{60}{\milli\eV} have weight shifted towards the latter. The mode at \SI{50}{\milli\eV} is a bond-stretching mode of the apical oxygen, while the mode at \SI{60}{\milli\eV} involves vibration of all oxygen-atoms along the $c$ axis, with in-plane and apical oxygen atoms being relatively out of phase.
 
 \section{Validation of simulations}\label{sec:sim_validation}
 Since LSCO is such an extensively studied system, there is data available in the literature to compare our band structures. By inspection of the band structure plots in the previous section, it seems like a difficult task to actually separate the bands in a neutron scattering experiment. Luckily, there are a few modes that can be distinguished. Figure \ref{fig:htt_phonons_lit} compares our HTT band phonons band structures along $\Gamma$-$X$ with experimental data from a range of LSCO samples. The highlighted modes is the Cu-O half-breathing mode ($\approx \SI{80}{\milli\eV}$) and the apical oxygen stretching mode ($\approx \SI{60}{\milli\eV}$). We will discuss this mode in detail in Chapter \ref{ch:anomaly}

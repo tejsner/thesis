@@ -1,5 +1,5 @@
 \chapter{Molecular Dynamics of L(S)CO+O}\label{ch:md}
-Using the lessons learned in the previous chapter and after a reasonably successful validation of simulations (see section \ref{sec:sim_validation}), we can use the computational parameters at a lower precision and perform Molecular Dynamics simulations in VASP. The purpose of this chapter is to discuss the computational details, outline the chosen defect structures and finally present how defects (interstitial or otherwise) modifies the structure and dynamics of the parent structure. While molecular dynamics simulations are unable to provide information about the phonon band structure directly, it is possible to extract the phonon DOS and other relevant dynamical information as outlined in section \ref{sec:method_md}.
+Using the lessons learned in the previous chapter and after a reasonably successful validation of simulations (see section \ref{sec:sim_validation}), we can use the computational parameters at a lower precision and perform Molecular Dynamics simulations in VASP. The purpose of this chapter is to discuss the computational details, outline the chosen defect structures and finally present how defects (interstitial or otherwise) modifies the structure and dynamics of the parent structure. While molecular dynamics simulations are unable to provide information about the phonon band structure directly, it is possible to extract the phonon DOS and other relevant dynamical information as outlined in section \ref{sec:method_md}. In order to distinguish the simulations, we use a similar notation as in the previous chapter, but with the option to add dopants: [HTT/LTO/LTT][m]+[Sr/O$_\text{i}$], where omitting the [m] refers to the AFM electronic structure. For example, LTOm+Sr refers to a calculation starting from orthorhombic (Bmab) symmetry, in the metallic phase, with added Sr dopant.
 
 \section{Computational Details}
 Since Molecular Dynamics simulations require a large number of SCF cycles, it is necessary to drastically reduce the precision of our simulation. In general, the most drastic approximation comes from only running the simulation at one $k$-point ($\Gamma$). Other parameters are benchmarked by small test runs of a couple hundred steps and then evaluating the computational resources/time available. In our case we end up with the following additional reductions in precision:
@@ -42,7 +42,7 @@ After having performed this analysis, we can apply the same operations to every 
 Since the introduction of dopant ions breaks the crystal symmetry, we cannot perform phonon calculations using the direct method without making an excessive amount of high-precision calculations. Our typical $2 \times 2 \times 1$ supercell containing 112 ions with P1 symmetry would require $112 \times 3 = 336$ displacements just to describe phonon frequencies and eigenvectors at $\Gamma$. The worst case phonon calculation (LTT with magnetism) in the preceding chapter required just 21 displacements. For this reason, we are essentially forced to use molecular dynamics. In the following, the model for placing the initial dopants is outlined for Sr- and O-doped systems separately.
 
 \subsection{LCO+O}
-We start by considering the La$_2$CuO$_{4+\delta}$ System, which is simply LCO with added oxygen atoms at interstitial sites. It is generally accepted that the oxygen enters in the middle of the rock-salt layer, the least dense area of the crystal structure. Figure \ref{fig:oint_location} shows possible interstitial positions for the LTO (Bmab) and LTT (P4$_2$/ncm) phase, taken from a model proposed for the La$_2$NiO$_{4+\delta}$ system \cite{Tranquada1994}. We ignore the HTT phase for molecular dynamics since the symmetry is broken and the preliminary geometry optimization would tend to tilt the octahedra similar to the LTT phase. To represent a reasonable doping level, we consider the addition of a single interstitial. It is generally accepted that the oxidation state is, at least approximately, O$^{2-}$, such that each dopant adds two holes. In our $2 \times 2 \times 1$ supercell, this corresponds to a doping of $n_\text{h} = \frac{2}{16} = 0.125$.
+We start by considering the La$_2$CuO$_{4+\delta}$ System, which is simply LCO with added oxygen atoms at interstitial sites. It is generally accepted that the oxygen enters in the middle of the rock-salt layer, the least dense area of the crystal structure. Figure \ref{fig:oint_location} shows possible interstitial positions for the LTO (Bmab) and LTT (P4$_2$/ncm) phase, taken from a model proposed for the La$_2$NiO$_{4+\delta}$ system \cite{Tranquada1994}. Simulations in the defect phases are denoted by subscript `defect'. We ignore the HTT phase for molecular dynamics since the symmetry is broken and the preliminary geometry optimization would tend to tilt the octahedra similar to the LTT phase. To represent a reasonable doping level, we consider the addition of a single interstitial. It is generally accepted that the oxidation state is, at least approximately, O$^{2-}$, such that each dopant adds two holes. In our $2 \times 2 \times 1$ supercell with 16 formula units, this corresponds to a doping of $n_\text{h} = \frac{2}{16} = 0.125$.
 
 \begin{figure}
     \centering
@@ -51,7 +51,7 @@ We start by considering the La$_2$CuO$_{4+\delta}$ System, which is simply LCO w
     \label{fig:oint_location}
 \end{figure}
 
-To see how the symmetry is broken, Table \ref{tab:oint_locations} shows the resulting space groups when inserting an interstitial into various starting symmetries. As expected, the symmetry is lowered substantially, especially if the $z$-component of the interstitial is different from $\frac{1}{4}$. Diffraction studies point to the interstitial being placed at either $\left(\frac{1}{4}  \frac{1}{4} z \right)$ with $z$ close to $\frac{1}{4}$ or on a general $(xyz)$ position \cite{Rial1997}. When modelling this position in diffraction studies, it is possible to keep the symmetry by assigning an occupation factor to the interstitial and thus keeping the symmetry of the parent phase. Since we are not afforded that luxury, defects will naturally break the symmetry of our parent phase. Table \ref{tab:oint_locations} should thus not be seen as proposed models for the various phases, but rather an illustration of our inability to model partial occupancies.
+To see how the symmetry is broken, Table \ref{tab:oint_locations} shows the resulting space groups when inserting an interstitial into various starting symmetries. As expected, the symmetry is lowered substantially, especially if the $z$-component of the interstitial is different from $\frac{1}{4}$. While the symmetry isn't reduced to P1, it is difficult to imagine that any of the space groups in Table \ref{tab:oint_locations} could be used solve the observed superstructures in LCO+O (see section XX). Diffraction studies point to the interstitial being placed at either $\left(\frac{1}{4}  \frac{1}{4} z \right)$ with $z$ close to $\frac{1}{4}$ or on a general $(xyz)$ position \cite{Rial1997}. When modelling this position in diffraction studies, it is possible to keep the parent symmetry by assigning an occupation factor to the interstitial and thus keeping the symmetry of the parent phase. Since we are not afforded that luxury when building structures for molecular dynamics, defects will naturally break the symmetry of our parent phase. Table \ref{tab:oint_locations} should thus not be seen as proposed models, but rather as an illustration of our inability to model partial occupancies.
 
 \begin{table}
 	\centering
@@ -69,7 +69,7 @@ We performed high-precision geometry optimizations on these LCO+O defect structu
 \begin{figure}
 	\centering
 	\includegraphics[width=0.6\textwidth]{fig/md/lcoo_eos.pdf}
-	\caption[LCOO EOS]{Equation-of-state fit to LCO starting from the LTT phase with an added interstitial oxygen. The broken vertical line is the minimum of the fit, showing that our starting volume was reasonable. Each minimization was performed without symmetry while relaxing both ionic positions and the cell shape. The orthorhombic strain due to the cell shape change was below $\eta = 0.0004$ for all volumes, suggesting that the tetragonal crystal structure is a stable minimum.}
+	\caption[LCOO EOS]{Equation-of-state fit to LCO+O starting from the LTT phase with an added interstitial oxygen. The broken vertical line is the minimum of the fit, showing that our starting volume was reasonable. Each minimization was performed without symmetry while relaxing both ionic positions and the cell shape. The orthorhombic strain due to the cell shape change was below $\eta = 0.0004$ for all volumes, suggesting that the tetragonal crystal shape is a stable minimum.}
 	\label{fig:lcoo_eos}
 \end{figure}
 
@@ -113,15 +113,15 @@ Table \ref{tab:oint_lsco_en} shows the same optimizations performed on Sr-doped 
 \end{table}
 
 \section{Benchmarking}
-Similar to our phonon calculations in the previous chapter, molecular dynamics simulations are typically benchmarked in various ways. Depending on the type of ensemble and thermostat, either the temperature or total energy is expected to be conserved. It is, however, possible for numerical noise to cause these quantities to drift. In our case the Nos\'{e} thermostat controls temperature through velocities, so it can be useful to plot the temperature as a function of simulation time to see if the fluctuations are reasonable. The temperature can be calculated from the MD trajectory by first computing the velocities through the Verlet algorithm (see XX) and then evaluating
+Similar to our phonon calculations in the previous chapter, molecular dynamics simulations are typically benchmarked in various ways. Depending on the type of ensemble and thermostat, either the temperature or total energy is expected to be conserved. It is, however, possible for numerical noise to cause these quantities to drift. In our case the Nos\'{e} thermostat controls temperature through velocities, so it can be useful to plot the temperature as a function of simulation time to see if the fluctuations are reasonable. The temperature can be calculated from the MD trajectory by first computing the velocities through the Verlet algorithm (VASP does not save the velocities) and then evaluating
 %
 \[ T = \frac{1}{3 k_\text{B} (N_\text{ions}-1)} \sum_j M_j |\bm{v}_j|^2 \, , \]
 %
-where $N_\text{ions}$ is the number of atoms, $M_j$ is the mass of atom $n$ and $\bm{v}_j$ is the velocity of atom $j$. When considering the instantaneous temperature in this way, we expect the mean-squared temperature fluctuations to be \cite{Hickman2016}
+where $N_\text{ions}$ is the number of atoms, $M_j$ is the mass of atom $n$ and $\bm{v}_j$ is the velocity of atom $j$. We divide by $(N_\text{ions} - 1)$ rather than $N_\text{ions}$, since temperature is defined with respect to degrees of freedom and we can arbitrarily redefine our coordinate system with respect to a particular atom. When considering the instantaneous temperature in this way, we expect the mean-squared temperature fluctuations to be \cite{Hickman2016}
 %
 \[ \left\langle \left( \Delta T^2 \right) \right\rangle = \frac{2T_0^2}{3N_\text{ions}} \, . \]
 %
-Four our simulation with $N_\text{ions} = 112$ at $T = \SI{300}{\kelvin}$ we thus expect temperatures fluctuations of $\pm \SI{23.15}{\kelvin}$. Figure \ref{fig:stitch} is a summary of benchmarks performed on the LCO in the LTO phase with no dopant ions or defects. Simulations were performed with two different time steps and the difference in temperature fluctuations and the resulting phonon DOS was recorded. In terms of temperature fluctuations, there is little effect of going from 1 to 2 fs time steps, but there are slight modifications to the DOS, especially in the region around 30 meV. While this may be seen as problematic, it is important to realize that we are probing a relatively small number of steps, and it is unlikely that our simulation is completely ergodic. In other words, we may be probing a different area of phase space in the two simulations. It is unlikely that the time step resolution itself is causing the effects on DOS, since an energy of \SI{30}{\milli\eV} = \SI{7.3}{\tera\hertz} is probed by simulation times of roughly \SI{137}{\femto\second}. While higher precision is always desirable, we stick with a time step of \SI{2}{\femto\second} in order to be able to probe dynamics for longer time scales in more systems.
+Four our simulation with $N_\text{ions} = 112$ at $T_0 = \SI{300}{\kelvin}$ we thus expect temperatures fluctuations of $\pm \SI{23.15}{\kelvin}$. Figure \ref{fig:stitch} is a summary of benchmarks performed on the LCO in the LTO phase with no dopant ions or defects. Simulations were performed with two different time steps and the difference in temperature fluctuations and the resulting phonon DOS was recorded. In terms of temperature fluctuations, there is little effect of going from 1 to 2 fs time steps, but there are slight modifications to the DOS, especially in the region around 30 meV. While this may be seen as problematic, it is important to realize that we are probing a relatively small number of steps, and it is unlikely that our simulation is completely ergodic. In other words, we may be probing a different area of phase space in the two simulations. It is unlikely that the time step resolution itself is causing the effects on DOS, since an energy of \SI{30}{\milli\eV} = \SI{7.3}{\tera\hertz} is probed by simulation times of roughly \SI{137}{\femto\second}. While higher precision is always desirable, we stick with a time step of \SI{2}{\femto\second} in order to be able to probe dynamics for longer time scales in more systems.
 
 \begin{figure}
 	\centering
@@ -131,26 +131,26 @@ Four our simulation with $N_\text{ions} = 112$ at $T = \SI{300}{\kelvin}$ we thu
 \end{figure}
 
 \section{DOS and PDF}
-Molecular dynamics simulations have been performed with 7 starting configurations based on geometry optimizations in Table \ref{tab:oint_lcoo_en} and \ref{tab:oint_lsco_en} as well as references without dopant ions. Since the full matrix of combinations now includes 3 structural phases, 2 dopant ions, 2 electronic phases and 2 `defect' phases, the total number of desired is 20. In order to limit the scope and focus our computational resources, we chose to focus on the LTO phase and end up with the following simulations:
+Molecular dynamics simulations have been performed with 7 starting configurations based on geometry optimizations in Table \ref{tab:oint_lcoo_en} and \ref{tab:oint_lsco_en} as well as references without dopant ions. Since the full matrix of combinations now includes 3 structural phases, 2 dopant ions, 2 electronic phases and 2 `defect' phases, the total number of desired is 20. In order to limit the scope and focus computational resources, we chose to focus on the LTO phase and end up with the following simulations:
 
 \begin{enumerate}
 	\item LTT: LTT in AFM phase.
 	\item LTO: LTO in AFM phase.
-	\item LTO+Sr LTO in AFM phase with added Sr dopants.
-	\item LTO+O LTO in AFM phase with added O dopant.
+	\item LTO+Sr: LTO in AFM phase with added Sr dopants.
+	\item LTO+O: LTO in AFM phase with added O dopant.
 	\item LTOm: LTO in metallic phase.
-	\item LTOm+Sr LTO in metallic phase with added Sr dopants.
+	\item LTOm+Sr: LTO in metallic phase with added Sr dopants.
 	\item LTOm+O: LTO in metallic phase with added O dopant
 \end{enumerate}
 
 Our primary observables when comparing to experiment is the phonon density of states and pair-density-function. We start by considering the DOS of all simulations, calculated with the method described in chapter \ref{ch:method} and the scripts developed in appendix \ref{app:software}. Figure \ref{fig:lto_md_defect_comparison} shows the neutron-weighted phonon DOS for all 7 simulations. While the overall shape of the phonon DOS is mostly unchanged, there are some subtleties that we might consider for further analysis. For the magnetic simulations, we see a similar modification of modes at $\approx \SI{30}{\milli\eV}$ when comparing the LTO and LTT phases. Interestingly, the sharp dip in DOS at \SI{30}{\milli\eV} is seen in LTO+O as well. In fact, the LTT and LTO+O phases appear to share more qualitative features with each other compared to the parent LTO phase. This is consistent with the initial geometry optimization of LCO+O in table \ref{tab:oint_lcoo_en} moving towards a LTT-like tilt pattern. LTO+Sr, on the other hand, mostly seem to broaden features rather than directly modify then. 
 
-For the metallic simulations, we see similar trends but in a much more smeared out fashion, most likely due to reduced accuracy of these simulations due to the fermi surface smearing (see figure \ref{fig:sim_bench_para} in section \ref{sec:sim_benchmark}). Similar to the observations in chapter \ref{ch:simulation}, the main modification of the phonon DOS compared to the AFM simulations is related to the high energy modes.
+For the metallic simulations, we see similar trends but in a much more smeared out fashion, possibly due to reduced accuracy of these simulations due to the fermi surface smearing (see figure \ref{fig:sim_bench_para} in section \ref{sec:sim_benchmark}). Similar to the observations in chapter \ref{ch:simulation}, the main modification of the phonon DOS compared to the AFM simulations is related to the high energy modes.
 
 \begin{figure}
 	\centering
 	\includegraphics[width=\textwidth]{fig/md/lto_defect_comparison.png}
-	\caption[LTO MD DOS: Defect comparison]{LTO MD DOS: Defect comparison. $\sigma=\SI{0.5}{\milli\eV}$ (\SI{1.18}{\milli\eV} FWHM)}
+	\caption[LTO MD DOS: Defect comparison]{Neutron-weighed density-of-states for all molecular dynamics simulations performed in this chapter. The filled grey area is the total DOS and the lines are the partial atomic DOS. The initial conditions for the MD simulation is annotated on each plot according to the notation outlined in the beginning of this chapter. The density-of-states was obtained through the power spectrum of the velocity autocorrelation function (see section XX). The power spectrum was smoothed by a Gaussian kernel with width $\sigma=\SI{0.5}{\milli\eV}$ (\SI{1.18}{\milli\eV} FWHM).}
 	\label{fig:lto_md_defect_comparison}
 \end{figure}
 
@@ -159,27 +159,29 @@ In order to compare more directly these observations, Figure \ref{fig:dos_pdf} s
 \begin{figure}
 	\centering
 	\includegraphics[width=\textwidth]{fig/md/lto_ltt_ltoo_comparison.pdf}
-	\caption[MD: DOS and PDF]{MD: DOS and PDF}
+	\caption[MD: DOS and PDF]{\textbf{Top}: Total DOS for selected MD simulations. In general, differences are subtle, but we see some surprising similarities between the LTO+O and LTT simulation, indicating LTT-like behaviour due to the interstitial (see text). \textbf{Bottom}: PDF of the same simulations, showing almost identical spectra for the 3 simulations. At roughly \SI{5.2}{\angstrom} there is a small modification where, once again, LTO+O and LTT simulations show similarities.\todo[inline]{remove black vertical line of top plot}}
 	\label{fig:dos_pdf}
 \end{figure}
 
 \section{Microscopic analysis}
-In addition to observables for comparison with experiment, the point of molecular dynamics simulations is often to relate microscopic phenomena to these observables. For this reason, we will try to extract relevant information from the simulation trajectory in order to understand what is causing the changes in experimental observables. In the cuprates, there is much experimental evidence of the fact that Cu-O distances and distributions are important for superconductivity (see section XX and references \cite{Bozin2000, Peng2017, Ivashko2019}). Inspired by these results, Figure \ref{fig:md_distances} show the distribution of Cu-O$_\text{equatorial}$ and Cu-O$_\text{apical}$ distances for selected simulations. In general, they follow a normal distribution showing that the harmonic approximation works well for our system\todo{is this a good arugment?}, with the notable exception of the apical oxygen distance in LTO+O. Table \ref{tab:md_cu_o_distances} summarizes these distances for all of the performed simulations.  
+In addition to observables for comparison with experiment, the purpose of molecular dynamics simulations is to relate microscopic phenomena to these observables. For this reason, we will try to extract relevant information from the simulation trajectory in order to understand what is causing the changes in the phonon DOS and PDF. In the cuprates, there is much experimental evidence of the fact that Cu-O distances and distributions are important for superconductivity (see section XX and references \cite{Bozin2000, Peng2017, Ivashko2019}). Inspired by these results, Figure \ref{fig:md_distances} show the distribution of Cu-O$_\text{equatorial}$ and Cu-O$_\text{apical}$ distances for selected simulations. In general, they follow a normal distribution showing that the harmonic approximation works well for our system, with the notable exception of the apical oxygen distance in LTO+O. 
 
 \begin{figure}
 	\centering
 	\includegraphics[width=\textwidth]{fig/md/dist_hist.pdf}
-	\caption[MD: distance histograms]{MD: distance histograms}
+	\caption[MD: distance histograms]{Distance histograms of Cu-O distances with respect to the equatorial oxygen (Oeq) and apical oxygen (Oap) in the three simulations we compared in Figure \ref{fig:dos_pdf}. The data was generated by recording all appropriate distances at every time step of the simulation. The $y$-axis is normalized to unity and the broken line is a Gaussian function with expected value and variance calculated from the data.}
 	\label{fig:md_distances}
 \end{figure}
 
+Table \ref{tab:md_cu_o_distances} summarizes these distances for all of the performed simulations. As expected from the almost identical PDF across simulations, the mean Cu-O$_\text{equatorial}$ distances does not seem to have any discernible trends, but there is a slight widening of the distributions in the systems containing dopants. In some sense this is expected since we have created different local environments by the introduction of impurity dopants. The same trend can be seen in the Cu-O$_\text{apical}$ distanced, but here we additionally have an shortening of the mean distance due to the introduction of oxygen (notice also that this shortening is identical to the LTT distance in magnetic case). For Sr-doping there is an elongation in the magnetic simulation but a shortening in the metallic simulation. It is, however, important to note that these differences are extremely subtle and may just be due to numerical peculiarities\todo{can we estimate this?}.
+
 \begin{table}
 	\centering
-	\caption{MD: Cu-O Distances}
+	\caption{Cu-O Distances distance statistics for all MD simulations performed in this chapter. Columns 2 and 3 show the mean distance and standard deviation for the Cu-O equatorial distance. Column 3 is the $R^2$ value of a linear regression assuming a normal distribution. Columns 4-6 show the same values for the Cu-O apical distance.}
 	\label{tab:md_cu_o_distances}
 	\begin{tabular}{lllllll}
 		\toprule
-			name &   $|\text{O}_\text{eq}|$ [\AA]  & $\sigma$ (O$_\text{eq}$) [\AA] &  $R^2$ (O$_\text{eq}$) & $|\text{O}_\text{ap}|$ [\AA] & $\sigma$ (O$_\text{ap}$) [\AA] &  $R^2$ (O$_\text{ap}$) \\
+			name &   $\langle \text{O}_\text{eq} \rangle $ [\AA]  & $\sigma$ (O$_\text{eq}$) [\AA] &  $R^2$ (O$_\text{eq}$) & $ \langle \text{O}_\text{ap} \rangle$ [\AA] & $\sigma$ (O$_\text{ap}$) [\AA] &  $R^2$ (O$_\text{ap}$) \\
 		\midrule
 			 LTO &  1.898 &  0.0455 &  0.9972 &  2.421 &   0.113 &  0.9989 \\
 		   LTO+O &  1.902 &  0.0464 &  0.9972 &  2.406 &   0.127 &  0.9608 \\
@@ -192,40 +194,44 @@ In addition to observables for comparison with experiment, the point of molecula
 		\end{tabular}
 \end{table}
 
-Using the definitions of octahedral tilts outlined in section \ref{sec:md_tilts}, Figure \ref{fig:md_q1_q2_all} shows a histogram of $(Q_1, Q_2)$ tilts from all of our performed MD simulations. Similar to observations from DOS and PDF, the tilt patterns of LTO+O are LTT-like, while the Sr-doped and parent compounds have tilts distributed around $(Q_1, Q_2) = (0,5)$ which is the equilibrium LTO structure.
+Using the definitions of octahedral tilts described in section \ref{sec:md_tilts}, Figure \ref{fig:md_q1_q2_all} shows a histogram of $(Q_1, Q_2)$ tilts from all of our performed MD simulations on a logarithmic scale. Similar to observations from DOS and PDF, the tilt patterns of LTO+O are LTT-like, while the Sr-doped and parent compounds have tilts distributed around $(Q_1, Q_2) = (0,5)$ which is the equilibrium LTO structure. We also notice that the LTT-like simulations (LTT, LTO+O, LTOm+O) are able to transition between the  symmetrically equivalent tilt patterns, while the LTO-like simulations are `stuck' in the initial configuration. This is an indication that LTT-like tilts have distinct dynamics compared to LTO-like tilts.
 
 \begin{figure}
 	\centering
 	\includegraphics[width=\textwidth]{fig/md/Q1_Q2_all.png}
-	\caption[MD Q1 Q2 All sims]{MD Q1 Q2 All sims}
+	\caption[MD Q1 Q2 All sims]{Tilt histograms of all performed molecular dynamics simulations. Plots are generated by obtaining the tilt as seen from apical oxygens and pairs of equatorial oxygens (as described in section \ref{sec:md_tilts}) for each time step and then plotting a 2D histogram of the resulting data on a logarithmic scale. As discussed in the text, we distinguish between LTT-like tilts sitting on the diagonals of this figure and LTO-like tilts sitting along the main axes. The same symmetry operations are applied at each time step, such that transitions between symmetrically equivalent configurations is visible in this plot.}
 	\label{fig:md_q1_q2_all}
 \end{figure}
 
-Finally, figures \ref{fig:md_diffusion1} and \ref{fig:md_diffusion2} investigates the dynamics of the placed interstitial in LTO+O. 
+Finally, figures \ref{fig:md_diffusion1} investigates the dynamics of the placed interstitial in LTO+O by following the in-plane location of the interstitial by plotting a histogram of its location as well as a line depicting its time evolution at equally spaced points in time. Additionally, we plot the $c$-axis evolution with a 1d histogram. For contrast, Figure \ref{fig:md_diffusion3} shows the same plots for a `normal' apical oxygen. Finally, Figure \ref{fig:md_diffusion2} shows the distribution of the apical oxygen near the interstitial, revealing a very similar distribution. These figures together show that the interstitial forms a `binary system' with the closest apical giving rise to a very localized effect. At $T=\SI{300}{\kelvin}$ we thus see no indication of diffusion. In some sense this is not surprising since diffusion is likely slow and not accessible within our relatively short \SI{40}{\pico\second} simulation times.
 
 \begin{figure}
 	\centering
 	\includegraphics[width=\textwidth]{fig/md/diffusion1.pdf}
-	\caption[MD Oint Diffusion Oi]{Distribution of the interstitial oxygen in LTO+O. \textbf{(A)}: In-plane distribution of the interstital. Circles denote apical oxygens `sticking up', while crosses denote apical oxygen `hanging down' (similar to Figure \ref{fig:oint_location}). \textbf{(B)}: Zoomed-in version of \textbf{(A)} with the line marking the time-evolution of the interstitial sampled at isochronal points. \textbf{C}: $c$-coordinate distribution of the interstitial with the initial position marked.}
+	\caption[MD Oint Diffusion Oi]{Distribution of the interstitial oxygen in LTO+O. \textbf{(A)}: In-plane distribution of the interstitial. Circles denote apical oxygens `sticking up', while crosses denote apical oxygen `hanging down' (similar to Figure \ref{fig:oint_location}). \textbf{(B)}: Zoomed-in version of \textbf{(A)} with the line marking the time-evolution of the interstitial sampled at isochronal points. \textbf{C}: $c$-coordinate distribution of the interstitial with the initial position marked.}
 	\label{fig:md_diffusion1}
 \end{figure}
 
 \begin{figure}
 	\centering
+	\includegraphics[width=\textwidth]{fig/md/diffusion3.pdf}
+	\caption[MD Oint Diffusion Oap 2]{Distribution of a normal apical oxygen in LTO+O. \textbf{(A)}: In-plane distribution of the apical. Circles denote apical oxygens `sticking up', while crosses denote apical oxygen `hanging down' (similar to Figure \ref{fig:oint_location}). \textbf{(B)}: Zoomed-in version of \textbf{(A)} with the line marking the time-evolution of the interstitial sampled at isochronal points. \textbf{C}: $c$-coordinate distribution of the apical.}
+	\label{fig:md_diffusion3}
+\end{figure}
+
+\begin{figure}
+	\centering
 	\includegraphics[width=\textwidth]{fig/md/diffusion2.pdf}
-	\caption[MD Oint Diffusion Oap 1]{Distribution of a normal apical oxygen in LTO+O. \textbf{(A)}: In-plane distribution of the apical. Circles denote apical oxygens `sticking up', while crosses denote apical oxygen `hanging down' (similar to Figure \ref{fig:oint_location}). \textbf{(B)}: Zoomed-in version of \textbf{(A)} with the line marking the time-evolution of the interstitial sampled at isochronal points. \textbf{C}: $c$-coordinate distribution of the apical.}
+	\caption[MD Oint Diffusion Oap 1]{Distribution of am apical oxygen in LTO+O near the interstitial. \textbf{(A)}: In-plane distribution of the apical. Circles denote apical oxygens `sticking up', while crosses denote apical oxygen `hanging down' (similar to Figure \ref{fig:oint_location}). \textbf{(B)}: Zoomed-in version of \textbf{(A)} with the line marking the time-evolution of the interstitial sampled at isochronal points. \textbf{C}: $c$-coordinate distribution of the apical.}
 	\label{fig:md_diffusion2}
 \end{figure}
 
-% \begin{figure}
-% 	\centering
-% 	\includegraphics[width=\textwidth]{fig/md/diffusion3.pdf}
-% 	\caption[MD Oint Diffusion Oap 2]{MD Oint Diffusion Oap 2}
-% 	\label{fig:md_diffusion3}
-% \end{figure}
-
 \section{Summary}
-Figure \ref{fig:md_phonopy_comparison} shows a comparison of phonon DOS as calculated from the frozen phonons method and the one obtained from molecular dynamics.
+The main take-home message from chapter is the fact that interstitials seem to have a very subtle effect on structure but a more significant effect on dynamics. In particular, an observable such as PDF will se barely any difference between our simulations but high-quality DOS measurements should be able to see subtle differences due to dopants.
+
+If we can obtain a reasonable validation of these simulations, the microscopic analysis reveals very clearly that oxygen interstitial phases move towards LTT-like tilt dynamics. Since the average structure of LCO+O at accessible temperatures is LTO, a possible explanation is that this tendency to LTT-like tilts can result in the observed superstructures (and/or staging) if we had access to bigger simulation boxes and longer simulation times. It might be valuable to examine this more closely with real-space methods such as reverse monte-carlo (RMC) or simply performing classical MD based on the results obtained in this chapter.
+
+Before moving on to experimental comparisons, Figure \ref{fig:md_phonopy_comparison} shows a comparison of phonon DOS as calculated from the frozen phonons method and the one obtained from molecular dynamics. While there is a definite distinction between the spectra, it is important to realize that they are obtained by very different methods, while being based on the same computational background. With this in mind, Figure \ref{fig:md_phonopy_comparison} is `good enough' and can, at least qualitatively, be used to identify phonon modes (eigenvectors) when we only have access to the DOS.
 
 \begin{figure}
 	\centering

@@ -60,7 +60,7 @@ Finally, there is a large number of computational parameters that can be tweaked
 	\item \texttt{ISYM}: Controls how VASP deals with space group symmetry. 
 \end{itemize}
 
-\noindent Some examples of VASP input files can be found in appendix \ref{app:vasp}. The take-home message here is that phonon calculations generally needs increased precision with respect to the recommended default values. When one is mainly concerned with the electronic band structure the dominant energies are typically on the order of eV, where typical phonon energies are on the order of meV, 3 orders of magnitude smaller. In addition, forces are evaluated as derivatives of the total energy (per the Hellmann-Feynmann Theorem, see section \ref{sec:forceDFT}) so numerical noise is amplified\todo{This seems Intuitively true, but is it true???}. For molecular dynamics this precision is less crucial since the many time steps will average out this numerical noise.
+\noindent Some examples of VASP input files can be found in appendix \ref{app:vasp}. The take-home message here is that phonon calculations generally needs increased precision with respect to the recommended default values. When one is mainly concerned with the electronic band structure the dominant energies are typically on the order of eV, where typical phonon energies are on the order of meV, 3 orders of magnitude smaller. In addition, forces are evaluated as derivatives of the total energy (per the Hellmann-Feynmann Theorem, see section \ref{sec:forceDFT}) so numerical noise is amplified. For molecular dynamics this precision is less crucial since the many time steps will average out this numerical noise.
 
 \subsection{Functional and Energy Cut-off}
 As we discussed in Section \ref{sec:dft}, a large number of functionals have been developed for DFT calculations. At the GGA level of theory 24 functionals are available in VASP and choosing one can seem like an daunting task at first glance. It is, however, important to realize that most functionals have been created to treat a specific problem. This is an expression of the fact that, despite our best efforts, no completely transferrable functional exists. With that in mind, functionals with high transferability do exist and the default PBE functional in VASP has been used to describe a wide variety of systems, emphasized by the 40000+ citations of the original paper \cite{Perdew1996}. 
@@ -204,7 +204,7 @@ All calculations in this chapter is performed on La$_2$CuO$_4$ in the convention
 \section{Benchmarking}\label{sec:sim_benchmark}
 When performing DFT calculations in VASP there are a few parameters that have significant impact on the precision of the calculation. Increasing the precision also results in significantly longer computation time, so it is important to find a compromise. 
 
-Figure \ref{fig:sim_bench_afm} shows a benchmark of AFM LCO with respect to the $k$-point mesh and smearing width $\sigma$. Since there are no states at the Fermi level, the smearing width converges rather quickly, and we can safely use a value of $\sigma = \SI{0.1}{\eV}$. The $k$-point density also converges rather quickly, and we achieve a precision of \SI{0.1}{\milli\eV} using a fairly coarse MP-grid of $8\times 8 \times 4$. In AFM LCO we also checked the effect on electronic structure due to the on-site repulsion $U$. The result is shown in Table \ref{tab:ldau} and the values of $U=\SI{8}{\eV}$, $J=\SI{0.8}{\eV}$ are chosen based on the proximity to experimental evidence \cite{Vaknin1987, Uchida1991} and previous theoretical studies of the La$_2$CuO$_4$ system, where the values of $U$ and $J$ where found self-consistently \cite{Anisimov2004,Anisimov1991}.
+Figure \ref{fig:sim_bench_afm} shows a benchmark of AFM LCO with respect to the $k$-point mesh and smearing width $\sigma$. Since there are no states at the Fermi level, the smearing width converges rather quickly, and we can safely use a value of $\sigma = \SI{0.1}{\eV}$. The $k$-point density also converges rather quickly, and we achieve a precision of \SI{0.1}{\milli\eV} using a fairly coarse MP-grid of $8\times 8 \times 4$ (7168 $k$-points per reciprocal atom). In AFM LCO we also checked the effect on electronic structure due to the on-site repulsion $U$. The result is shown in Table \ref{tab:ldau} and the values of $U=\SI{8}{\eV}$, $J=\SI{0.8}{\eV}$ are chosen based on the proximity to experimental evidence \cite{Vaknin1987, Uchida1991} and previous theoretical studies of the La$_2$CuO$_4$ system, where the values of $U$ and $J$ where found self-consistently \cite{Anisimov2004,Anisimov1991}.
 
 \begin{figure}
     \centering
@@ -215,7 +215,7 @@ Figure \ref{fig:sim_bench_afm} shows a benchmark of AFM LCO with respect to the 
 
 \begin{table}[b]
 	\centering
-	\caption[LDA+U Benchmarking]{LDA+U Benchmarking of the parameters $U$ and $J$ calculated with \texttt{LDAUTYPE=4} in the HTT phase of La$_2$CuO$_4$. Experimentally the Cu moment is $(0.48 \pm 0.15) \, \mu_\text{B}$ \cite{Vaknin1987} and the optical gap is $\approx \SI{2}{\eV}$ \cite{Uchida1991}.}
+	\caption[LDA+U Benchmarking]{LDA+U Benchmarking of the parameters $U$ and $J$ calculated with \texttt{LDAUTYPE=4} in the HTT phase of La$_2$CuO$_4$. Experimentally the Cu moment is $(0.48 \pm 0.15) \, \mu_\text{B}$ \cite{Vaknin1987} and the optical gap is $\approx \SI{2}{\eV}$ \cite{Uchida1991}. As a reasonable compromise we chose $U=\SI{8}{\eV}$ and $J=\SI{0.8}{\eV}$, a set of values also used in a previous study of the same system \cite{Anisimov2004}.}
 	\label{tab:ldau}
 	\begin{tabular}{@{}llll@{}}
 		\toprule
@@ -228,7 +228,7 @@ Figure \ref{fig:sim_bench_afm} shows a benchmark of AFM LCO with respect to the 
 	\end{tabular}
 \end{table}
 
-Due to partial occupancies, metallic systems are generally more sensitive to $k$-point density and smearing width/method. For this reason, we performed a more comprehensive set of benchmarks as shown in Figure \ref{fig:sim_bench_para}. While the numerical fluctuations are within a few meV, the precision on total energy is decreased by a few orders of magnitude.
+Due to partial occupancies, metallic systems are generally more sensitive to $k$-point density and smearing width/method. For this reason, we performed a more comprehensive set of benchmarks as shown in Figure \ref{fig:sim_bench_para}. While the numerical fluctuations are within a few meV, the precision on total energy is decreased by a few orders of magnitude. Based on these results, we evaluate the metallic simulations at twice the $k$-point density with a mesh of $16 \times 16 \times 8$ (57344 $k$-points per reciprocal atom).
 
 \begin{figure}
     \centering
@@ -384,7 +384,7 @@ A summary of all the geometry optimizations are shown in Table \ref{tab:sim_stru
 \end{table}
 
 \section{Phonons}
-Phonons are calculated using the PhonoPy software using the finite displacement, or frozen phonon, method. Details on the methodology is given in Section \ref{sec:phononpractical}. Phonon calculations were performed on both metallic and AFM LCO in the HTT, LTO and LTT structrual phases. While benchmarking with regards to $k$-points and smearing width $\sigma$ is reasonable, we check the effect of functional choice and energy cut-off \texttt{ENCUT} on phonon bands since these are more susceptible to instabilities in forces. In Figure \ref{fig:pbe_bands}, we show the phonon band structure in the AFM phase with \texttt{ENCUT=520} and \texttt{ENCUT=800}. While the effect of increasing the plane wave cut-off is small, we see immediately that it fixes some unstable modes at $\Gamma$. While we do expect instabilities at the $M$ point in the HTT phase, the results could be improved.
+Phonons are calculated using the Phonopy software using the finite displacement (also known as the direct method or the frozen phonon method). Details on the methodology is given in section \ref{sec:phononpractical}. Phonon calculations were performed on both metallic and AFM LCO in the HTT, LTO and LTT structural phases. We use the same computational parameters as in the preceding sections, but expand to a $2 \times 2 \times 1$ supercell in order to compute phonon energies at finite values of $\bm{q}$. Since the cell is expanded, we reduce the $k$-point mesh to $4 \times 4 \times 4$ for both the metallic and magnetic solutions. While it would be preferable to perform the metallic simulation at a higher $k$-point density, memory requirements became a problem when performing computations on a supercell with P1 symmetry. While we can rely on most of the computational parameters chosen/obtained in the preceding sections, we check the effect of functional choice and energy cut-off (\texttt{ENCUT}) on phonon bands since these are more susceptible to instabilities in forces. In Figure \ref{fig:pbe_bands}, we show the phonon band structure in the AFM phase with \texttt{ENCUT=520} and \texttt{ENCUT=800}. While the effect of increasing the plane wave cut-off is small, we see immediately that it fixes some unstable modes at $\Gamma$. While we do expect instabilities at the $M$ point in the HTT phase, the results could be improved.
 
 \begin{figure}
 	\centering
@@ -393,10 +393,10 @@ Phonons are calculated using the PhonoPy software using the finite displacement,
 	\label{fig:pbe_bands}
 \end{figure}
 
-For this reason, we keep the \SI{800}{\eV} cut-off and perform the same phonon calculation using the PBESol \cite{Csonka2009} functional. This functional has been successful for phonon calculations in other perovskite systems \cite{DaSilva2015}, so it is a likely candidate for improvement. 
+For this reason, we keep the \SI{800}{\eV} cut-off and perform the same phonon calculation using the PBESol \cite{Csonka2009} functional. This functional has been successful for phonon calculations in other perovskite systems with tilt disorder \cite{DaSilva2015}, so it is a likely candidate for improvement. 
 
 \subsection{Band structures}
-Figure \ref{fig:htt_bands} shows phonon band structures in the HTT phase using both AFM and metallic electronic structures. We immediately notice improvements on two fronts. First, the low-energy modes are `more stable' and the low-energy optic modes have been moved up. In addition the unstable modes are localized around $M$ where we expect a structural phase transition. Second, the high-energy bond-strething mode ($\Gamma$-$X$) has increased in energy and is much closer to experimental values. In addition, we reproduce the softening of this mode at $X$ due to doping.
+Figure \ref{fig:htt_bands} shows phonon band structures in the HTT phase using both AFM and metallic electronic structures. We immediately notice improvements on two fronts. First, the low-energy modes are `more stable' and the low-energy optic modes have been moved up. In addition the unstable modes are localized around $M$ where we expect a structural phase transition. Second, the high-energy bond-stretching mode ($\Gamma$-$X$) has increased in energy and is much closer to experimental values. In addition, we reproduce the softening of this mode at $X$ due to doping.
 
 \begin{figure}
 	\centering
@@ -442,7 +442,7 @@ Qualitatively, the main difference between the structural phases is a modificati
 	\item \SI{28.6}{\milli\eV}: A lanthanum mode where the atoms move out of phase along $c$.
 \end{enumerate}
 
-The metallic simulations mainly have the effect of generally pushing phonon energies down and a `smoothing' of high-energy modes. In the HTT phase this is directly linked to the softening of the Cu-O bond-stretching mode at the zone boundary, as discussed in chapter \ref{ch:anomaly}. In addition, the two peaks at \SI{50}{\milli\eV} and \SI{60}{\milli\eV} have weight shifted towards the latter. The mode at \SI{50}{\milli\eV} is a bond-stretching mode of the apical oxygen, while the mode at \SI{60}{\milli\eV} involves vibration of all oxygen-atoms along the $c$ axis, with in-plane and apical oxygen atoms being relatively out of phase.
+The metallic simulations mainly have the effect of generally pushing phonon energies down and a `smoothing' of high-energy modes. Extrapolating from the HTT phase, this is directly linked to the softening of the Cu-O bond-stretching mode at the zone boundary, as will be discussed in chapter \ref{ch:anomaly}. In addition, the two peaks at \SI{50}{\milli\eV} and \SI{60}{\milli\eV} have weight shifted towards the latter. The mode at \SI{50}{\milli\eV} is a bond-stretching mode of the apical oxygen, while the mode at \SI{60}{\milli\eV} involves vibration of all oxygen-atoms along the $c$ axis, with in-plane and apical oxygen atoms being relatively out of phase.
 
 \section{Validation of simulations}\label{sec:sim_validation}
 Since LSCO is such an extensively studied system, there is data available in the literature to compare our band structures. By inspection of the band structure plots in the previous section, it seems like a difficult task to actually separate the bands in a neutron scattering experiment. Luckily, there are a few modes that can be distinguished. Figure \ref{fig:htt_phonons_lit} compares our HTT band phonons band structures along $\Gamma$-$X$ with experimental data from a range of LSCO samples. The highlighted modes is the Cu-O half-breathing mode ($\approx \SI{80}{\milli\eV}$) and the apical oxygen stretching mode ($\approx \SI{60}{\milli\eV}$). We will discuss this mode in detail in Chapter \ref{ch:anomaly}
@@ -450,7 +450,7 @@ Since LSCO is such an extensively studied system, there is data available in the
 \begin{figure}
 	\centering
 	\includegraphics[width=0.7\textwidth]{fig/simulation/htt_phonons_lit.pdf}
-	\caption[phonon bands: comparison with literature]{Comparison of phonon band structures in the HTT structural phase along the $\Gamma$-X path with data from literature. Modes associated with data are highlighted in red.\todo[inline]{references to data + giustino}}
+	\caption[phonon bands: comparison with literature]{Comparison of phonon band structures in the HTT structural phase along the $\Gamma$-X path with data from literature. Data for LSCO 15\% taken from ref. \cite{McQueeney1999}, data for LSCO 20\% and 0\% taken from ref. \cite{Park2014}. Modes associated with data are highlighted in red.}
 	\label{fig:htt_phonons_lit}
 \end{figure}
 

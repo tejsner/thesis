@@ -13,3 +13,5 @@
 main.pdf
 main.xdv
 spellright.dict
+.vscode/
+*.pdn

@@ -10,14 +10,14 @@ Superconductivity was first discovered in 1911 by Kamerlingh Onnes, essentially 
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{fig/intro/onnes.png}
-    \caption{\textbf{Left}: Kammerling Onnes (right) and his chief engineer (left) in their cryogenics lab. \textbf{Right}: Resistivity as a function of temperature in elemental Lead. Both images from \cite{VanDelft2010}.}
+    \caption[SC of elemental lead]{\textbf{Left}: Kammerling Onnes (right) and his chief engineer (left) in their cryogenics lab. \textbf{Right}: Resistivity as a function of temperature in elemental Lead. Both images from \cite{VanDelft2010}.}
     \label{fig:onnes}
 \end{figure}
 
 \begin{figure}
     \centering
     \missingfigure{Meissner effect}
-    \caption{Meissner effect}
+    \caption[Meissner effect]{Meissner effect}
     \label{fig:meissner}
 \end{figure}
 
@@ -57,7 +57,7 @@ With this brief introduction to superconductivity, I will proceed with an introd
 Before we begin, I want to get some of the nomenclature out of the way. As the title of this thesis suggest, I am working on the so-called `high-temperature superconductors'. This definition essentially only concerns itself with the value of the critical temperature (usually above the `BCS-limit' of \SI{30}{\kelvin}), without saying anything about other physical properties. On the other hand Type-I and Type-II, as seen in the previous section, are rigidly defined with respect to their properties as defined through Ginzburg-Landau Theory. Finally, `conventional superconductors' are those that can be microscopically described with BCS theory, while 'unconventional superconductors' cannot. While cuprates are relatively simple crystals, most of them have a variety of names and abbreviations attached to them. Table \ref{tab:cuprates} lists the most important ones along with their critical temperatures and a few other physical properties.
 
 \begin{table}
-    \caption{list of cuprates}
+    \caption[table of cuprates]{list of cuprates}
     \label{tab:cuprates}
     \missingfigure{Table of cuprates, formulae, names, Tc, crystal structure}
 \end{table}
@@ -99,22 +99,78 @@ I emphasize here the very different states of matter at the boundaries of the su
 
 The Pseudogap is a curious phenomena first observed in NMR measurements of YBCO \cite{Alloul1989} and later on in the $c$-axis resistivity \cite{Homes1993} and specific heat \cite{Loram1993}. The name comes from the fact that, by now, it is generally associated with the opening of a gap in the electronic density of states (see below). The difficulty in finding a microscopic origin of the phase transition at the Pseudogap temperature $T^*$ has attracted as much attention as the superconducting transition itself. Many researchers believe that the key to understanding the superconducting transition is directly related to the Pseudogap. One idea is that of `pre-formed pairs', where Cooper pairs start forming at $T^*$, but the macroscopic superconducting state fails to settle between $T^*$ and $T_\text{c}$ due to incoherent fluctuations in the phase of the pairing field ($\psi$ in Ginzburg-Landau theory) \cite{Emery1995, Curty2003}.\todo{maybe remove this last bit, too technical}
 
-The strange metal phase is possibly the least understood part of the cuprate phase diagram \cite{Keimer2015}. A `strange' metal is essentially a phase of matter where the theory of `normal' metals (fermi liquids) breaks down and is a phenomenon seen in a number of correlated electron systems, not just the cuprates. A significant indicator of this behaviour is a linear temperature-dependence of resistivity (see e.g. \cite{Martin1990} for a cuprate example), where a normal fermi liquid varies as $T^2$ at low temperatures. A recent study even suggests that linear-in-$T$ resistivity in the cuprates is a generic property related to a universal scattering rate \cite{Legros2018}.
+The strange metal phase is possibly the least understood part of the cuprate phase diagram \cite{Keimer2015}. A `strange' metal is essentially a phase of matter where the theory of `normal' metals (fermi liquids) breaks down and is a phenomenon seen in a number of correlated electron systems, not just the cuprates. A significant indicator of this behaviour is a linear temperature-dependence of resistivity (see e.g. \cite{Martin1990} for a cuprate example), where a normal fermi liquid varies as $T^2$ at low temperatures. A recent study even suggests that this linear-in-$T$ resistivity in the cuprates is a generic property related to a universal scattering rate \cite{Legros2018}.
 
 By outlining the the phase diagram in this way, I intend to illustrate both the difficulty of solving the cuprate problem and the many experimental methods and theoretical tools necessary to investigate the various features of this complex phase diagram. Until now, apart from crystallographic information, we have mainly considered \emph{macroscopic} behaviour through bulk measurements such as resistivity, specific heat, optical band gap or magnetic susceptibility. We now turn to a brief overview of \emph{microscopic} behaviour, starting with momentum-resolved measurements of the fermi surface.
 
 \subsection{Fermi Surface}
-Angle-Resolved Photoemission Spectroscopy (ARPES) is a method in X-ray spectroscopy that directly probes the electronic band structure of materials. This method has been extremely important in strongly correlated electron systems in general and has a rich history with the cuprates (see the extensive review by \citeauthor{Damascelli2003} \cite{Damascelli2003}, which also serves as a good introduction to the experimental method).
+Angle-Resolved Photoemission Spectroscopy (ARPES) is a method in X-ray spectroscopy that directly probes the electronic band structure of materials. This method has been extremely important in strongly correlated electron systems in general and has a rich history with the cuprates (see the extensive review by \citeauthor{Damascelli2003} \cite{Damascelli2003}, which also serves as a good introduction to the experimental method). As this thesis primarily concerns itself with neutron scattering as an experimental technique, technical details will not be reviewed here but can be found in literature (\cite{Osterwalder2014} is a great introduction).
+
+ARPES experiments are extremely surface sensitive experiments with a typical penetration depth of a few lattice spacings, and thus requires samples that cleave naturally at the interface one wants to probe. While cuprates have a layered structure, the materials themselves are also quite brittle, so the in-situ cleaving procedure can be challenging. However, since superconductivity is generally associated with a gap at the fermi level due to Cooper pair formation, this technique is extremely valuable for our understanding of unconventional superconductivity.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{fig/intro/arpes_fermisurface.png}
+    \caption[ARPES fermi surface schematic]{ARPES fermi surface schematic DFT from \cite{Matt2018}, metal schematic from \cite{Damascelli2003}, Gap structure from \cite{Yoshida2011}}
+    \label{fig:intro_arpes}
+\end{figure}
+
+Figure \ref{fig:intro_arpes}A and figure \ref{fig:intro_arpes}B shows our `reference' Fermi surface as calculated from Density Functional Theory (more on this in chapter \ref{ch:method}), representing the overdoped part of the phase diagram. Here we see that the conduction band is made up of electrons from the $d_{x^2-y^2}$ orbital that cross the fermi level halfway towards the antiferromagnetic wave vector $(\pi,\pi)$. This crossing defines the so-called `fermi arcs' shown in figure \ref{fig:intro_arpes}B,. As we move towards the optimally doped or underdoped part of the phase diagram, the fermi arcs are broken up as shown in figure \ref{fig:intro_arpes}C, revealing both the superconducting gap $\Delta_0$ and the pseudogap $\Delta^*$. These gaps have been identified and distinguished in experiments on Bi2212 as shown in figure \ref{fig:intro_arpes_feng}.
+
+\begin{figure}[]
+    \centering
+    \includegraphics[width=0.7\textwidth]{fig/intro/arpes_feng.png}
+    \caption[ARPES gaps data]{ARPES gaps data from \cite{Feng2002}}
+    \label{fig:intro_arpes_feng}
+\end{figure}
+
+The structure of this superconducting gap ($\Delta_0$) reveals certain symmetries of which, in turn, reveals the `pairing symmetry' of the cooper pairs (see \cite{Tsuei2000} for a review) which is related to their total spin and orbital angular momentum. These symmetries are what gives rise to the naming scheme taken from electron orbitals, where $s$-wave superconductors have an isotropic gap and $d$-wave superconductors have a gap with the functional form $\Delta^* = | \cos k_x - \cos k_y | / 2$, where $(k_x, k_y)$ are wave vectors along the fermi arcs (see $\Delta_0$ in figure \ref{fig:intro_arpes}C). Other symmetries have also been found, such as $p$-wave in Sr$_2$RuO$_4$ \cite{Mackenzie2003} and $f$-wave in UPt$_3$ \cite{Joynt2002}.
+
+These observations of the electronic band structure and fermi surface thus tells us a lot about the nature of the superconducting pairing, it does not directly give us a \emph{mechanism} for the pairing similar to how BCS theory and the isotope effect gave us cooper pairs due to phonons. While theoreticians have been working tirelessly on constructing models that can explain all these behaviours, no consensus have been reached at this point. For this reason, some experimentalists are looking at microscopic correlations in order to uncover what the atoms and electrons are `doing' at the various phase transitions summarized in figure \ref{fig:cuprate_phase_keimer}.
 
 \subsection{Microscopic correlations}
-The primary method for investigations in this thesis is inelastic neutron scattering (INS), which will be covered extensively in chapter \ref{ch:method}. For now, we just briefly state some of the things that can be measured by this and related methods.
+When any type of phase transition happens in a material it, by definition, must be caused by a microscopic phenomenon. Any satisfactory theory in condensed matter physics should be able to explain macroscopic behaviour starting from the constituent parts and experiment that can probe microscopic behaviour are often essential. Sometimes, as with the isotope effect in conventional superconductors, we can infer the microscopic this microscopic behaviour in indirect ways, but often it is necessary to probe the atomic length scales directly.
 
-\section{Lanthanum Based Cuprates}\label{sec:lsco}
-In this section, we look more closely at the Lanthanum based cuprates. These are variants of the material discovered by Bednorz and M\"uller all based on the La$_2$CuO$_4$ parent compound (leftmost compound on figure \ref{fig:cuprate_family_structures}). Sometimes known as `La214' or with specific acronyms depending on the dopant species, these materials are single-layer cuprates with a relatively simple crystal structure and a maximum critical temperature $T_\text{c} \approx \SI{40}{\kelvin}$.
+The microscopic probe used in this thesis is neutron scattering, which is used to infer structure and dynamics through a scattering process between a beam of neutrons and a sample. Technical details of the method will be covered in chapter \ref{ch:method}, but for now we briefly state some of the important results obtained from neutron scattering.
+
+As mentioned earlier, the undoped cuprates are antiferromagnetic insulators. While the odd number of electrons in the system usually results in metallic behaviour, the localized shape of the $d$ orbitals results in static magnetism due to an exchange interaction $J$ and the physics are reasonably well-described within linear spin wave theory \cite{Headings2010}.
+
+As one moves to finite values of hole doping, this antiferromagnetic order is interrupted and some electrons can start to propagate through the material. A common analogy is that of magnetic interactions causing a traffic jam of electrons that is then relieved as one moves from left to right in the phase diagram (figure \ref{fig:cuprate_phase_keimer}). A real-space visualization of this mechanism is shown in figure \ref{fig:electron_traffic_jam}. It turns out that this gradual destruction of magnetic order happens in a peculiar way where the magnetism becomes incommensurate with an incommensurability $\delta$ that is linear in doping as shown in figure \ref{fig:yamada_plot}A.
+
+\begin{figure}
+    \centering
+    \missingfigure{electron traffic jam}
+    \caption[electron traffic jam analogy]{electron traffic jam analogy}
+    \label{fig:electron_traffic_jam}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.49\textwidth]{fig/intro/enoki_plot.png}
+    \includegraphics[width=0.49\textwidth]{fig/intro/hourglass.png}
+    \caption[yamada plot plus hourglass]{yamada plot plus hourglass}
+    \label{fig:yamada_plot}
+\end{figure}
+
+Figure \ref{fig:yamada_plot}A also reveals a saturation of this incommensurability at $x \approx \frac{1}{8}$, suggesting that period-8 magnetic order is somehow important for cuprate superconductivity. On the other hand, the phase diagram reveals that $T_\text{c}$ is supressed at exactly this doping in a number of compounds, with optimal $T_\text{c}$ requiring a few percent more doped holes per CuO$_2$ plane at $n_\text{h} \approx 0.16$. It thus appears as if these observations are universal for the cuprates but at the same time detrimental for superconductivity. This `$\frac{1}{8}$ conundrum' has given rise to the concept of competing orders\todo{reference}, where superconductivity emerges near a plethora of near-degenerate electronic phases.
+
+The excitations of this magnetic order also reveals a universality as shown in figure \ref{fig:yamada_plot}B. It turns out that the magnetic fluctuations from this incommensurate order has a highly unusual `hourglass'-shape, where the `neck' of the hourglass scaled is scaled by the strength of the magnetic exchange in the parent compound. Additionally, when static magnetic order disappears the fluctuations persist and become gapped (details of this behaviour will be outlined below).
+
+These observations, together with the $d$-wave structure of the fermi surface, intuitively points to a picture where this dual behaviour of the $d_{x^2-y^2}$ electrons is the key to understanding cuprate superconductivity. One popular approach is one where pairing happens not due to an external attractive potential, but through spin fluctuations of the electrons themselves \cite{Scalapino2012}. While these models are not without their problems (perhaps the idea of a bosonic glue is not even appropriate? \cite{Anderson2007}), they reproduce parts of the phase diagram quite well [XX].
+
+\section{LSCO}\label{sec:lsco}
+I will not depart from universal observations in the cuprates and focus on a particular class of cuprates based on the parent compound La$_2$CuO$_4$ (see figure \ref{fig:cuprate_family_structures}). Sometimes known as `La214' or with specific acronyms depending on the dopant species, these materials are single-layer cuprates with a relatively simple crystal structure and a maximum critical temperature $T_\text{c} \approx \SI{40}{\kelvin}$.
 
 Since this thesis is focussed on specific structural aspects and phonon dynamics, this `relatively' simple crystal structure is a particularly strong point for us. Since we want to model the full 3-dimensional structure using computationally heavy simulation methods, it is advantageous to consider the simplest system possible. In addition, since the lanthanum cuprates were the first so-called 'high-temperature superconductors` to be discovered, there is a massive amount of literature on which to build our ideas from.  
 
 In the phase diagram presented in figure \ref{fig:cuprate_phase_keimer}, a few of the many phenomena in the cuprates were indicated. In this section we will discuss these phenomena specifically in the context of lanthanum cuprates and relate them to other compounds where applicable. 
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\textwidth]{fig/intro/kofu_phase.png}
+    \caption[kofu phase diagram]{kofu phase diagram}
+    \label{fig:kofu_phase}
+\end{figure}
 
 
 \begin{figure}
@@ -124,6 +180,6 @@ In the phase diagram presented in figure \ref{fig:cuprate_phase_keimer}, a few o
     \label{fig:lsco_afm}
 \end{figure}
 
-\section{LSCO+O}
+\section{LSCO+O}\label{sec:lscoo}
 
 \section{Thesis objectives}

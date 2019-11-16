@@ -1,7 +1,8 @@
 \documentclass[a4paper, oneside, table]{memoir}
 
 %% Language and font encodings
-\usepackage[english]{babel}
+%% British rather than English fixes date formats
+\usepackage[british]{babel}
 
 %%% Margins
 \setulmarginsandblock{2cm}{2cm}{*}
@@ -21,6 +22,7 @@
 %\usepackage{pdfpages}
 \usepackage{framed}
 \usepackage{float}
+\usepackage{csquotes}
 
 % some commands for making tables with alternating colours (replaces tabular environment)
 \definecolor{tablegrey}{gray}{0.9}
@@ -32,8 +34,18 @@
 %% TIKZ
 \usetikzlibrary{quotes,angles}
 
-%% Bibliography
-\usepackage[numbers]{natbib}
+%% Bibtex
+\usepackage[
+backend=bibtex8,
+style=phys,
+sorting=none,
+articletitle=false,
+biblabel=brackets,
+pageranges=true,
+chaptertitle=true
+]{biblatex}
+\addbibresource{bibliography.bib}
+\addbibresource{websites.bib}
 
 \author{Tim Birger Tejsner}
 \title{Oxygen Dynamics in the High-Temperature Superconductor LSCO+O}
@@ -69,7 +81,6 @@
 
 \include{ch/appendix}
 
-\bibliographystyle{apsrev4-1}
-\bibliography{bibliography}
+\printbibliography
 
 \end{document}

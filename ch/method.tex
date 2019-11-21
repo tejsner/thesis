@@ -7,28 +7,131 @@
 \newcommand{\fcb}{\bm{\Theta}\genfrac{(}{)}{0pt}{}{j \jp}{l \lp}}
 \newcommand{\fcbpp}{\bm{\Theta}\genfrac{(}{)}{0pt}{}{j \jpp}{l \lpp}}
 \newcommand{\fcbf}{-\bm{\Theta}\genfrac{(}{)}{0pt}{}{j \jp}{l \lp} + \delta_{j,\jp} \delta_{l,\lp} \sum_{\jpp, \lpp}  \bm{\Theta}\genfrac{(}{)}{0pt}{}{j \jpp}{l \lpp} }
+\newcommand{\rla}[1]{\langle #1 \rangle}
 \newcommand*\tageq{\refstepcounter{equation}\tag{\theequation}}
 
 \chapter{Methods}\label{ch:method}
 
-\begin{framed}
-	\begin{itemize}
-		\item Neutron scattering (first, since we can then get simulation cross-sections)
-		\item Specific neutron scattering methods (TAS (IN8, ThALES), PDF (D4), DOS (IN4)). Give the specific equations such as phonon cross-sections here (so we can refer to them later.)
-		\item Density Functional Theory (Basic principles, KS equations, HK Theorem, weaknesses of one-electron theory)
-		\item Jacob's Ladder (and how we circumvent it with DFT+U)
-		\item Forces in DFT
-		\item Phonons with DFT
-		\item Molecular dynamics
-		\item Simulation and Experiment summary (what can we simulate/measure and how can we compare)
-	\end{itemize}	
-\end{framed}
-
 \section{Neutron Scattering}
+In this section, we give some of the key equations and concepts related to neutron scattering. Basic concepts will not be dealt with in detail, since excellent literature already exists and does a much better job than I would be capable of. See e.g. \cite{Lovesey1984, Squires2012, Schober2014} for general theory and \cite{Shirane2002} for triple-axis spectroscopy. Rather, I will attempt to take a more practical approach with three primary goals:
+
+\begin{enumerate}
+	\item Understand what types of problems can be solved with neutron scattering.
+	\item Understand the concept of correlation functions and why they are essential to neutron scattering.
+	\item Outline the equations \emph{actually} used when performing experiments and comparing with theory.
+\end{enumerate}
 
 \subsection{General Theory}
+In neutron scattering, the idea is to illuminate a sample with a beam of neutrons and then record the scattered neutrons. In order to have enough neutrons for our experiments, they are usually produced through nuclear fission in a reactor or by bombarding a target with high energy protons in a so-called spallation source. The physics and general characteristics of these two methods are summarized in figure \ref{fig:neutron_sources}.
 
-\subsection{Specific Scattering Methods}
+\begin{figure}
+	\centering
+	\missingfigure{neutron sources. cold/thermal/hot table with wavelengths, temperatures, energies}
+	\caption[Neutron Sources]{neutron sources summary}
+	\label{fig:neutron_sources}
+\end{figure}
+
+The neutron is a neutral, spin-$\frac{1}{2}$ particle with a mass $m_\text{n} = \SI{1.675e-27}{\kilo\gram}$ and a magnetic moment $\mu_\text{n} = -1.913 \, \mu_\text{B}$. Just like any quantum object, the neutron exhibits particle-wave duality and as it propagates through a medium we can conveniently characterize it by a wavevector $\bm{k}$ that has a magnitude $k = \frac{2\pi}{\lambda}$, where $\lambda$ is the wavelength, and points in the direction of propagation. Given the wavevector $\bm{k}$, along with the fact that typical neutrons for experiments can be treated as non-relativistic particle, we can compute the neutron energy $E = \frac{\hbar^2 k^2}{2m_\text{n}}$ and its equivalent temperature through $E = k_\text{B}T$. In neutron scattering we often categorize experimental methods based on the temperature of the incident neutrons, as summarized in figure \ref{fig:neutron_sources}. 
+
+In general, scattering experiments have optimal conditions when the wavelength of the probe is similar to the studied length scale. Similarly, when studying excitations, it is preferable that the energy of the probe is similar to that of the excitations. This is exactly why neutron scattering is so useful for condensed matter since typical wavelengths matches interatomic distances ($\approx \SI{e-10}{\meter}$) and typical energies matches elemental excitations of matter ($\approx \SI{10}{\milli\eV}$). In addition, since the neutron has a magnetic moment it can be used to study magnetic structure and excitations.
+
+In order to describe the scattering experiment, we first need to understand how the neutron interacts with the atomic species in our sample. The process is a neutron-nucleus scattering process, where the potential of the nucleus is approximated by the Fermi pseudopotential
+%
+\[ V(\bm{r}) = \frac{2\pi \hbar}{m_\text{n}} b \delta (\bm{r}) \, \]
+%
+where $b$ is called the \emph{nuclear scattering length} and depends on the specific nuclear species involved in the scattering process. The $\delta$-function in the pseudopotential is an expression of the fact that we are using the \emph{Born approximation}, which is essentially a statement that the nucleus can be thought of as a point-scatterer compared to the neutron. Since the wavelength of a typical thermal neutrons ($\approx \SI{e-10}{\meter}$) is orders of magnitude smaller than the range of nuclear forces ($\approx \SI{e-15}{\meter}$), this is a reasonable assumption. For a single, free nuclei, the scattering will be isotropic and the total scattering is $\sigma_\text{tot} = 4\pi b^2$.
+
+The general geometry of a scattering experiment is outlined in figure \ref{fig:dsdo_geometry}. An incident beam with wave vector $k_\text{i}$ is scattered from the origin to a final wave vector $k_\text{f}$ at an azimuthal angle $\Theta$ and a polar angle $\Phi$ into a solid angle $\Omega$ distance $r$ away from the origin. From this geometry we define the differential scattering cross-section as
+%
+\[ \frac{\mathrm{d} \sigma}{\mathrm{d}\Omega} = \frac{\text{flux of neutrons into } \mathrm{d}\Omega}{\text{incident flux of neutrons}} \]
+%
+Since we can only measure the neutron flux, $\mathrm{d}\sigma / \mathrm{d}\Omega$ is our experimental observable, given that we have neutron detectors before and after the sample. Since the neutron flux tells us nothing about the wave vectors, additional constraints are necessary to get information about the scattering process from the experiment. In \emph{elastic scattering}, we assume that no energy is exchanged in the scattering process so that $|\bm{k}_\text{f}| = |\bm{k}_\text{i}|$. By fixing one of them (typically $\bm{k}_\text{i}$), the other is completely described by the geometry of figure \ref{fig:dsdo_geometry} and we can measure $\mathrm{d}\sigma / \mathrm{d}\Omega$ as a function of $\bm{k}_\text{f}$ since the location of our detector, and thus $\Phi$ and $\Theta$ is known. In \emph{inelastic scattering}, we need to fix the lengths, and thus the energy, of both $\bm{k}_\text{i}$ and $\bm{k}_\text{f}$. This defines the \emph{partial differential cross-section}:
+%
+\[ \frac{\mathrm{d}^2 \sigma}{\mathrm{d}\Omega \mathrm{d}E_\text{f}} = \frac{\text{flux of neutrons into } \mathrm{d}\Omega \text{ with energy between } E_\text{f} \text{ and } E_\text{f} + \mathrm{d}E_\text{f}}{\text{incident neutron flux with energy } E_\text{i}} \, , \]
+%
+where $E_\text{i}$ is the energy of the incident neutron and $E_\text{f}$ is the energy of the final neutron. How to technically achieve neutron beams with fixed wave vectors will be described later on in the relevant experimental sections, but for now we just make the assumption that it is possible. With the observables now defined, we can start to discuss how to actually extract useful information about a microscopic sample from a neutron scattering experiment. Knowing $\bm{k}_\text{i}$ and $\bm{k}_\text{f}$, the coordinate system can be redefined with respect to our sample through the scattering vector $\bm{Q} = \bm{k}_\text{i} - \bm{k}_\text{f}$. In addition, we define the \emph{energy transfer} as the amount of energy gained (or lost, for negative values) by the neutron in the scattering process $\hbar \omega = E_\text{f} - E_\text{i}$.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.6\textwidth]{fig/method/ns/dsdo_schober.png}
+	\caption[scattering cross-section geometry]{scattering cross-section geometry from \cite{Schober2014} + scattering triangle}
+	\label{fig:dsdo_geometry}
+\end{figure}
+
+The objective of neutron scattering theory (or really, any scattering theory), is then to find a sample-dependent function $S(\bm{Q}, \omega)$ that can be related to the observable (partial) scattering cross-section. In fact, as we shall see in the next section, it turns out that this \emph{scattering function} $S(\bm{Q}, \omega)$ not only exists, but have an intimate relationship with microscopic correlation functions which can be derived from first principles. In addition, it is related to the partial differential cross-section in the following simple way:
+%
+\begin{equation}\label{eq:dsdo_sqw}
+\frac{\mathrm{d}^2 \sigma}{\mathrm{d}\Omega \mathrm{d}E_\text{f}} = \frac{k_\text{f}}{k_\text{i}} S(\bm{Q}, \omega)
+\end{equation}
+%
+This, somewhat abstract, introduction essentially covers most of what we need to know with regards to the neutron scattering process and coordinate systems. The rest of this section is then dedicated to 1) understanding what the scattering function $S(\bm{Q}, \omega)$ actually represents and 2) outline some of practicalities involved in the neutron scattered methods used in this thesis. 
+
+\subsection{Correlation Functions}
+After setting up the coordinate system, we are now left with the much more complicated task of constructing models that can help is interpret the partial differential cross-section. As equation \eqref{eq:dsdo_sqw} suggests, information about our samples comes from the structure of $\mathrm{d}^2 \sigma / \mathrm{d}\Omega \mathrm{d}E_\text{f}$ as a function of $\bm{Q}$ and $\omega$, or equivalently: The angles $\Phi$, $\Theta$ and neutron energies $E_\text{i}$, $E_\text{f}$). Intuitively, the reason we have any structure at all is due to interference of the scattered waves. Since the scattering from a single nucleus is isotropic, any structure in $S(\bm{Q}, \omega)$ comes from the specific composition of, or correlations between, atomic species in our sample. 
+
+It turns out that this can be conveniently described through the mathematics of correlation functions, introduced by \citeauthor{VanHove1954} in 1954 \cite{VanHove1954}. We start with the pair-correlation function for a system of identical particles $G(\bm{r}, t)$, which describes the probability of finding a pair of particles separated by the spatial vector $\bm{r}$ at time $t$. Similarly, the self pair-correlation function $G_\text{s}(\bm{r}, t)$ describes the probability of finding the same particle at a distance $\bm{r}$ at a time $t$. These concepts are illustrated in figure \ref{fig:correlation_functions} and can be defined mathematically defined through position operators:
+
+\begin{figure}
+	\centering
+	\missingfigure{correlation functions illustration}
+	\caption[pair correlation functions]{pair correlation functions}
+	\label{fig:correlation_functions}
+\end{figure}
+
+\begin{align*}
+	G(\bm{r}, t) &= \frac{1}{N} \sum_{i \neq j} \int \left\langle  \delta (\bm{r}^\prime - \bm{R}_j(0) ) \delta (\bm{r}^\prime + \bm{r} - \bm{R}_i(t)) \right\rangle \mathrm{d}\bm{r}^\prime \\
+	G_\text{s}(\bm{r}, t) &= \frac{1}{N} \sum_{i} \int \left\langle  \delta (\bm{r}^\prime - \bm{R}_i(0) ) \delta (\bm{r}^\prime + \bm{r} - \bm{R}_i(t)) \right\rangle \mathrm{d}\bm{r}^\prime \, ,
+\end{align*}
+
+\noindent where $i$, $j$ are particle indices and $\bm{R}_i(t)$ is the position operator for particle $i$ at time $t$. Finally the \emph{scattering function} $S(\bm{Q}, \hbar\omega)$ can be obtained through Fourier transforms in time and space:
+
+\begin{align*}
+	I(\bm{Q}, t) &= \int G(\bm{r},t) \exp (i \bm{Q} \cdot \bm{r} ) \mathrm{d}\bm{r} \\
+	S(\bm{Q}, \omega) &= \frac{1}{2 \pi \hbar} \int I(\bm{Q}, t) \exp (-i \omega t) \mathrm{d}t \, ,
+\end{align*}
+
+\noindent where $I(\bm{Q}, t)$ is known as the \emph{intermediate scattering function}. It thus turns out that there is a direct relationship between the measured partial differential cross-section in neutron scattering. \textbf{Coherent and incoherent scattering here in terms of correlation functions.}
+
+In fact, many microscopic theories can be translated directly into a theoretical $S(\bm{Q}, \omega)$ and compared 1-to-1 with experiment. One illustrative example, used in this thesis, is that of a molecular dynamics simulation where we record the atomic positions as a function of time. From this trajectory it is trivial to compute a classical version of $G(\bm{r},t)$ and thus obtain predictions for neutron scattering experiments.
+
+Even more generally, given a Hamiltonian and assuming a weak (linear) perturbation, it is possible to invoke linear response theory (see e.g. \cite[chapter 3]{Jensen1991}). Importantly, linear response theory provides a link between the spontaneous fluctuations of a system and the response to an external perturbation. The object of interest in this context becomes the dynamic susceptibility $\chi(\bm{Q}, \omega)$, which can be thought of as
+%
+\[ \chi(\bm{Q}, \omega) = \chi^{\prime}(\bm{Q}, \omega) + \chi^{\prime\prime}(\bm{Q}, \omega) = \frac{\text{`response'}}{\text{`force'}} \, , \]
+%
+where the real part $\chi^{\prime}(\bm{Q}, \omega)$ describes a response in phase with the perturbation (reactive),
+while the imaginary part $\chi^{\prime\prime}(\bm{Q}, \omega)$ describes an anti-phase response (dissipative). The real and imaginary parts are linked through the Kramers-Kronig relation
+%
+\[ \chi^{\prime\prime}(\bm{Q}, \omega) = - \frac{1}{\pi} \mathcal{P} \int_{-\infty}^{\infty} \frac{\chi^{\prime}(\bm{Q},\omega^\prime)}{\omega^\prime - \omega} \mathrm{d}\omega^\prime \, , \]
+%
+where $\mathcal{P}$ is the Cauchy principal value. Finally, the scattering function is related to the imaginary part of dynamic susceptibility through the fluctuation-dissipation theorem:
+%
+\[ S(\bm{Q},\omega) = \frac{1}{1-e^{\frac{\hbar\omega}{k_\text{B}T}}} \chi^{\prime\prime}(\bm{Q}, \omega) \, . \]
+%
+Since the real and imaginary parts of the susceptibility are uniquely connected through the Kramers-Kronig relation, neutron scattering experiments can directly probe predictions of linear response theory. A particularly illustrative example\todo{maybe remove this or put in appendix} in the context of this thesis is that of a damped harmonic oscillator (DHO). Consider the classical system shown in figure \ref{fig:dho_chi}, with the equations of motion:
+
+\begin{figure}[]
+	\centering
+	\missingfigure{dho chi}
+	\caption[DHO susceptibility]{dho susceptibility}
+	\label{fig:dho_chi}
+\end{figure}
+
+\[ m \rla{\ddot{x}(t)} + m w_0^2 \rla{x(t)} = - m\gamma\rla{\dot{x}(t)} \, . \]
+
+\noindent Going through the mathematics of linear response theory (see \cite{Lovesey1984} for details), we get the dynamic susceptibility
+%
+\[ \chi[\omega] = \frac{1}{m}\frac{1}{\omega_0^2 - \omega^2 + i\gamma\omega} = \frac{1}{m} \frac{\omega_0^2 - \omega^2}{(\omega_0^2-\omega^2)^2 + \gamma^2\omega^2} - \frac{i}{m}\frac{\gamma\omega}{(\omega_0^2-\omega^2)^2 + \gamma^2\omega^2} \, . \]
+%
+We thus see that damped harmonic motion can is seen as a Lorenzian as a function of energy in a neutron scattering experiment, where the position $\omega_0$ denotes the fundamental frequency and the width $\gamma$ the damping constant. While very rudimentary, the purpose of this example is to emphasize the intimate relationship between observables in neutron scattering and microscopic theories.
+
+\section{Specific Scattering Methods}
+Departing from the abstract
+
+\subsection{Triple-Axis spectroscopy}
+
+\subsection{Time-of-Flight spectroscopy}
+
+\subsection{Diffraction, PDF}
 
 \section{Density Functional Theory}\label{sec:dft}
 

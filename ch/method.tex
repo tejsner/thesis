@@ -12,7 +12,7 @@
 
 \chapter{Methods}\label{ch:method}
 
-\section{Neutron Scattering}
+\section{Neutron Scattering}\label{sec:neutron}
 In this section, we give some of the key equations and concepts related to neutron scattering. Basic concepts will not be dealt with in detail, since excellent literature already exists and does a much better job than I would be capable of. See e.g. \cite{Lovesey1984, Squires2012, Schober2014} for general theory and \cite{Shirane2002} for triple-axis spectroscopy. Rather, I will attempt to take a more practical approach with three primary goals:
 
 \begin{enumerate}
@@ -22,22 +22,30 @@ In this section, we give some of the key equations and concepts related to neutr
 \end{enumerate}
 
 \subsection{General Theory}
-In neutron scattering, the idea is to illuminate a sample with a beam of neutrons and then record the scattered neutrons. In order to have enough neutrons for our experiments, they are usually produced through nuclear fission in a reactor or by bombarding a target with high energy protons in a so-called spallation source. The physics and general characteristics of these two methods are summarized in figure \ref{fig:neutron_sources}.
+In neutron scattering, the idea is to illuminate a sample with a beam of neutrons and then record the scattered neutrons. In order to have enough neutrons for our experiments, they are usually produced through nuclear fission in a reactor or by bombarding a target with high energy protons in a so-called spallation source.
 
-\begin{figure}
+\begin{table}
+	\caption[Neutron Temperatures]{Approximate values of of energies, temperatures and wavelength for the three classifications of reactor sources. From \cite{Squires2012}.}
+	\label{fig:neutron_temperatures}
 	\centering
-	\missingfigure{neutron sources. cold/thermal/hot table with wavelengths, temperatures, energies}
-	\caption[Neutron Sources]{neutron sources summary}
-	\label{fig:neutron_sources}
-\end{figure}
+	\begin{tabular}{@{}llll@{}}
+		\toprule
+		Source  & Energy [meV] & Temperature [K] & Wavelength [\AA]  \\ \midrule
+		cold    & 0.1-10       & 1-120           & 30-3               \\
+		thermal & 5-100        & 60-1000         & 4-1                \\
+		hot     & 100-500      & 1000-6000       & 1-0.4              \\ \bottomrule
+		\end{tabular}
+\end{table}
 
-The neutron is a neutral, spin-$\frac{1}{2}$ particle with a mass $m_\text{n} = \SI{1.675e-27}{\kilo\gram}$ and a magnetic moment $\mu_\text{n} = -1.913 \, \mu_\text{B}$. Just like any quantum object, the neutron exhibits particle-wave duality and as it propagates through a medium we can conveniently characterize it by a wavevector $\bm{k}$ that has a magnitude $k = \frac{2\pi}{\lambda}$, where $\lambda$ is the wavelength, and points in the direction of propagation. Given the wavevector $\bm{k}$, along with the fact that typical neutrons for experiments can be treated as non-relativistic particle, we can compute the neutron energy $E = \frac{\hbar^2 k^2}{2m_\text{n}}$ and its equivalent temperature through $E = k_\text{B}T$. In neutron scattering we often categorize experimental methods based on the temperature of the incident neutrons, as summarized in figure \ref{fig:neutron_sources}. 
+The neutron is a neutral, spin-$\frac{1}{2}$ particle with a mass $m_\text{n} = \SI{1.675e-27}{\kilo\gram}$ and a magnetic moment $\mu_\text{n} = -1.913 \, \mu_\text{B}$. Just like any quantum object, the neutron exhibits particle-wave duality and as it propagates through a medium we can conveniently characterize it by a wavevector $\bm{k}$ that has a magnitude $k = \frac{2\pi}{\lambda}$, where $\lambda$ is the wavelength, and points in the direction of propagation. Given the wavevector $\bm{k}$, along with the fact that typical neutrons for experiments can be treated as non-relativistic particle, we can compute the neutron energy $E = \frac{\hbar^2 k^2}{2m_\text{n}}$ and its equivalent temperature through $E = k_\text{B}T$. In neutron scattering we often categorize experimental methods based on the temperature of the incident neutrons, as summarized in table \ref{fig:neutron_temperatures}. 
 
 In general, scattering experiments have optimal conditions when the wavelength of the probe is similar to the studied length scale. Similarly, when studying excitations, it is preferable that the energy of the probe is similar to that of the excitations. This is exactly why neutron scattering is so useful for condensed matter since typical wavelengths matches interatomic distances ($\approx \SI{e-10}{\meter}$) and typical energies matches elemental excitations of matter ($\approx \SI{10}{\milli\eV}$). In addition, since the neutron has a magnetic moment it can be used to study magnetic structure and excitations.
 
 In order to describe the scattering experiment, we first need to understand how the neutron interacts with the atomic species in our sample. The process is a neutron-nucleus scattering process, where the potential of the nucleus is approximated by the Fermi pseudopotential
 %
-\[ V(\bm{r}) = \frac{2\pi \hbar}{m_\text{n}} b \delta (\bm{r}) \, \]
+\begin{equation}\label{eq:fermi_pseudopotential}
+V(\bm{r}) = \frac{2\pi \hbar}{m_\text{n}} b \delta (\bm{r}) \, ,
+\end{equation}
 %
 where $b$ is called the \emph{nuclear scattering length} and depends on the specific nuclear species involved in the scattering process. The $\delta$-function in the pseudopotential is an expression of the fact that we are using the \emph{Born approximation}, which is essentially a statement that the nucleus can be thought of as a point-scatterer compared to the neutron. Since the wavelength of a typical thermal neutrons ($\approx \SI{e-10}{\meter}$) is orders of magnitude smaller than the range of nuclear forces ($\approx \SI{e-15}{\meter}$), this is a reasonable assumption. For a single, free nuclei, the scattering will be isotropic and the total scattering is $\sigma_\text{tot} = 4\pi b^2$.
 
@@ -54,22 +62,18 @@ where $E_\text{i}$ is the energy of the incident neutron and $E_\text{f}$ is the
 \begin{figure}
 	\centering
 	\includegraphics[width=0.6\textwidth]{fig/method/ns/dsdo_schober.png}
-	\caption[scattering cross-section geometry]{scattering cross-section geometry from \cite{Schober2014} + scattering triangle}
+	\caption[scattering cross-section geometry]{Geometry of a scattering experiment. An incident beam of neutrons characterized by the wave vector $\bm{k}_\text{i}$ impinges on a sample at the origin. The neutron beam is scattered in the direction of $\bm{k}_\text{f}$, defined by the two angles $\Phi$ and $\Theta$. The neutrons are detected at a solid angle $\mathrm{d}\Omega$ at a distance $r$. From \cite{Schober2014}}
 	\label{fig:dsdo_geometry}
 \end{figure}
 
-The objective of neutron scattering theory (or really, any scattering theory), is then to find a sample-dependent function $S(\bm{Q}, \omega)$ that can be related to the observable (partial) scattering cross-section. In fact, as we shall see in the next section, it turns out that this \emph{scattering function} $S(\bm{Q}, \omega)$ not only exists, but have an intimate relationship with microscopic correlation functions which can be derived from first principles. In addition, it is related to the partial differential cross-section in the following simple way:
-%
-\begin{equation}\label{eq:dsdo_sqw}
-\frac{\mathrm{d}^2 \sigma}{\mathrm{d}\Omega \mathrm{d}E_\text{f}} = \frac{k_\text{f}}{k_\text{i}} S(\bm{Q}, \omega)
-\end{equation}
-%
+The objective of neutron scattering theory (or really, any scattering theory), is then to find a sample-dependent function $S(\bm{Q}, \omega)$ that can be related to the observable (partial) scattering cross-section. In fact, as we shall see in the next section, it turns out that this \emph{scattering function} $S(\bm{Q}, \omega)$ not only exists, but have an intimate relationship with microscopic correlation functions which can be derived from first principles. 
+
 This, somewhat abstract, introduction essentially covers most of what we need to know with regards to the neutron scattering process and coordinate systems. The rest of this section is then dedicated to 1) understanding what the scattering function $S(\bm{Q}, \omega)$ actually represents and 2) outline some of practicalities involved in the neutron scattered methods used in this thesis. 
 
 \subsection{Correlation Functions}
-After setting up the coordinate system, we are now left with the much more complicated task of constructing models that can help is interpret the partial differential cross-section. As equation \eqref{eq:dsdo_sqw} suggests, information about our samples comes from the structure of $\mathrm{d}^2 \sigma / \mathrm{d}\Omega \mathrm{d}E_\text{f}$ as a function of $\bm{Q}$ and $\omega$, or equivalently: The angles $\Phi$, $\Theta$ and neutron energies $E_\text{i}$, $E_\text{f}$). Intuitively, the reason we have any structure at all is due to interference of the scattered waves. Since the scattering from a single nucleus is isotropic, any structure in $S(\bm{Q}, \omega)$ comes from the specific composition of, or correlations between, atomic species in our sample. 
+After setting up the coordinate system, we are now left with the much more complicated task of constructing models that can help is interpret the partial differential cross-section. As I previously suggested, information about our samples comes from the structure of $\mathrm{d}^2 \sigma / \mathrm{d}\Omega \mathrm{d}E_\text{f}$ as a function of $\bm{Q}$ and $\omega$, or equivalently: The angles $\Phi$, $\Theta$ and neutron energies $E_\text{i}$, $E_\text{f}$. Intuitively, the reason we have any structure at all is due to interference of the scattered waves. Since the scattering from a single nucleus is isotropic, any structure in $S(\bm{Q}, \omega)$ comes from the specific composition of, or correlations between, atomic species in our sample. 
 
-It turns out that this can be conveniently described through the mathematics of correlation functions, introduced by \citeauthor{VanHove1954} in 1954 \cite{VanHove1954}. We start with the pair-correlation function for a system of identical particles $G(\bm{r}, t)$, which describes the probability of finding a pair of particles separated by the spatial vector $\bm{r}$ at time $t$. Similarly, the self pair-correlation function $G_\text{s}(\bm{r}, t)$ describes the probability of finding the same particle at a distance $\bm{r}$ at a time $t$. These concepts are illustrated in figure \ref{fig:correlation_functions} and can be defined mathematically defined through position operators:
+It turns out that this can be conveniently described through the mathematics of correlation functions, introduced by \citeauthor{VanHove1954} in 1954 \cite{VanHove1954}. We start with the \emph{time-dependent pair-correlation function} for a system of identical particles $G(\bm{r}, t)$, which describes the probability of finding a pair of particles separated by the spatial vector $\bm{r}$ at time $t$. Similarly, the \emph{self time-dependent pair-correlation function} $G_\text{s}(\bm{r}, t)$ describes the probability of finding the same particle at a distance $\bm{r}$ at a time $t$. These concepts are illustrated in figure \ref{fig:correlation_functions}\todo{probably remove this if no time} and can be defined mathematically defined through position operators:
 
 \begin{figure}
 	\centering
@@ -83,18 +87,42 @@ It turns out that this can be conveniently described through the mathematics of 
 	G_\text{s}(\bm{r}, t) &= \frac{1}{N} \sum_{i} \int \left\langle  \delta (\bm{r}^\prime - \bm{R}_i(0) ) \delta (\bm{r}^\prime + \bm{r} - \bm{R}_i(t)) \right\rangle \mathrm{d}\bm{r}^\prime \, ,
 \end{align*}
 
-\noindent where $i$, $j$ are particle indices and $\bm{R}_i(t)$ is the position operator for particle $i$ at time $t$. Finally the \emph{scattering function} $S(\bm{Q}, \hbar\omega)$ can be obtained through Fourier transforms in time and space:
+\noindent where $i$, $j$ are particle indices and $\bm{R}_i(t)$ is the position operator for particle $i$ at time $t$. Finally the following functions can be obtained through Fourier transforms in time and space:
 
 \begin{align*}
 	I(\bm{Q}, t) &= \int G(\bm{r},t) \exp (i \bm{Q} \cdot \bm{r} ) \mathrm{d}\bm{r} \\
-	S(\bm{Q}, \omega) &= \frac{1}{2 \pi \hbar} \int I(\bm{Q}, t) \exp (-i \omega t) \mathrm{d}t \, ,
+	I_\text{s}(\bm{Q}, t) &= \int G_\text{s}(\bm{r},t) \exp (i \bm{Q} \cdot \bm{r} ) \mathrm{d}\bm{r} \\
+	S(\bm{Q}, \omega) &= \frac{1}{2 \pi \hbar} \int I(\bm{Q}, t) \exp (-i \omega t) \mathrm{d}t \, \\
+	S_\text{i}(\bm{Q}, t) &= \frac{1}{2 \pi \hbar} \int I_\text{s}(\bm{Q}, t) \exp (-i \omega t) \mathrm{d}t \, ,
 \end{align*}
 
-\noindent where $I(\bm{Q}, t)$ is known as the \emph{intermediate scattering function}. It thus turns out that there is a direct relationship between the measured partial differential cross-section in neutron scattering. \textbf{Coherent and incoherent scattering here in terms of correlation functions.}
+\noindent where $I(\bm{Q}, t)$ is known as the \emph{intermediate function}, $I_\text{s}(\bm{Q}, t)$ the \emph{self intermediate function}, $S(\bm{Q}, \omega)$ the \emph{scattering function} and $S_\text{i}(\bm{Q}, t)$ the \emph{incoherent scattering function}. The connection to the partial differential cross-section can now be stated succinctly as
 
-In fact, many microscopic theories can be translated directly into a theoretical $S(\bm{Q}, \omega)$ and compared 1-to-1 with experiment. One illustrative example, used in this thesis, is that of a molecular dynamics simulation where we record the atomic positions as a function of time. From this trajectory it is trivial to compute a classical version of $G(\bm{r},t)$ and thus obtain predictions for neutron scattering experiments.
+\begin{equation}
+	\frac{\mathrm{d}^2\sigma}{\mathrm{d}\Omega\mathrm{d}E_\text{f}} = \left( \frac{\mathrm{d}^2\sigma}{\mathrm{d}\Omega\mathrm{d}E_\text{f}} \right)_\text{coh} + \left( \frac{\mathrm{d}^2\sigma}{\mathrm{d}\Omega\mathrm{d}E_\text{f}} \right)_\text{inc} \\
+\end{equation}
 
-Even more generally, given a Hamiltonian and assuming a weak (linear) perturbation, it is possible to invoke linear response theory (see e.g. \cite[chapter 3]{Jensen1991}). Importantly, linear response theory provides a link between the spontaneous fluctuations of a system and the response to an external perturbation. The object of interest in this context becomes the dynamic susceptibility $\chi(\bm{Q}, \omega)$, which can be thought of as
+\noindent with
+
+\begin{align*}
+	\left( \frac{\mathrm{d}^2\sigma}{\mathrm{d}\Omega\mathrm{d}E_\text{f}} \right)_\text{coh} &= \frac{\sigma_\text{coh}}{4\pi}\frac{k_\text{f}}{k_\text{i}}N S(\bm{Q}, \omega) \\ 
+	\left( \frac{\mathrm{d}^2\sigma}{\mathrm{d}\Omega\mathrm{d}E_\text{f}} \right)_\text{inc} &= \frac{\sigma_\text{inc}}{4\pi}\frac{k_\text{f}}{k_\text{i}}N S_\text{i}(\bm{Q}, \omega)
+\end{align*}
+
+\noindent where
+
+\begin{align*}
+	\sigma_\text{coh} &= 4 \pi \overline{b}^2 \\
+	\sigma_\text{inc} &= 4 \pi \left( \overline{b^2} - \overline{b}^2 \right)
+\end{align*}
+
+\noindent In the above equations, $N$ is the number of particles in the scattering system, $b$ is the nuclear scattering length as defined in equation \eqref{eq:fermi_pseudopotential} and the bars denote ensemble averages. The \emph{coherent cross-section} $\sigma_\text{coh}$ is thus related to the average scattering length, while the \emph{incoherent cross-section} $\sigma_\text{inc}$ is related to the distribution of scattering lengths. These cross-sections are determined experimentally and are tabulated for most elements \cite{nist}.
+
+In a neutron scattering experiment we thus see a superposition pair-correlations through coherent scattering and self-correlations through incoherent scattering. As an example involving dynamics, phonons (correlated motion) are generally seen as coherent scattering while Brownian motion (random motion) would show up as incoherent scattering.
+
+It thus turns out that there is a direct relationship between the measured partial differential cross-section in neutron scattering and microscopic correlation functions. In fact, many microscopic theories can be translated directly into a theoretical $S(\bm{Q}, \omega)$ and compared 1-to-1 with experiment. One illustrative example, used in this thesis, is that of a molecular dynamics simulation where we record the atomic positions as a function of time. From this trajectory it is trivial to compute a classical version of $G(\bm{r},t)$ and thus obtain predictions for neutron scattering experiments.
+
+Even more generally, given a Hamiltonian (quantum or classical) and assuming a weak (linear) perturbation, it is possible to invoke linear response theory (see e.g. \cite[chapter 3]{Jensen1991}). Importantly, linear response theory provides a link between the spontaneous fluctuations of a system and the response to an external perturbation. The object of interest in this context becomes the dynamic susceptibility $\chi(\bm{Q}, \omega)$, which can be thought of as
 %
 \[ \chi(\bm{Q}, \omega) = \chi^{\prime}(\bm{Q}, \omega) + \chi^{\prime\prime}(\bm{Q}, \omega) = \frac{\text{`response'}}{\text{`force'}} \, , \]
 %
@@ -111,27 +139,118 @@ Since the real and imaginary parts of the susceptibility are uniquely connected 
 
 \begin{figure}[]
 	\centering
-	\missingfigure{dho chi}
-	\caption[DHO susceptibility]{dho susceptibility}
+	\inputTikZ{0.8}{fig/method/ns/dho.tex}\hspace{4mm}
+	\begin{tikzpicture}
+		\pgfplotsset{width=0.4\textwidth}
+		\begin{axis}[xlabel=$t$, ylabel=$x(t)$, axis lines = left, ymin=-1.2, ymax=1.2]
+			\addplot[color=red, domain=0:10, range=-1:1, samples=200]{exp(-0.2*x)*sin(deg(4*x))};
+		\end{axis}
+	\end{tikzpicture}
+	\caption[DHO schematic]{Mechanical version of the damped harmonic oscillator. \textbf{Left:} A mass on a spring moving with velocity $\bm{v}$ under the influence of a restoring spring force (blue arrow) with force constant $\omega_0^2$ and a frictional force $\gamma$ which is linear in velocity. \textbf{Right:} Position of the spring as a function of time after applying a an impulsive perturbation, analogous to quickly pulling the mass and letting go.}
 	\label{fig:dho_chi}
 \end{figure}
 
 \[ m \rla{\ddot{x}(t)} + m w_0^2 \rla{x(t)} = - m\gamma\rla{\dot{x}(t)} \, . \]
 
-\noindent Going through the mathematics of linear response theory (see \cite{Lovesey1984} for details), we get the dynamic susceptibility
+\noindent Assuming an impulsive perturbation and going through the mathematics of linear response theory (see \cite{Lovesey1984} for details), we arrive at the dynamic susceptibility
 %
 \[ \chi[\omega] = \frac{1}{m}\frac{1}{\omega_0^2 - \omega^2 + i\gamma\omega} = \frac{1}{m} \frac{\omega_0^2 - \omega^2}{(\omega_0^2-\omega^2)^2 + \gamma^2\omega^2} - \frac{i}{m}\frac{\gamma\omega}{(\omega_0^2-\omega^2)^2 + \gamma^2\omega^2} \, . \]
 %
-We thus see that damped harmonic motion can is seen as a Lorenzian as a function of energy in a neutron scattering experiment, where the position $\omega_0$ denotes the fundamental frequency and the width $\gamma$ the damping constant. While very rudimentary, the purpose of this example is to emphasize the intimate relationship between observables in neutron scattering and microscopic theories.
+From the last term we thus see that damped harmonic motion can be observed as a Lorentzian as a function of energy in a neutron scattering experiment, where the position $\omega_0$ denotes the fundamental frequency and the width $\gamma$ is the damping constant. In fact, this expression is typically used as a fitting function when measuring phonons \cite{Fak1997}. While rudimentary, the purpose of this example is to emphasize the intimate relationship between observables in neutron scattering and microscopic theories.
+
+\subsection{Resolution}
+Maybe a short section about resolution? Just basic concepts starting from distributions of neutron beams.
 
 \section{Specific Scattering Methods}
-Departing from the abstract
+Departing from the abstract concepts of the preceding section, I will now outline specific neutron scattering techniques used in the experimental part of this thesis. Despite the significant power generated in a neutron reactor, the number of neutrons expelled from the core is typically small with respect to neutron experiments, especially when compared to X-ray synchrotron radiation\todo{some numbers}. In addition, the neutrons have a wide distribution of wavelengths and propagate in all directions. Neutron facilities and instruments thus take advantage of various optical elements in order to define the neutron beam.
 
-\subsection{Triple-Axis spectroscopy}
+Transporting the neutrons to the instruments is done with neutron guides, which are rectangular tubes where the insides are coated with mirrors that can cause total reflection of neutrons at sufficiently small angles. When the neutrons reach the instrument, we have so-called \emph{white beam} with a wide distribution of wavelengths, but most experiments needs a well-defined $\bm{k}_\text{i}$. For this we use a \emph{monochromator}, which is a crystalline material that takes advantage of Bragg scattering. Similarly, if we want a well-defined final neutron energy, we can place an identical element (an \emph{analyser}) before our detector.
 
-\subsection{Time-of-Flight spectroscopy}
+Neutron instruments are complicated and discussing them in detail would distract from the main purpose of understanding how to use them. For now, it will suffice to know that we have found a way to build neutron scattering instruments such that the geometry in figure \ref{fig:dsdo_geometry} is valid. Other details will be discussed where appropriate.
 
-\subsection{Diffraction, PDF}
+\subsection{Triple-Axis Spectroscopy}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.6\textwidth]{fig/method/ns/in8.jpg}
+	\caption[in8 layout]{in8 layout \cite{in8}}
+	\label{fig:in8}
+\end{figure}
+
+In some way, the triple-axis spectrometer (TAS) is the easiest neutron scattering instrument to understand because it has a one-to-one correspondence with the geometry from figure \ref{fig:dsdo_geometry}. Figure \ref{fig:in8} shows the view from above of the TAS instrument IN8 at ILL. The triple-axis name comes from the fact that all the angles defined by the beam path can be adjusted by moving the motors of the instrument. These angles then completely define $\bm{k}_\text{i}$, $\bm{k}_\text{f}$ and we essentially have a two dimensional version of figure \ref{fig:dsdo_geometry}, known as the \emph{scattering plane}.
+
+Because the instrument is essentially two-dimensional, single crystal samples must be aligned with a desired crystal plane in the scattering plane. For the cuprates, we typically have tetragonal (or almost-tetragonal) crystal structures so we typically align in the $a$-$b$ or $a$-$c$ plane. With the sample in place, we can now completely explore $S(\bm{Q},\omega)$ with the restriction that $\bm{Q}$ is restricted to the scattering plane. The sample is placed on a rotating sample stick that, together with the scattering angle, allows us to access the two dimensions of $\bm{Q}$. The energy transfer $\hbar\omega$ is controlled by monochromator and analyser.
+
+As one might have noticed, figure \ref{fig:in8} features just a single detector. While other options exists (see chapter \ref{ch:lowen}), this is typical for TAS instruments. As a consequence, measurements are performed along pre-defined paths in $(\bm{Q}, \omega)$ space step-by-step. The main purpose of TAS instruments is then generally to look at specific features in $S(\bm{Q},\omega)$ with high counting statistics and tight resolution. Since inelastic scattering is orders of magnitude weaker than elastic scattering, TAS instruments are primarily used for spectroscopic measurements.
+
+In this thesis, most TAS measurements are of specific phonon branches. The 1-phonon cross-section gives an expression for the differential cross section of phonons, indexed by phonon band.
+
+\begin{equation}
+	S(\bm{Q},\nu,\omega) = \frac{k_\text{f}}{k_\text{i}} \frac{N}{\hbar} \sum_{\bm{q}} | F(\bm{Q},\bm{q},\nu) |^2 ( n_{\bm{q}\nu} + 1) \delta (\omega - \omega_{\bm{q}\nu}) \delta(\bm{Q} - \bm{q} - \bm{G})
+	\label{eq:one_phonon_sqw}
+\end{equation}
+%
+with
+%
+\[
+	F(\bm{Q}, \bm{q}, \nu) = \sum_j \sqrt{\frac{\hbar}{2 m_j \omega_{\bm{q}\nu}}} \bar{b}_j \exp \left( -\frac{1}{2} \langle | \bm{Q} \cdot \bm{u}(j0) |^2 \rangle \right) \exp [ -i(\bm{Q} - \bm{q}) \cdot \bm{r}(j0) ] \bm{Q} \cdot \bm{e}_j(\bm{q},\nu)
+\]
+%
+where $\bm{Q}$ and $\omega$ are the wave vector and energy of our measurement. $\nu$ is a phonon band and $\bm{q}$ is a wave vector. $\omega_{\bm{q}\nu}$ is the energy of phonon band $\nu$ at wave vector $\bm{q}$ and $n_{\bm{q}\nu}$ is the Bose factor at this energy. Atomic species are designated with index $j$, their mass is $m_j$ and their coherent neutron cross-section is $\bar{b}_j$. $\bm{u}(j0)$ and $\bm{r}(j0)$ is the displacement and position of atom $j$ in unit cell 0, respectively. Finally, $G$ is any reciprocal lattice vector and $\bm{e}_j(\bm{q},\nu)$ is the phonon eigenvector of atom $j$, band $\nu$ and wave vector $\bm{q}$.
+
+While this expression rests on some microscopic details that we might not have knowledge of, close inspection of equation \eqref{eq:one_phonon_sqw} allows us to extract information from an experiment without any prior knowledge of the system. The $\delta$-functions makes sure that we only see scattering at the phonon dispersion. In addition, the $\bm{Q}\cdot \bm{e}_j(\bm{q},\nu)$ term tells us that scattering is strongest when the eigenvector of the phonon mode is parallel to $\bm{Q}$ (and vanishes when perpendicular). This allows us to distinguish longitudinal and transverse phonons.
+
+As it turns out, it \emph{is} possible to obtain prior knowledge about the phonon spectrum through microscopic simulations. These simulations give us direct access to eigenvectors and we can make a detailed analysis of equation \eqref{eq:one_phonon_sqw}. More information about this type of calculation is given in section \ref{sec:phonon_calc}.
+
+\subsection{Time-of-Flight Spectroscopy}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.6\textwidth]{fig/method/ns/in4.jpg}
+	\caption[in4 layout]{in4 layout \cite{in4}}
+	\label{fig:in4}
+\end{figure}
+
+In Time-of-Flight (ToF) spectroscopy, we take advantage of the fact that thermal neutrons move at speeds that we can accurately determine experimentally (\SI{10}{\milli\eV} neutrons has a speed of roughly \SI{1400}{\meter\per\second}). Figure \ref{fig:in4} shows a schematic of the IN4c spectrometer at ILL. Neutrons from the reactor are chopped up into discrete packets using two rotating discs (background choppers) and then monochromatized using a crystal monochromator. Before impinging on the sample, the neutrons pass through a `Fermi chopper' which produces very short neutron pulses (\SIrange{10}{50}{\micro\second}). Neutrons are then detected radially in one of the many detectors. By recording the time-of-flight from the Fermi chopper to a specific detector, we can determine the energy transfer through the velocity as determined from the flight time and $\bm{Q}$ from the angle to the detector where the neutron was measured.
+
+Time-of-Flight spectrometers thus perform many simultaneous measurements, but can in some sense be used to probe many of the same things as TAS instruments. The better choice depends, of course, on the sample and phenomena that you are using it to probe. In the case of this thesis, we used the IN4 spectrometer to measure the phonon density-of-states of powdered samples. Since the powder is rotationally averaged, the result of a measurement is a $(Q,\hbar\omega)$ map where $Q$ is defined as the length of $\bm{Q}$. An example of such a dataset is shown in figure \ref{fig:sample_sqw} in chapter \ref{ch:in4}. By integrating the full map onto the energy axis we obtain the experimental phonon density-of-states.
+
+While equation \ref{eq:one_phonon_sqw} is still valid since most of our scattering is 1-phonon processes at low temperature, we use the confusingly named \emph{incoherent approximation}. The physical reasoning is that the rotational averaging due to the powder cancels out correlations between distinct atoms. Mathematically, it is due to factor 
+%
+\[ \left( \sum_j \bm{Q} \cdot \bm{e}_j (\bm{q}, \nu) \right)^2 \, \]
+%
+which in the incoherent approximation is replaced by \cite{Carpenter1985}\todo{I think this is correct, not 100\% sure}
+%
+\[ \sum_j  Q^2 \left( \bm{e}_j (\bm{q}, \nu) \right)^2 \]
+%
+essentially eliminating the cross terms. With this approximation, the 1-phonon incoherent cross-section becomes\todo{check these equations and make consistent with notation}:
+%
+\[ S^{(1)}_{\mathrm{inc}}(Q,E) = \exp\left(-2\bar{W}(Q)\right) \frac{Q^2}{E} \langle n+\frac{1}{2}\pm\frac{1}{2} \rangle \left[ \sum_k \frac{\sigma_k^{\mathrm{scatt}}}{2m_k} g_k(E) \right]\, \]
+%
+where $g_k(E)$ represents the phonon density of states. With this, much simpler, expression we can transform our $(Q,E)$ dataset into the phonon density of states, only supplying the mean-squared displacement and atomic composition. Similar to the phonon bands, the phonon density of states can also be directly obtained from simulations methods. ToF spectroscopy on powders thus allows us to investigate properties of the overall phonon spectra, in contrast to the distinct phonon bands as measured by TAS spectroscopy.
+
+\subsection{Real-space diffraction}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.6\textwidth]{fig/method/ns/d4.jpg}
+	\caption[D4 layout]{D4 layout \cite{d4}}
+	\label{fig:d4}
+\end{figure}
+
+The last method I will cover here is a diffraction instrument focussed on obtaining real space structures. In terms of the correlation functions defined in section \ref{sec:neutron}, we are interested in the time-averaged $G(\bm{r}, t)$ which can be found as the Fourier transform of $S(\bm{Q},\omega=0)$. In order to perform this Fourier transform, it is desired to measure at a wide range of $\bm{Q}$ in order to avoid artefacts related to the Fourier transform.
+
+Figure \ref{fig:d4} shows the D4 diffractometer at ILL. Since diffraction assumes elastic scattering, the instrument is equipped with a monochromator before the sample, but no energy analysis of the scattered neutrons is performed. Rather, the neutrons are directly measured at the radial detectors. In order to optimize the $\bm{Q}$-range of the instrument, we want to minimize the wavelength (Bragg's law), so D4 is placed at a hot source so that we can get a large number of high-energy neutrons. For our particular experiment the monochromator selected neutrons with a wavelength $\lambda = \SI{0.35}{\angstrom}$, corresponding to an energy of $E = \SI{668}{\milli\eV}$.
+
+The object of interest in this case is the total pair distribution function $G(r)$, which tells you the probability of finding two atoms separated by a distance $r$, weighted by the product of their coherent neutron scattering lengths $\overline{b}$. As we shall see in section \ref{sec:sim_experiment_compare}, these distributions can be found from a molecular dynamics simulation. In order to compare with experiment  we then consider
+%
+\[ G(r) = \frac{1}{\overline{b}^2} \sum_{\alpha=1,\beta\geq\alpha} c_\alpha c_\beta \overline{b}_\alpha \overline{b}_\beta (g_{\alpha\beta}(r) - 1) \, , \]
+%
+where $c_i = \frac{N_i}{N}$ is the number concentration and $\bar{b_i}$ is the coherent neutron cross section of species $i$ and 
+%
+\[ \overline{b}^2 = \left(\sum_\alpha \overline{b}_\alpha c_\alpha \right)^2 \, . \]
+%
+In the PDF community there is a large number of conventions regarding how to normalize and represent pair-correlation functions in theory and experiment (see review by keen et al.). The $G(r)$ presented here is typically called the \emph{Total Pair-Distribution Function}, but your mileage may vary. For the calculations and experiments presented in this thesis we always refer to $g_{\alpha\beta}(r)$ and $G(r)$ as defined here.
 
 \section{Density Functional Theory}\label{sec:dft}
 
@@ -142,7 +261,7 @@ In electronic structure calculations we are ultimately interested in the many-bo
 
 \[ \Psi(\bm{r}_1,\bm{r}_2,\dots, \bm{r}_n; \bm{R}_1, \bm{R}_2, \dots , \bm{R}_N) \]
 
-\noindent where $\bm{r}_i$ are electron coordinates and $\bm{R}_i$ are nuclear coordinates. Imagine that we want to calculate this object for a small molecule such as Benzene (C$_6$H$_6$) containing 12 nuclei and 42 electrons. This wavefunction exists in $42\cdot3-6 = 156$ dimensional cartesian space! If we want to store this object on a computer with a modest precision of 10 grid points per coordinate, it would require $10^{156}$ complex numbers or $64 \cdot 10^{156}$ bits (assuming single-precision floating points numbers of 32 bits). Lloyd2000 estimated the total number of bits available for computation in the observable universe to be $10^{90}$ (Lloyd2000). Even with the entire universe at our disposal this object is completely unmanageable. This exercise also emphasizes the potential of Quantum Computers. For this reason, we fix the ionic positions and assume that the many-body wavefunction can be written as a product of single-electron wavefunctions (orbitals):
+\noindent where $\bm{r}_i$ are electron coordinates and $\bm{R}_i$ are nuclear coordinates. Imagine that we want to calculate this object for a small molecule such as Benzene (C$_6$H$_6$) containing 12 nuclei and 42 electrons. This wavefunction exists in $42\cdot3-6 = 156$ dimensional cartesian space! If we want to store this object on a computer with a modest precision of 10 grid points per coordinate, it would require $10^{156}$ complex numbers or $64 \cdot 10^{156}$ bits (assuming single-precision floating points numbers of 32 bits). \citeauthor{Lloyd2002} estimated the total number of bits available for computation in the observable universe to be $10^{90}$ \cite{Lloyd2002}. Even with the entire universe at our disposal this object is completely unmanageable. This exercise also emphasizes the potential of Quantum Computers. For this reason, we fix the ionic positions and assume that the many-body wavefunction can be written as a product of single-electron wavefunctions (orbitals):
 
 \[ \Psi(\bm{r}_1,\bm{r}_2,\dots, \bm{r}_n; \bm{R}_1, \bm{R}_2, \dots , \bm{R}_N) \longrightarrow \phi(\bm{r}_1)\phi(\bm{r}_2)\dots\phi(\bm{r}_n) \]
 
@@ -154,7 +273,7 @@ In electronic structure calculations we are ultimately interested in the many-bo
 
 \subsection{The Hellman-Feynman theorem and molecular forces}
 
-\section{Phonon Calculations}
+\section{Phonon Calculations}\label{sec:phonon_calc}
 In most textbooks (e.g. Kittel \cite{Kittel2005}), phonon calculations are exemplified by simple models in one dimension consisting of only one or two inequivalent atoms. While these models are useful for providing basic results of lattice dynamical models, the extension to realistic models requires some level of abstraction in order to be useful. In particular, it is essential to cast the problem in terms of linear algebra. In this section, I will start from the (somewhat abstract) formalism used in practice and work backwards towards a physical understanding. While software such as PHONON \cite{Parlinski1997} and Phonopy \cite{Togo2015} can be used without prior knowledge of the formalism, it is always useful to have some insights about our frequently used 'black boxes`. In order to calculate the phonon spectrum for a given system in the harmonic approximation, we require the following objects:
 
 \begin{enumerate}
@@ -362,7 +481,7 @@ v_i^\text{scaled} &= \frac{\bm{p}_i}{m_i} \\
 \text{d}\zeta &= \frac{1}{Q} \left( \sum_{i=1}^N \frac{|\bm{p_i}|^2}{m_i} - (3N+1)k_\text{B}T\right) \text{d}t
 \end{align*}
 
-\section{Comparing Simulation and Experiment}
+\section{Comparing Simulation and Experiment}\label{sec:sim_experiment_compare}
 
 \subsection{VACF and gDOS}
 It turns out [dove] that the phonon density of states can be found from the power spectrum of the mass-weighted velocity autocorrelation function (VACF). The VACF is, as the name implies, an expression of the correlation between velocites at different. In liquids, the VACF will rapidly decay to zero and in solids the VACF will fluctuate due to coherent vibrations around equilibrium positions. The VACF for a single atomic species $\alpha$ is defined as
@@ -421,13 +540,13 @@ g_{\alpha\beta}(r) &= \frac{ \left\langle n_{\alpha\beta}(r,\mathrm{d}r) \right\
 %
 where $N_i$ is the number and $\rho_i$ is the density of particle species $i$. The reason to define it in `both directions' is that $n_{\alpha\beta}$ is symmetric to exchange of particles. From the partial pair distribution functions, $g(r)$ can be trivially computed and optionally weighted by neutron cross sections:
 %
-\[ G(r) = \frac{1}{\overline{b}^2} \sum_{\alpha=1,\beta\geq\alpha} c_\alpha c_\beta \overline{b}_\alpha \overline{b}_\beta (g_{\alpha\beta}(r) - 1) \, , \]
-%
-where $c_i = \frac{N_i}{N}$ is the number concentration and $\bar{b_i}$ is the coherent neutron cross section of species $i$ and 
-%
-\[ \overline{b}^2 = \left(\sum_\alpha \overline{b}_\alpha c_\alpha \right)^2 \, . \]
-%
-In the PDF community there is a large number of conventions regarding how to normalize and represent pair-correlation functions in theory and experiment (see review by keen et al.). The $G(r)$ presented here is typically called the \emph{Total Pair-Distribution Function}, but your mileage may vary. For the calculations and experiments presented in this thesis we always refer to $g_{\alpha\beta}(r)$ and $G(r)$ as defined here.
+% \[ G(r) = \frac{1}{\overline{b}^2} \sum_{\alpha=1,\beta\geq\alpha} c_\alpha c_\beta \overline{b}_\alpha \overline{b}_\beta (g_{\alpha\beta}(r) - 1) \, , \]
+% %
+% where $c_i = \frac{N_i}{N}$ is the number concentration and $\bar{b_i}$ is the coherent neutron cross section of species $i$ and 
+% %
+% \[ \overline{b}^2 = \left(\sum_\alpha \overline{b}_\alpha c_\alpha \right)^2 \, . \]
+% %
+% In the PDF community there is a large number of conventions regarding how to normalize and represent pair-correlation functions in theory and experiment (see review by keen et al.). The $G(r)$ presented here is typically called the \emph{Total Pair-Distribution Function}, but your mileage may vary. For the calculations and experiments presented in this thesis we always refer to $g_{\alpha\beta}(r)$ and $G(r)$ as defined here.
 
 \subsection{Atomic distance histograms}
 If our MD simulations fulfils the ergodic hypothesis, it is useful to look at various distributions that can be extracted from the simulation. While a lot of this information is contained in the radial distribution function, the system studied in this thesis is not isotropic. In fact, the 2-dimensional nature of the cuprates appears to be essential for the electronic properties. By generating histograms for certain atoms, we can ask a few pertinent questions such as:
@@ -458,19 +577,19 @@ In this thesis 3 types of neutron measurements has been performed:
 
 \subsubsection{Phonon bands with TAS}
 The master equation for phonon scattering can be found in [squires] and directly relates the measured differential cross-section to the phonon band structure:
-%
-\begin{equation}
-	S(\bm{Q},\nu,\omega) = \frac{k_\text{f}}{k_\text{i}} \frac{N}{\hbar} \sum_{\bm{q}} | F(\bm{Q},\bm{q},\nu) |^2 ( n_{\bm{q}\nu} + 1) \delta (\omega - \omega_{\bm{q}\nu}) \delta(\bm{Q} - \bm{q} - \bm{G})
-	\label{eq:one_phonon_sqw}
-\end{equation}
-%
-with
-%
-\[
-	F(\bm{Q}, \bm{q}, \nu) = \sum_j \sqrt{\frac{\hbar}{2 m_j \omega_{\bm{q}\nu}}} \bar{b}_j \exp \left( -\frac{1}{2} \langle | \bm{Q} \cdot \bm{u}(j0) |^2 \rangle \right) \exp [ -i(\bm{Q} - \bm{q}) \cdot \bm{r}(j0) ] \bm{Q} \cdot \bm{e}_j(\bm{q},\nu)
-\]
-%
-where $\bm{Q}$ and $\omega$ are the wave vector and energy of our measurement. $\nu$ is a phonon band and $\bm{q}$ is a wave vector. $\omega_{\bm{q}\nu}$ is the energy of phonon band $\nu$ at wave vector $\bm{q}$ and $n_{\bm{q}\nu}$ is the Bose factor at this energy. Atomic species are designated with index $j$, their mass is $m_j$ and their coherent neutron cross-section is $\bar{b}_j$. $\bm{u}(j0)$ and $\bm{r}(j0)$ is the displacement and position of atom $j$ in unit cell 0, respectively. Finally, $G$ is any reciprocal lattice vector and $\bm{e}_j(\bm{q},\nu)$ is the phonon eigenvector of atom $j$, band $\nu$ and wave vector $\bm{q}$.
+% %
+% \begin{equation}
+% 	S(\bm{Q},\nu,\omega) = \frac{k_\text{f}}{k_\text{i}} \frac{N}{\hbar} \sum_{\bm{q}} | F(\bm{Q},\bm{q},\nu) |^2 ( n_{\bm{q}\nu} + 1) \delta (\omega - \omega_{\bm{q}\nu}) \delta(\bm{Q} - \bm{q} - \bm{G})
+% 	\label{eq:one_phonon_sqw}
+% \end{equation}
+% %
+% with
+% %
+% \[
+% 	F(\bm{Q}, \bm{q}, \nu) = \sum_j \sqrt{\frac{\hbar}{2 m_j \omega_{\bm{q}\nu}}} \bar{b}_j \exp \left( -\frac{1}{2} \langle | \bm{Q} \cdot \bm{u}(j0) |^2 \rangle \right) \exp [ -i(\bm{Q} - \bm{q}) \cdot \bm{r}(j0) ] \bm{Q} \cdot \bm{e}_j(\bm{q},\nu)
+% \]
+% %
+% where $\bm{Q}$ and $\omega$ are the wave vector and energy of our measurement. $\nu$ is a phonon band and $\bm{q}$ is a wave vector. $\omega_{\bm{q}\nu}$ is the energy of phonon band $\nu$ at wave vector $\bm{q}$ and $n_{\bm{q}\nu}$ is the Bose factor at this energy. Atomic species are designated with index $j$, their mass is $m_j$ and their coherent neutron cross-section is $\bar{b}_j$. $\bm{u}(j0)$ and $\bm{r}(j0)$ is the displacement and position of atom $j$ in unit cell 0, respectively. Finally, $G$ is any reciprocal lattice vector and $\bm{e}_j(\bm{q},\nu)$ is the phonon eigenvector of atom $j$, band $\nu$ and wave vector $\bm{q}$.
 
 Note that the equations have been rewritten slightly when compared to Squires (similar to what is presented on the Phonopy website), such that $S(\bm{Q},\nu,\omega)$ is defined separately for each phonon band. In addition, the sum in the phonon structure factor runs over atomic indices in unit cell 0, consistent with the definitions made earlier in this chapter.
 

@@ -110,46 +110,67 @@ This appendix contains plots and analysis that would be distracting in the main 
     \label{fig:incar}
 \end{figure}
 
-\chapter{Temp}
-
-\section{Neutron-weighted phonon bands}
+\chapter{Low energy phonon additional plots}\label{app:lowen_plots}
 
 \begin{figure}
-	\centering
-	\includegraphics[width=\textwidth]{fig/simulation/lto_neutron_bands.pdf}
-	\caption[LTO band structure with neutron intensities]{LTO band structure with neutron intensities. $l=0$ so no intensity at $Z$. The wo paths are with respect to Figure \ref{fig:band_paths}. but in the two inequivalent directions due to orthorhombic strain. A real neutron scattering image would correspond to the superposition of these two band structures due to twinning.}
-	\label{fig:lco_lto_netron_bands}
+    \centering
+    \includegraphics[width=\textwidth]{fig/lowen/fits_400T.pdf}
+    \caption[400T flatcone raw data]{400T flatcone raw data}
+    %label{fig:flatcone_phonons_400T_raw}    
 \end{figure}
 
 \begin{figure}
-	\centering
-	\includegraphics[width=\textwidth]{fig/simulation/lco_soft_modes.pdf}
-	\caption[LCO, LTO: soft mode simulation]{Neutron-weighted phonon bands of the LTO taken in the (104) and (014) BZ along the $M$-$\Gamma$-$X$-$M$ (left to right) path with respect to the coordinate system defined in Figure \ref{fig:band_paths}. Due to the larger BZ of the LTO primitive cell, the high symmetry points changes their labels as shown on the horizontal axis of the figure. This illustrates the fact that neutron scattering measurements at (104)/(014) will be measuring at the primitive $\Gamma$- and $Z$-point, respectively. Note that an $l$-component is required to get any neutron weight at $Z$.}
-	\label{fig:lco_soft_sim}
+    \centering
+    \includegraphics[width=\textwidth]{fig/lowen/fits_220T.pdf}
+    \caption[220T flatcone raw data]{220T flatcone raw data}
+    %\label{fig:flatcone_phonons_400T_raw}
 \end{figure}
 
 \begin{figure}
-	\centering
-	\includegraphics[width=0.45\textwidth]{fig/simulation/qxqy_neutron.pdf}
-	\hspace{2em}
-	\includegraphics[width=0.45\textwidth]{fig/simulation/flatcone_data.png}
-	\caption[flatcone 9 meV compared to simulation]{Simulation of neutron intensities compared to flatcone data at 9 meV.}
-	\label{fig:qxqy_neutron}
-	
+    \centering
+    \includegraphics[width=\textwidth]{fig/lowen/fits_400L.pdf}
+    \caption[400L flatcone raw data]{400L flatcone raw data}
+    %\label{fig:flatcone_phonons_400L_raw}    
 \end{figure}
 
-\section{LSCO}
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{fig/lowen/fits_220L.pdf}
+    \caption[220L flatcone raw data]{220L flatcone raw data}
+    %\label{fig:flatcone_phonons_220L_raw}    
+\end{figure}
 
-In order to dope with strontium, we chose an equivalent doping of LCO+O (assuming that each oxygen atom adds two holes which is disputed). We thus replace two lanthanum atoms with strontium. With the assumption that strontium atoms are randomly, homogeneously distributed, we chose two sites where the distance is maximized. Inspection of the 2x2x1 supercell reveals that there are 4 reasonable choices of which one is chosen at random. The distance between the Sr ions is roughly \SI{8.85}{\angstrom}
+\begin{figure}[]
+    \centering
+    \includegraphics[width=\textwidth]{fig/lowen/flatcone_fits_simulation_htt_afm.png}
+    \caption[Flatcone dispersion and neutron weighted simulation data]{Flatcone dispersion and neutron weighted simulation data. HTT AFM simulation data.}
+    %\label{fig:flatcone_phonons_dispersion_simulation}
+\end{figure}
 
-\section{Phonon DOS from PhonoPy}
+\begin{figure}[]
+    \centering
+    \includegraphics[width=\textwidth]{fig/lowen/flatcone_fits_simulation_ltt_afm.png}
+    \caption[Flatcone dispersion and neutron weighted simulation data]{Flatcone dispersion and neutron weighted simulation data. LTT AFM simulation data.}
+    %\label{fig:flatcone_phonons_dispersion_simulation}
+\end{figure}
 
-The phonon density-of-states is formally defined as
+\begin{figure}[]
+    \centering
+    \includegraphics[width=\textwidth]{fig/lowen/flatcone_fits_simulation_htt_metal.png}
+    \caption[Flatcone dispersion and neutron weighted simulation data]{Flatcone dispersion and neutron weighted simulation data. LTT AFM simulation data.}
+    %\label{fig:flatcone_phonons_dispersion_simulation}
+\end{figure}
 
-\[ g(\omega) = \frac{1}{N} \sum_\lambda \delta(\omega - \omega _\lambda) \]
+\begin{figure}[]
+    \centering
+    \includegraphics[width=\textwidth]{fig/lowen/flatcone_fits_simulation_lto_metal.png}
+    \caption[Flatcone dispersion and neutron weighted simulation data]{Flatcone dispersion and neutron weighted simulation data. LTO metal simulation data.}
+    %\label{fig:flatcone_phonons_dispersion_simulation}
+\end{figure}
 
-\noindent where $\omega$ is the phonon frequency, $N$ is the number of unit cells and $\omega _\lambda$ is the energy of a phonon $\lambda=(\nu,\bm{q})$ parametrized by a band index $\nu$ and a wave vector $\bm{q}$. In practice, $g(\omega)$ is found by integrating the phonon branches in the FBZ on a mesh of $N$ equally spaced points. The $\delta$-function is handled by either replacing it with a Gaussian of finite width $\sigma$ or by performing an integration using the tetrahedron method \cite{Blochl1994} (or both)\todo{sill not sure how it is ACTUALLY done in phonopy}. The partial density of states an atom $j$ can similarly be defined as:
-
-\[ g^j (\omega) = \sum_{\bm{\hat{n}}=\{x,y,z\}} \frac{1}{N} \sum_\lambda \sigma(\omega - \omega_\lambda) \left| \bm{\hat{n}} \cdot \bm{e}^j_\lambda \right| ^2 \]
-
-\noindent where $\bm{\hat{n}}$ is the unit projection vector direction and $\bm{e}^j_\lambda$ is the phonon eigenvector of atom $j$ at $\lambda=(\nu,\bm{q})$. The neutron-weighted partial density of states of atom $j$ is then simply $b_j g^j(\omega)$, where $b_j$ is the total scattering cross-section of atom $j$.
+\begin{figure}[]
+    \centering
+    \includegraphics[width=\textwidth]{fig/lowen/flatcone_fits_simulation_ltt_metal.png}
+    \caption[Flatcone dispersion and neutron weighted simulation data]{Flatcone dispersion and neutron weighted simulation data. LTT Metal simulation data.}
+    %\label{fig:flatcone_phonons_dispersion_simulation}
+\end{figure}

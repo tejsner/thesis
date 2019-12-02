@@ -7,6 +7,7 @@
 %%% Margins
 \setulmarginsandblock{2cm}{2cm}{*}
 \setlrmarginsandblock{3cm}{3cm}{*}
+%\setlrmarginsandblock{3cm}{2cm}{*}
 \checkandfixthelayout
 
 %% Useful packages
@@ -38,6 +39,7 @@
 
 \usepackage{pgfplots}
 \usepgfplotslibrary{dateplot}
+\pgfplotsset{compat=1.16}
 
 %% Bibtex
 \usepackage[
@@ -56,11 +58,18 @@ chaptertitle=true
 \title{Oxygen Dynamics in the High-Temperature Superconductor LSCO+O}
 \date{\today}
 
-\includeonly{ch/tilts, ch/appendix}
+%\includeonly{ch/arpes}
 
 \begin{document}
 
-\maketitle
+\input{ch/title.tex}
+
+\clearpage
+
+\chapter*{Abstract}
+
+\clearpage
+
 \tableofcontents
 
 \clearpage

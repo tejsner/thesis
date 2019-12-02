@@ -9,7 +9,7 @@ We start by considering measurements performed on IN8 at ILL, using the FlatCone
 \begin{figure}
     \includegraphics[width=\textwidth]{fig/lowen/flatcone_colorplots.png}
     \includegraphics[width=\textwidth]{fig/lowen/simulation_colorplots.png}
-    \caption[Flatcone raw inelastic]{FlatCone data of La$_2$CuO$_{4+\delta}$ in the $a$-$b$ at three energies and simulation data of La$_2$CuO$_{4}$ at the same energies. \textbf{Top}: Raw data at \SIlist{6;9;12}{\milli\eV} annotated with cut directions in the leftmost figure. In addition, the middle figure highlights a small amount of spectral weight observed in a narrow range of energies near (310). \textbf{Bottom}: Simulation data at energies corresponding to the top row. Details about the simulation data is given in the text.}
+    \caption[Flatcone raw inelastic]{FlatCone data of La$_2$CuO$_{4+\delta}$ in the $a$-$b$ plane at three energies and simulation data of La$_2$CuO$_{4}$ at the same energies. \textbf{Top}: Raw data at \SIlist{6;9;12}{\milli\eV} annotated with cut directions in the leftmost figure. In addition, the middle figure highlights a small amount of spectral weight observed in a narrow range of energies near (310). \textbf{Bottom}: Simulation data at energies corresponding to the top row. Details about the simulation data is given in the text.}
     \label{fig:flatcone_raw_inelastic}
 \end{figure}
 
@@ -42,12 +42,12 @@ Now, as we can see in figure \ref{fig:flatcone_raw_inelastic}, there is a nice q
     \label{fig:flatcone_phonons_310T_raw}    
 \end{figure}
 
-Figures \ref{fig:transverse_phonons_flatcone} and \ref{fig:longitudinal_phonons_flatcone} shows the peak positions as a function of energy along the transverse and longitudinal directions, respectively along with a naive fit to the shape of a monoatomic phonon dispersion \cite{Kittel2005}. Details about the peak finding feature and plots of the data is shown in appendix \ref{app:lowen_plots}. We have the expected results that longitudinal acoustic phonons are steeper since they are essentially bond stretching motions, where transverse phonons resembles a shear motion. Finally, we show the raw data for the four spectra where we see a signature of excitations around (310) in figure \ref{fig:flatcone_phonons_310T_raw}.
+Figures \ref{fig:transverse_phonons_flatcone} and \ref{fig:longitudinal_phonons_flatcone} shows the peak positions as a function of energy along the transverse and longitudinal directions, respectively along with a naive fit to the shape of a monoatomic phonon dispersion \cite{Kittel2005}. Details about the peak finding feature and plots of the data is shown in appendix \ref{app:lowen_plots}. We have the expected results that longitudinal acoustic phonons are steeper since they are essentially bond stretching motions, where transverse phonons resembles a shear motion with a flatter dispersion. Finally, in Figure \ref{fig:flatcone_phonons_310T_raw} we show the raw data for the four spectra where we see a signature of excitations around (310).
 
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{fig/lowen/flatcone_fits_simulation_lto_afm.png}
-    \caption[FlatCone dispersion and neutron weighted simulation data]{Data obtained from FlatCone measurements in red (figures \ref{fig:transverse_phonons_flatcone} and \ref{fig:longitudinal_phonons_flatcone}) superimposed on the neutron-weighted simulation data of La$_2$CuO$_4$ in the orthorhombic phase. The simulation data is given a small Gaussian width in order to emphasize what a neutron experiment should look like according to simulations.}
+    \caption[FlatCone dispersion and neutron weighted simulation data]{Data obtained from FlatCone measurements La$_2$CuO$_{4+\delta}$ in the $a$-$b$ plane  ar shown in red (figure \ref{fig:transverse_phonons_flatcone} tranverse in top row) and figure \ref{fig:longitudinal_phonons_flatcone}longitudinal in bottom row ) superimposed on the neutron-weighted simulation data of La$_2$CuO$_4$ in the orthorhombic phase. The simulation data is given a small Gaussian width in order to emphasize what a neutron experiment should look like according to simulations.}
     \label{fig:flatcone_phonons_dispersion_simulation}
 \end{figure}
 
@@ -58,7 +58,7 @@ Figures \ref{fig:transverse_phonons_flatcone} and \ref{fig:longitudinal_phonons_
     \label{fig:flatcone_phonons_310T_sim}
 \end{figure}
 
-Once again, we can use this extracted dispersion to compare with our simulation data. In figure \ref{fig:flatcone_phonons_dispersion_simulation}, we see the data previous figures along with a neutron weighted band structure plot along the same directions. Once again, the simulations have been broadened along the energy axis in order to emphasize the neutron cross-section. This also means that there are certain bands not visible in these plots because their intensity vanishes (see figure \ref{fig:bands_sqw_color_line} for a visual explanation of this point). As indicated by the two dimensional color plot in figure \ref{fig:flatcone_raw_inelastic}, we have excellent agreement between measurement and simulation.
+Once again, we can use this extracted dispersion to compare with our simulation data. In figure \ref{fig:flatcone_phonons_dispersion_simulation}, we see the data from figures \ref{fig:transverse_phonons_flatcone} and \ref{fig:longitudinal_phonons_flatcone}  together with a simulated neutron weighted band structure plot along the same directions. Once again, the simulations have been broadened along the energy axis in order to emphasize the neutron cross-section. This also means that there are certain bands not visible in these plots because their intensity vanishes (see figure \ref{fig:bands_sqw_color_line} for a visual explanation of this point). As indicated by the two dimensional color plot in figure \ref{fig:flatcone_raw_inelastic}, we have excellent agreement between measurement and simulation.
 
 As the attentive reader might have noticed, we performed simulations of several different versions of La$_2$CuO$_4$ in chapter \ref{ch:simulation}. The comparison shown here is the low-temperature orthorhombic structural phase in the insulating state with static magnetism. This was chosen using through a visual inspection of the different simulations. The remaining five plots are shown in appendix \ref{app:lowen_plots}.
 
@@ -80,7 +80,7 @@ In addition, the bottom row of figure \ref{fig:flatcone_raw_inelastic} was gener
 
 For the sake of completeness, figure \ref{fig:simulation_sqw_xy_plots_all} shows all six simulations from chapter \ref{ch:simulation} at \SI{9}{\milli\eV}. Once again, it seems likely that the `LTO AFM' simulation is the best representation of the sample chosen for this experiment, La$_{1.94}$Sr$_{0.06}$CuO$_{4+\delta}$.
 
-While not groundbreaking in terms of scientific impact, I believe that these comparison confidently shows that our simulations can be trusted to some degree with regards to lattice dynamics. In addition, I hope that the tools (appendix \ref{app:software}) developed to generate these plots can be helpful for neutron scatterers in the future. To end this section, I direct the reader to a video at \url{https://youtu.be/LC-qV3CjqBM} which illustrates the dispersive features of the 2D colorplots in this section by moving through the energy axis as a function of time. While not particularly pertinent, I think it has an aesthetic most people can appreciate.
+While they may not be groundbreaking in terms of scientific impact, I believe that these comparisons confidently shows that our simulations can be trusted to some degree with regards to lattice dynamics. In addition, I hope that the tools (appendix \ref{app:software}) developed to generate these plots can be helpful for neutron scatterers in the future. To end this section, I direct the reader to a video at \url{https://youtu.be/LC-qV3CjqBM} which illustrates the dispersive features of the 2D colorplots in this section by moving through the energy axis which may be instructive for the reader to predict what may be observed at constant neutron energy measurements besides the ones explicitly plotted in this thesis.
 
 \section{Structural instabilities}
 In this section, we investigate a peculiarity with regards to the low-temperature orthorhombic phase in La$_{2-x}$Sr$_x$CuO$_{4}$. In the mid 2000s, it was discovered that this material is unstable towards a low-temperature tetragonal phase at low temperatures. This shows up as the softening of a phonon at (104) and the temperature-dependence has been measured in optimally doped La$_{1.85}$Sr$_{0.15}$CuO$_4$ and insulating La$_{1.95}$Sr$_{0.05}$CuO$_4$, summarized in figure \ref{fig:soft_phonons_summary}. Back then, it was suggested that the softening abruptly stops at $T_\text{c}$ for the optimally doped sample, essentially preventing the tetragonal phase from emerging -- or at least stopping the instability in its tracks.
@@ -131,7 +131,7 @@ Finally, we take a look at the superstructures observed in chapter \ref{ch:local
     \label{fig:phason_flatcone_maps}
 \end{figure}
 
-We start by looking at these dynamics with the FlatCone analyser as shown in figure \ref{fig:phason_flatcone_maps}. We, once again, clearly see the elastic scattering from the superstructures, but as we move up in energy, we only see the acoustic phonon emerging from the Bragg peak. Since the FlatCone analyser measures at a fixed energy, it can be difficult to see if the mode is very flat.
+We start by looking at these dynamics with the FlatCone analyser as shown in figure \ref{fig:phason_flatcone_maps}. We, once again, clearly see the elastic scattering from the superstructures, but as we move up in energy, we only see the acoustic phonon emerging from the Bragg peak. It should however be noted that since the FlatCone analyser measures at a fixed energy, it can be difficult to see detect a  mode if it is very flat.
 
 \begin{figure}
     \centering

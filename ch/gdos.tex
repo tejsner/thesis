@@ -27,7 +27,7 @@ We performed inelastic neutron time-of-flight experiments on a series of La$_{2-
        LCO &                           La$_2$CuO$_4$ &                           - \\
       LCOO &                      La$_2$CuO$_{4.05}$ &  $\approx \SI{40}{\kelvin}$ \\
      LSCO3 &           La$_{1.97}$Sr$_{0.03}$CuO$_4$ &                           - \\
-     LSCO3 &  La$_{1.97}$Sr$_{0.03}$CuO$_{4+\delta}$ &  $\approx \SI{40}{\kelvin}$ \\
+     LSCOO3 &  La$_{1.97}$Sr$_{0.03}$CuO$_{4+\delta}$ &  $\approx \SI{40}{\kelvin}$ \\
     \bottomrule
     \end{tabular}
 \end{table}
@@ -53,7 +53,7 @@ Experiments were performed at the thermal neutron time-of-flight spectrometer IN
     \label{fig:sample_sqw}
 \end{figure}
 
-The raw time-of-flight data was reduced to $S(\bm{q},\omega)$ using the \texttt{Mantid} \cite{Arnold2014} software and background was corrected using a sample of polycrystalline vanadium. Due to the isotropic nature of the powder, we only consider the magnitude of $\bm{Q}$ and the resulting data can be viewed in two dimensions as shown in Figure \ref{fig:sample_sqw}A. Obtaining the density-of-states is done in Mantid with the \texttt{ComputeIncoherentDOS} \cite{mantid_dos} algorithm, using the following expression for the one-phonon incoherent scattering function (see section \ref{sec:specific_neutron} for details):
+The raw time-of-flight data was reduced to $S(\bm{q},\omega)$ using the \texttt{Mantid} \cite{Arnold2014} software and the measured background was corrected by subtracting measurements of a sample of polycrystalline vanadium from our data. Due to the isotropic nature of the powder, we only consider the magnitude of $\bm{Q}$ and the resulting data can be viewed in two dimensions as shown in Figure \ref{fig:sample_sqw}A. Obtaining the density-of-states is done in Mantid with the \texttt{ComputeIncoherentDOS} \cite{mantid_dos} algorithm, using the following expression for the one-phonon incoherent scattering function (see section \ref{sec:specific_neutron} for details):
 
  \[ S^{(1)}_{\mathrm{inc}}(Q,E) = \exp\left(-2\bar{W}(Q)\right) \frac{Q^2}{E} \langle n+\frac{1}{2}\pm\frac{1}{2} \rangle \left[ \sum_k \frac{\sigma_k^{\mathrm{scatt}}}{2m_k} g_k(E) \right]\, , \]
  
@@ -106,12 +106,12 @@ Applying this procedure to all 4 samples, figure \ref{fig:gdos_10k} shows the ph
              LCO &   10.2 &  12.8 &     - &   18.9 &     - &   27.5 &   38.2 &   56.4 &   80.0 \\
             LCOO &   11.5 &     - &     - &   18.4 &     - &   28.9 &   38.5 &   55.4 &   79.5 \\
            LSCO3 &   10.7 &  13.6 &  16.5 &   18.9 &  22.9 &   28.8 &   39.1 &   56.4 &   83.5 \\
-         LSCO3+O &   11.6 &     - &     - &   18.8 &  23.2 &   28.9 &   38.8 &   56.5 &   79.5 \\
+         LSCOO3 &   11.6 &     - &     - &   18.8 &  23.2 &   28.9 &   38.8 &   56.5 &   79.5 \\
         \bottomrule
     \end{tabular}
 \end{table}
 
-Table \ref{tab:gdos_features_10K} shows these features in a list of peak-energies $E_k$, indicating that we can generally identify four separate high-energy peaks at $\approx$ \SIlist{28;39;56;80}{\milli\eV} which are general similar between our samples. Comparison with figure \ref{fig:neutron_bands_dos_lto_afm} shows that these features are qualitatively consistent with the calculated spectrum and that the two high-energy features originate from distinct bands. Features below \SI{30}{\milli\eV} are much more subtle and will have to be analyzed based on changes in the shape of our measured DOS.
+Table \ref{tab:gdos_features_10K} shows these features in a list of peak-energies $E_k$, indicating that we can generally identify four separate high-energy peaks at $\approx$ \SIlist{28;39;56;80}{\milli\eV} which are general similar between our samples. Comparison with figure \ref{fig:neutron_bands_dos_lto_afm} shows that these features are qualitatively consistent with the calculated spectrum and that the two highest energy features originate from distinct bands. Features below \SI{30}{\milli\eV} are much more subtle and will have to be analyzed based on changes in the shape of our measured DOS.
 
 Comparing between samples with and without interstitial oxygen, our visual inspection reveals two distinct features. First, we see a subtle modification of the high-energy mode at $\approx \SI{80}{\milli\eV}$, where it seems that spectral weight is moved to lower energies. This is consistent with softening of the Cu-O bond-stretching mode which we will return to in the next chapter. Second, there is a general smoothing of features below \SI{30}{\milli\eV} when introducing interstitial oxygen into the sample. Intuitively, one would expect a smoother DOS with increased disorder, so this observation is, at least qualitatively, consistent with what we would expect. On the other hand, we also see a slight sharpening of features when comparing Sr-doped LSCO3 with the parent compound LCO, inconsistent with the intuitive notion of disorder-induced smoothing of the spectra. LCO, in addition, has a peculiar broad feature at high energies (\SIrange{65}{85}{\milli\eV}), that is unique to that sample and cannot be explained by the logic we used so far.
 
@@ -141,7 +141,7 @@ Figure \ref{fig:compare_lco_lsco_sim} shows the same idea, but this time for the
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{fig/gdos/in4_low_energy_compare.pdf}
-    \caption{Dopant dependence of phonon DOS. \textbf{Left:} Effect of oxygen through a comparison of LCO and LCOO. Notice in particular the modification at low energies. \textbf{Right}: Effect of strontium through a comparison of LCO and LSCO3. While the LSCO3 spectra is much sharper, low energy features are similar in energy when compared to the effect of oxygen.}
+    \caption{Dopant dependence of measured phonon DOS. \textbf{Left:} Effect of oxygen through a comparison of LCO and LCOO. Notice in particular the modification at low energies. \textbf{Right}: Effect of strontium through a comparison of LCO and LSCO3. While the LSCO3 spectra is much sharper, low energy features are similar in energy when compared to the effect of oxygen.}
     \label{fig:in4_low_energy_compare}
 \end{figure}
 
@@ -152,6 +152,6 @@ In this chapter we measured several samples of La$_2$CuO$_4$ with different dopa
 
 With that in mind, we have been able to identify features at low energies which are qualitatively reproduced by our molecular dynamics simulations. At higher energies we only see a modification of the topmost phonon band which will be discussed in the following chapter.
 
-It thus appears as if, despite the significantly reduced simulation precision, that our molecular dynamics simulations can be used to identify a microscopic origin of the modified phonon DOS. The analysis of molecular dynamics simulations concluded that the inclusion of interstitial oxygen species resulted in local `LTT-like tilts' despite the structure being LTO. In fact, it is quite remarkable\todo{is it?} that the structure of these samples are almost identical in our diffraction experiments (the data in chapter \ref{ch:local} is from the same samples), but we clearly see a signature of the dopant species in the dynamics. 
+It thus appears, despite the significantly reduced simulation precision, that our molecular dynamics simulations can be used to identify a microscopic origin of the modified phonon DOS. The analysis of molecular dynamics simulations concluded that the inclusion of interstitial oxygen species resulted in local `LTT-like tilts' despite the structure being LTO. In fact, it is quite remarkable\todo{is it?} that the structure of these samples are almost identical in our diffraction experiments (the data in chapter \ref{ch:local} is from the same samples), but we clearly see a signature of the dopant species in the dynamics. 
 
 Now, if we believe that our simulations can completely reproduce the peculiarities of the phonon density in these systems,we are also forced to conclude that any differences cannot be directly due to superconductivity. That does not, however, rule out a scenario where these mechanisms are important for superconductivity. As a preliminary outlook, it could be interesting to perform the same measurements on, for example, La$_{1.85}$Sr$_{0.15}$CuO$_4$ ($T_\text{c} = \SI{39}{\kelvin}$) \cite{Radaelli1994a}, La$_{1.48}$Nd$_{0.4}$Sr$_{0.12}$CuO$_4$ (insulating) \cite{Tranquada1995} and La$_{1.875}$Ba$_{0.125}$CuO$_4$ ($T_\text{c} = \SI{4}{\kelvin}$) \cite{Hucker2011} with similar levels of doping but different $T_\text{c}$ and dopant distributions.

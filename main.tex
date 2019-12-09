@@ -1,4 +1,4 @@
-\documentclass[a4paper, oneside, table]{memoir}
+\documentclass[a4paper, table]{memoir}
 
 %% Language and font encodings
 %% British rather than English fixes date formats
@@ -6,15 +6,14 @@
 
 %%% Margins
 \setulmarginsandblock{2cm}{2cm}{*}
-\setlrmarginsandblock{3cm}{3cm}{*}
-%\setlrmarginsandblock{3cm}{2cm}{*}
+\setlrmarginsandblock{3.5cm}{2.5cm}{*}
 \checkandfixthelayout
 
 %% Useful packages
 \usepackage{amsmath}
 \usepackage{bm}
 \usepackage{graphicx}
-\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[colorinlistoftodos, disable]{todonotes}
 \usepackage[colorlinks=true, allcolors=blue, pdfencoding=auto]{hyperref}
 \usepackage{siunitx}
 \usepackage{booktabs}
@@ -24,6 +23,7 @@
 \usepackage{float}
 \usepackage{csquotes}
 \usepackage[super]{nth}
+\usepackage{subcaption}
 
 % some commands for making tables with alternating colours (replaces tabular environment)
 \definecolor{tablegrey}{gray}{0.9}
@@ -31,6 +31,23 @@
 \let\endoldtabular\endtabular
 \renewenvironment{tabular}{\rowcolors{2}{white}{tablegrey}\oldtabular}{\endoldtabular}
 \def\arraystretch{1.2}
+
+% some common materials
+\newcommand{\LSCO}{La$_{2-x}$Sr$_{x}$CuO$_4$}
+\newcommand{\LSCOOsix}{La$_{1.94}$Sr$_{0.06}$CuO$_{4+\delta}$}
+\newcommand{\LSCOO}{La$_{2-x}$Sr$_{x}$CuO$_{4+\delta}$}
+\newcommand{\LCOO}{La$_2$CuO$_{4+\delta}$}
+\newcommand{\LNSCO}{La$_{1.48}$Nd$_{0.4}$Sr$_{0.12}$CuO$_4$}
+\newcommand{\LSCOTwenty}{La$_{1.80}$Sr$_{0.20}$CuO$_4$}
+\newcommand{\LSCOopt}{La$_{1.85}$Sr$_{0.15}$CuO$_4$}
+\newcommand{\LSCOseven}{La$_{1.93}$Sr$_{0.07}$CuO$_4$}
+\newcommand{\LSCOTwentyfive}{La$_{1.75}$Sr$_{0.25}$CuO$_4$}
+\newcommand{\HBCOO}{HgBa$_2$CuO$_{4+\delta}$}
+\newcommand{\LBCO}{La$_{2-x}$Ba$_x$CuO$_4$}
+\newcommand{\LBCOtwelve}{La$_{1.875}$Ba$_{0.125}$CuO$_4$}
+\newcommand{\LCO}{La$_2$CuO$_4$}
+\newcommand{\Tc}{$T_\text{c}$}
+
 
 %% TIKZ
 \usepackage{tikz}
@@ -57,27 +74,33 @@ chaptertitle=true
 \title{Oxygen Dynamics in the High-Temperature Superconductor LSCO+O}
 \date{\today}
 
-%\includeonly{ch/conclusion}
+%\includeonly{ch/appendix}
 
 \begin{document}
 
 \input{ch/title.tex}
 
-\clearpage
+% \cleardoublepage
 
-\chapter*{Abstract}
+% \input{ch/preface.tex}
 
-\chapter*{Resum\'e}
+\cleardoublepage
 
-\clearpage
+\input{ch/abstract.tex}
 
-\tableofcontents
+\cleardoublepage
 
-\clearpage
+\input{ch/resume.tex}
+
+\cleardoublepage
+
+\tableofcontents*
+
+\cleardoublepage
 
 % \listoffigures
 % \listoftables
-\listoftodos
+%\listoftodos
 
 \include{ch/introduction}
 %\include{ch/lsco}

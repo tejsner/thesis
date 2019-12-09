@@ -1,21 +1,5 @@
 \chapter{Phonon Calculations}\label{ch:simulation}
-
-\begin{framed}
-	\begin{itemize}
-		\item An independent chapter on the structural phases of LSCO
-		\item Software details
-		\item Coordinate systems (reminder of HTT/LTO/LTT/LTLO)
-		\item Convergence tests (Benchmarking)
-		\item Electronic bands (Metal/AFM)
-		\item Geometry optimization
-		\item Phonon bands (PBESol seems to be necessary)
-		\item Molecular dynamics of defect Structures
-		\item Validation against experiment.
-		\item Discussion/conclusion
-	\end{itemize}	
-\end{framed}
-
-In this chapter, results from ab-initio simulations are presented independent of experimental data. It turns out that a careful investigation of various phases of LSCO+O presents us with valuable clues regarding the average and local structure. While DFT is unable to capture the strongly correlated nature of the cuprates, it turns out to be a reasonable description with regards to intermolecular forces. The subsequent strategy is to carefully validate our simulations and establish a `one-electron baseline' for the studied systems. Experimental deviations from this baseline can then be analysed for clues possibly pertaining to superconductivity or other phenomena not captured at the DFT level of theory.
+In this chapter, results from ab-initio simulations are presented independent of experimental data. It turns out that a careful investigation of various phases of La$_2$CuO$_4$ presents us with valuable clues regarding the average and local structure. While DFT is unable to capture the strongly correlated nature of the cuprates, it turns out to be a reasonable description with regards to intermolecular forces. The subsequent strategy is to carefully validate our simulations and establish a `one-electron baseline' for the studied systems. Experimental deviations from this baseline can then be analysed for clues possibly pertaining to superconductivity or other phenomena not captured at the DFT level of theory.
 
 One example of such a deviation is shown in Chapter \ref{ch:anomaly}, where we can detect potentially interesting physics by following how a certain phonon mode diverges from our otherwise robust simulation results. In this chapter we perform DFT simulations based on the La$_2$CuO$_4$ parent compound across three structural and two electronic phases, all of which have been observed experimentally in the lanthanum-based cuprates. We then calculate phonons within the `Frozen-Phonon' approach and obtain the neutron-weighted phonon band structure. Since the computational requirements of phonon calculations are heavily influenced by symmetries, we do not consider defects such as interstitials in this chapter as this would make the computational effort unmanageable. To understand the dynamics due to dopant species, molecular dynamics simulations based on the results of this chapter are presented in Chapter \ref{ch:md}.
 
@@ -31,7 +15,7 @@ The theory and principles behind Density Functional Theory (DFT) is presented in
 
 \begin{table}[b]
 	\centering
-	\begin{tabular}{@{}llll@{}}
+	\begin{tabular}{llll}
 	\toprule
 	 & Z & Core (\# electrons) & Valence (\# electrons)                        \\ \midrule
 	\texttt{La} & 57 & 1s$^2$2s$^2$2p$^6$3s$^2$3p$^6$3d$^{10}$4s$^2$4p$^6$4d$^{10}$ (46) & 5s$^2$5p$^6$5d$^1$6s$^2$ (11) \\
@@ -43,7 +27,7 @@ The theory and principles behind Density Functional Theory (DFT) is presented in
 	\label{tab:vasp_pseudo}
 \end{table}	
 
-The choice of crystal lattice and atomic positions are typically taken from experiment, but it is important to realize that the simulation might not `agree' completely. This is especially important if we want to calculate phonons through the evaluation of forces due to displacements away from equilibrium positions. The pseudopotentials configuration is usually taken from a database since the generation of consistent, transferable potentials is a difficult, time-consuming task. In fact, the main selling point of VASP is their high-quality pseudopotentials. The $k$-point mesh defines the number of $k$-points where the wavefunctions and density is evaluated and has a huge impact on computational effort (going from e.g. a $2 \times 2 \times 2$ grid to a $4 \times 4 \times 4$ takes 8 times as many evaluations). Luckily, the amount of $k$-points needed for an accurate calculation usually converges rapidly and we often check this convergence explicitly. Since the density of the k-point mesh depends on the system size, it is common to state the $k$-point density which is defined as the number of $k$-points per reciprocal atom (or simply \#$k$-points $\times$ \#atoms).
+The choice of crystal lattice and atomic positions are typically taken from experiment, but it is important to realize that the simulation might not `agree' completely. This is especially important if we want to calculate phonons through the evaluation of forces due to displacements away from equilibrium positions. The pseudopotential configuration is usually taken from a database since the generation of consistent, transferable potentials is a difficult, time-consuming task. In fact, the main selling point of VASP is their high-quality pseudopotentials. The $k$-point mesh defines the number of $k$-points where the wavefunctions and density is evaluated and has a huge impact on computational effort (going from e.g. a $2 \times 2 \times 2$ grid to a $4 \times 4 \times 4$ takes 8 times as many evaluations). Luckily, the amount of $k$-points needed for an accurate calculation usually converges rapidly and we often check this convergence explicitly. Since the density of the k-point mesh depends on the system size, it is common to state the $k$-point density which is defined as the number of $k$-points per reciprocal atom (or simply \#$k$-points $\times$ \#atoms).
 
 Finally, there is a large number of computational parameters that can be tweaked depending on the desired type of calculation. The VASP \texttt{INCAR} file has more than 300 optional tags \cite{zotero-1437}, but usually only a few needs to be tweaked depending on the desired type of simulation. For the simulations performed in this thesis the following keywords are important:
 
@@ -60,27 +44,27 @@ Finally, there is a large number of computational parameters that can be tweaked
 	\item \texttt{ISYM}: Controls how VASP deals with space group symmetry. 
 \end{itemize}
 
-\noindent Some examples of VASP input files can be found in appendix \ref{app:vasp}. The take-home message here is that phonon calculations generally needs increased precision with respect to the recommended default values. When one is mainly concerned with the electronic band structure the dominant energies are typically on the order of eV, where typical phonon energies are on the order of meV, 3 orders of magnitude smaller. In addition, forces are evaluated as derivatives of the total energy (per the Hellmann-Feynmann Theorem, see section \ref{sec:forceDFT}) so numerical noise is amplified. For molecular dynamics this precision is less crucial since the many time steps will average out this numerical noise.
+\noindent The take-home message here is that phonon calculations generally needs increased precision with respect to the recommended default values. When one is mainly concerned with the electronic band structure the dominant energies are typically on the order of eV, where typical phonon energies are on the order of meV, 3 orders of magnitude smaller. In addition, forces are evaluated as derivatives of the total energy (per the Hellmann-Feynmann Theorem, see section \ref{sec:forceDFT}) so numerical noise is amplified. For molecular dynamics this precision is less crucial since the many time steps will average out this numerical noise.
 
 \subsection{Functional and Energy Cut-off}
-As we discussed in Section \ref{sec:dft}, a large number of functionals have been developed for DFT calculations. At the GGA level of theory 24 functionals are available in VASP and choosing one can seem like an daunting task at first glance. It is, however, important to realize that most functionals have been created to treat a specific problem. This is an expression of the fact that, despite our best efforts, no completely transferrable functional exists. With that in mind, functionals with high transferability do exist and the default PBE functional in VASP has been used to describe a wide variety of systems, emphasized by the 40000+ citations of the original paper \cite{Perdew1996}. 
+As we discussed in Section \ref{sec:dft}, a large number of functionals have been developed for DFT calculations. At the GGA level of theory 24 functionals are available in VASP and choosing one can seem like an daunting task at first glance. It is, however, important to realize that most functionals have been created to treat a specific problem. This is an expression of the fact that, despite our best efforts, no universal functional exists currently. With that in mind, functionals with high transferability do exist and the default PBE functional in VASP has been used to describe a wide variety of systems, emphasized by the 40000+ citations of the original paper \cite{Perdew1996}. 
 
 While PBE is technically a semi-empirical functional, the only experimental parameter is derived from the uniform electron gas. The simplicity and transferability of this functional thus makes it an excellent starting point for any DFT calculation. Generally one would start with PBE and then turn to other functionals if calculations fail to line up with empirical data. As we shall see, we run into this exact problem when evaluating forces in our system and we have to change our functional to PBESol (PBE revised for solids) in order to get a reasonable description of low energy phonons. 
 
 We run into a similar problem with the plane wave energy-cutoff when evaluating forces. The default energy-cutoff is generally set by the element with the highest recommended cut-off, in our case oxygen at \SI{400}{\eV}. For accurate forces it is recommended to increase this by a factor of 1.3, but for phonon calculations, we see improvements all the way up to an \SI{800}{\eV} cut-off. The lesson here is a cautionary tale -- at times, the lack of precision in the calculation might not reveal itself before having performed an expensive phonon calculation.
 
 \section{Electronic and Structural Phases}
-With an understanding of the functionality and limitations of DFT, and in particular VASP, we can begin to formulate a strategy to investigate the La$_2$CuO$_4$ (LCO) system. From diffraction studies, we know that LCO can exist in (at least) three structural phases depending on doping and temperature (see section XX). While the electronic structure of superconducting cuprates cannot be accurately described within DFT, undoped and overdoped La$_2$CuO$_4$ can be described as Mott-Insulator and Fermi-Liquid, respectively. Both of these electronic phases can be approximately described with DFT.
+With an understanding of the functionality and limitations of DFT, and in particular VASP, we can begin to formulate a strategy to investigate the La$_2$CuO$_4$ (LCO) system. From diffraction studies, we know that LCO can exist in (at least) three structural phases depending on doping and temperature (see section \ref{sec:lsco}). While the electronic structure of superconducting cuprates cannot be accurately described within DFT, undoped and overdoped La$_2$CuO$_4$ can be described as Mott-Insulator and Fermi-Liquid, respectively. Both of these electronic phases can be approximately described with DFT.
 
 In order to say anything about the superconducting cuprates with DFT, we are thus limited to a study of limiting cases in terms of the electronic structure. On the other hand, if we want to study phonons through atomic forces, many-body theories will struggle with realistic system sizes. Quantum Monte Carlo methods are making progress, but accurate forces are still a significant limitation \cite{Wagner2016}. Since we are working with the knowledge that the exact behaviour of the electrons are poorly described in our theory, our simulations must be carefully evaluated against experiments to ensure that our simulations are capturing the dominating contributions to atomic forces.
 
 \subsection{Electronic Structure}
-Since `electronic structure' is the output of a DFT calculation, one might object to the statement that we want to investigate different electronic structures of LCO. Without any additional constrains, DFT at the GGA level of theory generally results in a metallic state \cite{Pickett1989}, where a magnetic solution requires a non-local theory \cite{Lane2018}. Since non-local theories (beyond GGA) are computationally expensive, they become impractical for our purposes. Some authors have reported a magnetic solution using certain GGA functionals \cite{Giustino2008}, but I have not been able to reproduce this result in a consistent way. If a magnetic solution is found, the magnetic moment usually vanishes by small changes to the $k$-point mesh or energy cut-off, suggesting that the magnetic ground state is a local minimum.
+Since `electronic structure' is the output of a DFT calculation, one might object to the statement that we want to investigate different electronic structures of La$_2$CuO$_4$. Without any additional constrains, DFT at the GGA level of theory generally results in a metallic state \cite{Pickett1989}, where the observed antiferromagnetic (AFM) solution requires a non-local theory \cite{Lane2018}. Since non-local theories (beyond GGA) are computationally expensive, they become impractical for our purposes. Some authors have reported an AFM solution using certain GGA functionals \cite{Giustino2008}, but I have not been able to reproduce this result in a consistent way. If a magnetic solution is found, the magnetic moment usually vanishes by small changes to the $k$-point mesh or energy cut-off, suggesting that the magnetic ground state is a local minimum.
 
 A compromise developed specifically for correlated electron systems is the LDA+U (sometimes called DFT+U or GGA+U) method \cite{Anisimov1997} described in section \ref{sec:ldau}. This ad-hoc method treats the strong on-site Coulomb interaction of localized electrons with a Hubbard-like term parametrized through an on-site repulsion $U$ and an exchange parameter $J$. In the method by \citeauthor{Dudarev1998} \cite{Dudarev1998} these are reduced to one parameter $U_\text{eff} = U - J$. The LDA+U method was developed specifically to treat Mott-Insulators \cite{Anisimov1997}, but has been used to calculate hole doped La$_2$CuO$_4$ and La$_2$NiO$_4$ \cite{Anisimov1997}. Some recent studies have even looked at stripe ordered phases of La$_{2-x}$Sr$_x$CuO$_4$ \cite{Anisimov2004, Pesant2011}. In these studies, hole doping is done by removing electrons and adding a neutralizing background, rather than the introduction of actual dopant species. Since LDA+U comes at a much lower computational cost compared to e.g. hybrid functionals and since it was developed with the cuprates in mind, it becomes an obvious choice for our purposes.
 
 \subsection{Crystal Structure}
-The observed structural phases of lanthanum based cuprates fall into a moderate number of space groups as listed in Table \ref{tab:crystalstructures} and discussed in section [REF]. All of the structural phases can be described with reference to Figure \ref{fig:lscocrystal} where we define three parameters: $Q_1$ as a rotation around the $[010]_o$, $Q_2$ as a rotation around the $[100]_o$ axis and the orthorhombic strain $\eta=\frac{b-a}{b+a}$. In our simulations we have chosen to focus on three structural phases
+The observed structural phases of lanthanum based cuprates fall into a moderate number of space groups as listed in Table \ref{tab:crystalstructures} and introduced in section \ref{sec:lsco}. All of the structural phases can be described with reference to Figure \ref{fig:htt_lto_coordinates} where we define $Q_1$ as a rotation along $a$ (around $b$) and $Q_2$ as a rotation along $b$ (around $a$). In addition, we define the orthorhombic strain as $\eta=\frac{b-a}{b+a}$. In our simulations we have chosen to focus on three structural phases
 
 \begin{itemize}
 	\item HTT: The parent high-symmetry phase observed at high temperatures and/or overdoped samples.
@@ -92,7 +76,7 @@ The observed structural phases of lanthanum based cuprates fall into a moderate 
 	\caption[Crystal structures LSCO]{Crystal structures found in various lanthanum-based cuprates. All structural phases can be parametrized with respect to LTLO, where $Q_1$ and $Q_2$ represent octahedral tilts as described in the text and $\eta=\frac{b-a}{b+a}$ is the orthorhombic strain.}
 	\label{tab:crystalstructures}
 	\centering
-	\begin{tabular}{@{}llll@{}}
+	\begin{tabular}{llll}
 		\toprule
 		Space Group (\#) & Name (shorthand)                         & Tilts                                    & $\eta$   \\ \midrule
 		I4/mmm (139)     & High-Temperature Tetragonal (HTT)        & $Q_1=Q_2=0$                              & $=0$     \\
@@ -103,23 +87,23 @@ The observed structural phases of lanthanum based cuprates fall into a moderate 
 	\end{tabular}
 \end{table}
 
-\begin{figure}
-	\centering
-	\includegraphics[width=0.8\textwidth]{fig/simulation/crystal_hucker.png}
-	\caption[LSCO crystal]{Crystal structure of lanthanum based cuprates based on the HTT conventional cell. From \cite{Hucker2012}. The $Q_1$, $Q_2$ rotations correspond to the LTO tilt in subfigure \textbf{b} and the perpendicular tilt. The LTT tilt in subfigure \textbf{c} corresponds to the case where $Q_1 = Q_2$.\todo[inline]{should update this to orthorhombic coordinate system if time allows...}}
-	\label{fig:lscocrystal}
-\end{figure}
+% \begin{figure}
+% 	\centering
+% 	\includegraphics[width=0.8\textwidth]{fig/simulation/crystal_hucker.png}
+% 	\caption[LSCO crystal]{Crystal structure of lanthanum based cuprates based on the HTT conventional cell. From \cite{Hucker2012}. The $Q_1$, $Q_2$ rotations correspond to the LTO tilt in subfigure \textbf{b} and the perpendicular tilt. The LTT tilt in subfigure \textbf{c} corresponds to the case where $Q_1 = Q_2$.\todo[inline]{should update this to orthorhombic coordinate system if time allows...}}
+% 	\label{fig:lscocrystal}
+% \end{figure}
 
 \section{Coordinate systems}
 Having decided on the phases to investigate, we take a short detour to describe the coordinate systems used in real and reciprocal space. Since we are dealing with several electronic and structural phases, we need a common description to compare between phases. In real space, we use the $Q_1$, $Q_2$, $\eta$ description from above and in reciprocal space we use the HTT Brillouin Zone.
 
 \subsection{Octahedral Tilts}
-In order to quantify the octahedral tilts for use in simulations, we use the coordinate system sketched in Figure \ref{fig:tilt}. All possible tilts can be described with reference to the lowest symmetry space group (LTLO, Pccn). The octahedra are described with two in-plane oxygens (O$_1$, O$_2$) and one apical oxygen $O_3$ and the Pccn space group is the only one with three inequivalent oxygen atoms. Due to symmetry constrains, a rotation of this octahedron will cause a displacements in the $c$-direction of the in-plane oxygen and in the $a$, $b$ direction of the apical oxygen (a reasonable approximation at small angles). Following \cite{Axe1989}, we define $Q_1$ as a rotation around the (010) axis and $Q_2$ as a rotation around the (100) axis in orthorhombic notation. In more intuitive terms, $Q_1$ `tilts' the octahedron along $a$, while $Q_2$ `tilts' along $b$\todo{show this in the tilt figure}.
+In order to quantify the octahedral tilts for use in simulations, we use the coordinate system sketched in Figure \ref{fig:tilt}. All possible tilts can be described with reference to the lowest symmetry space group (LTLO, Pccn). The octahedra are described with two in-plane oxygens (O$_1$, O$_2$) and one apical oxygen $O_3$ and the Pccn space group is the only one with three inequivalent oxygen atoms. Due to symmetry constrains, a rotation of this octahedron will cause a displacements in the $c$-direction of the in-plane oxygen and in the $a$, $b$ direction of the apical oxygen (a reasonable approximation at small angles). Following \cite{Axe1989}, we define $Q_1$ as a rotation around the (010) axis and $Q_2$ as a rotation around the (100) axis in orthorhombic notation. In more intuitive terms, $Q_1$ `tilts' the octahedron along $a$, while $Q_2$ `tilts' along $b$.
 
 \begin{figure}
 	\centering
 	\includegraphics[width=0.8\textwidth]{fig/simulation/tilt.pdf}
-	\caption[Geometry of octahedral tilts]{Left: Geometry of octahedral tilts in the with the $c$-axis vertical. Right: Illustration of the two inequivalent in-plane oxygens. The $Q_1$ irreducible representation represents a rotation around the (010) axis while $Q_2$ is a rotation around the (100) axis.\todo[inline]{update this to clearly show x,y,z displacements of O1, O2, O3}}
+	\caption[Geometry of octahedral tilts]{\textbf{Left:} Geometry of octahedral tilts in the with the $c$-axis vertical. \textbf{Right:} Illustration of the two inequivalent in-plane oxygens. $Q_1$ is a rotation around the (010) axis while $Q_2$ is a rotation around the (100) axis.}
 	\label{fig:tilt}
 \end{figure}
 
@@ -146,17 +130,17 @@ Q_1 &= \sin^{-1}  \left( - \frac{2c}{a} \times (\text{O}_1^z + \text{O}_2^z) \ri
 Q_2 &= \sin^{-1}  \left( -\frac{4c}{b} \times \text{O}_2^z - \frac{a}{b} \times \sin (Q_1) \right) \, .
 \end{align*}
 
-\noindent To apply an orthorhombic strain $\eta$ to a tetragonal structure with an in-plane lattice parameter $a^\prime$, while keeping the volume constant (which is important when comparing DFT simulations due to Pulay Stress, see section \ref{sec:dft}), the following equations can be used to find the $a$ and $b$ lattice parameters:
+\noindent To apply an orthorhombic strain $\eta$ to a tetragonal structure with an in-plane lattice parameter $a^\prime$, while keeping the volume constant (which is important when comparing DFT simulations due to Pulay Stress, \cite{zotero-1453}), the following equations can be used to find the $a$ and $b$ lattice parameters:
 
 \begin{align*}
 	a &= \frac{a^\prime}{1+\eta} \\
 	b &= (1+\eta) a^\prime \, .
 \end{align*}
 
-\noindent These equations can then be used to generate desired tilts and extract tilt angles from any given structure. Since every tilt is defined with respect to only 3 oxygen atoms, these equations require at least Pccn symmetry which is preserved for geometry optimizations and phonon calculations. For lower symmetries (in e.g. MD simulations) we define a `symmetrized average tilt' (see chapter \ref{ch:md}). Code to generate these structures and extract rotation angles from any structure can be found in appendix \ref{app:software}. This methodology can also be used with any software that can generate crystal structures from space group symmetry and fractional coordinates (e.g. ASE \cite{Larsen2017} and VESTA \cite{Momma2008}). The same result can, of course, also be obtained by considering each of the space groups individually and then figuring out how to generate tilts and transform the lattice to a common coordinate system. If one is only interested in atomic coordinates, starting from Pccn is convenient. This way, the atomic indices are also identical.
+\noindent These equations can then be used to generate desired tilts and extract tilt angles from any given structure. Since every tilt is defined with respect to only 3 oxygen atoms, these equations require at least Pccn symmetry which is preserved for geometry optimizations and phonon calculations. For lower symmetries (in e.g. MD simulations) we define a `symmetrized average tilt' (see chapter \ref{ch:md}). Code to generate these structures and extract rotation angles from any structure can be found in appendix \ref{app:software}. This methodology can also be used with any software that can generate crystal structures from space group symmetry and fractional coordinates (e.g. ASE \cite{Larsen2017} and VESTA \cite{Momma2008}). The same result can, of course, also be obtained by considering each of the space groups individually and then figuring out how to generate tilts and transform the lattice to a common coordinate system. If one is only interested in atomic coordinates, starting from Pccn is convenient. This way, atomic indices are also identical for all structures.
 
 \subsection{Reciprocal Space: Band Structures}
-Band structures are described with respect to the reciprocal lattice. Due to the enlargement of the real-space crystal structure as we move through HTT $\rightarrow$ LTO $\rightarrow$ LTT, the Brillouin Zone (BZ) shrinks by the same amount. Similar to how it is useful to describe our real-space lattice with respect to the Pccn coordinate system, it is useful to describe reciprocal space with respect to a common coordinate system when comparing results. As we can see in Figure \ref{fig:allbz}, the BZ's of HTT, LTO and LTT have vastly different shapes, so it is difficult to superimpose results.
+Band structures are described with respect to the reciprocal lattice. Due to the enlargement of the real-space crystal structure as we move through HTT $\rightarrow$ LTO $\rightarrow$ LTT, the Brillouin Zone (BZ) shrinks by the same amount. Similar to how it is useful to describe our real-space lattice with respect to the Pccn coordinate system, it is useful to describe reciprocal space with respect to a common coordinate system when comparing results. As we can see in Figure \ref{fig:allbz}, the BZs of HTT, LTO and LTT have vastly different shapes, so it is difficult to superimpose results.
 
 \begin{figure}
 	\centering
@@ -165,7 +149,7 @@ Band structures are described with respect to the reciprocal lattice. Due to the
 	\label{fig:allbz}
 \end{figure}
 
-For this reason, we chose a \emph{primitive} tetragonal BZ to describe the HTT phase (note that the shape is different from the actual HTT BZ) and then construct the smaller LTO and LTT BZ's with respect to this construction. The idea is sketched in Figure \ref{fig:band_paths}. This construction also helps emphasize the 2-dimensional nature of the cuprates. In all following simulations, the band labels in Figure \ref{fig:band_paths} will be used, keeping in mind that the nature of high-symmetry points can change depending on the considered structural phase. One example is that the $M$ point, which is the zone boundary of HTT, becomes the zone centre of LTO and would thus usually be denoted $\Gamma$.
+For this reason, we chose a \emph{primitive} tetragonal BZ to describe the HTT phase (note that this shape is different from the \emph{actual} HTT BZ in figure \ref{fig:allbz}) and then construct the smaller LTO and LTT BZZs with respect to this construction. The idea is sketched in Figure \ref{fig:band_paths}. This construction also helps emphasize the 2-dimensional nature of the cuprates. In all following simulations, the band labels in Figure \ref{fig:band_paths} will be used, keeping in mind that the nature of high-symmetry points can change depending on the considered structural phase. One example is that the $M$ point, which is the zone boundary of HTT, becomes the zone centre of LTO and would thus usually be denoted $\Gamma$.
 
 \begin{figure}
     \centering
@@ -209,7 +193,7 @@ Figure \ref{fig:sim_bench_afm} shows a benchmark of AFM LCO with respect to the 
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{fig/simulation/convergence_afm.pdf}
-    \caption[Simulation Benchmarks: GGA+U]{Simulation Benchmarks: GGA+U with $U=\SI{8}{\eV}$ and $J=\SI{0.8}{\eV}$. \textbf{Left:} Energy as a function of k-point density with $\sigma=\SI{0.1}{\eV}$. $\Delta E$ is total energy (with entropy) with respect to the $13 \times 13 \times 5$ mesh. \textbf{Right:} $\Delta E = E_0 - E$ as a function of Gaussian smearing $\sigma$, $E$ is the total energy and $E_0$ is the energy where $\sigma=0$ calculated with the tetrahedron method (\texttt{ISMEAR=-5} in VASP).}
+    \caption[Simulation Benchmarks: GGA+U]{Simulation Benchmarks: GGA+U with $U=\SI{8}{\eV}$ and $J=\SI{0.8}{\eV}$. \textbf{Left:} Energy as a function of k-point density with $\sigma=\SI{0.1}{\eV}$. $\Delta E$ is total energy (with entropy) with respect to the $13 \times 13 \times 5$ mesh. \textbf{Right:} $\Delta E = E_0 - E$ as a function of Gaussian smearing $\sigma$, $E$ is the total energy and $E_0$ is the energy where $\sigma=0$ calculated with the tetrahedron method (\texttt{ISMEAR=-5} in VASP). The inset is a zoom of the 4 lowest points.}
     \label{fig:sim_bench_afm}
 \end{figure}
 
@@ -233,7 +217,7 @@ Due to partial occupancies, metallic systems are generally more sensitive to $k$
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{fig/simulation/convergence_metal.pdf}
-    \caption[Simulation Benchmarks: Paramagnet/Metal]{Simulation Benchmarks: Paramagnet/Metal. Note the significant variation in energy compared to the insulating case, even with much higher k-point density. \textbf{Left:} Energy as a function of k-point density for three combinations values of $\sigma$ and smearing type. $\Delta E$ is total energy (with entropy) with respect to the $18 \times 18 \times 8$ mesh. \textbf{Right:} $\Delta E$ as a function of $\sigma$ with the Methfessel-Paxton method (orders 1, 2, 3) while using a $16 \times 16 \times 8$ k-point mesh (57344 k-points per reciprocal atom). $\sigma=0$ corresponds to the tetrahedron method (\texttt{ISMEAR=-5}). Below $\sigma = \SI{0.4}{\eV}$ the entropy term is \SI{0.5}{\milli\eV} per atom or lower, so forces should be well-behaved.}
+    \caption[Simulation Benchmarks: Paramagnet/Metal]{Simulation Benchmarks: Paramagnet/Metal. Note the significant variation in energy compared to the insulating case (see figure \ref{fig:sim_bench_afm}), even with much higher k-point density. \textbf{Left:} Energy as a function of k-point density for three combinations values of $\sigma$ and smearing type. $\Delta E$ is total energy (with entropy) with respect to the $18 \times 18 \times 8$ mesh. \textbf{Right:} $\Delta E$ as a function of $\sigma$ with the Methfessel-Paxton method (orders 1, 2, 3) while using a $16 \times 16 \times 8$ k-point mesh (57344 k-points per reciprocal atom). $\sigma=0$ corresponds to the tetrahedron method (\texttt{ISMEAR=-5}). Below $\sigma = \SI{0.4}{\eV}$ the entropy term is \SI{0.5}{\milli\eV} per atom or lower, so forces should be well-behaved.}
     \label{fig:sim_bench_para}
 \end{figure}
 
@@ -267,7 +251,7 @@ While we are generally interested in lattice dynamics, a DFT calculation is leve
     \label{fig:edos_htt}
 \end{figure}
 
-To further illustrate this point, Figure \ref{fig:bs_afm1} and \ref{fig:bs_metal} shows the electronic band structures coloured by atomic projections in the AFM and metallic state, respectively. We now notice that DFT+U is pushing the Cu states down by about \SI{8}{\eV}, as expected from the on-site repulsion $U$. Comparing our band structures to literature we have, as expected, a qualitative agreement in both the AFM \cite{Lane2018} and metallic \cite{Matt2018, Horio2018} cases. As mentioned in section [XX], the metallic band structures also agree quite well with experimental ARPES studies. The question of LDA+U being an appropriate model for the undoped AFM system is still not settled \cite{Damascelli2003}.\todo{find a more recent paper.}
+To further illustrate this point, Figure \ref{fig:bs_afm1} and \ref{fig:bs_metal} shows the electronic band structures coloured by atomic projections in the AFM and metallic state, respectively. We now notice that DFT+U is pushing the Cu states down by about \SI{8}{\eV}, as expected from the on-site repulsion $U$. Comparing our band structures to literature we have, as expected, a qualitative agreement in both the AFM \cite{Lane2018} and metallic \cite{Matt2018, Horio2018} cases. The question of LDA+U being an appropriate model for the undoped AFM system is still not settled \cite{Damascelli2003}.
 
 % \begin{figure}
 %     \centering
@@ -299,7 +283,7 @@ Having settled on a set of appropriate computational parameters, we can proceed 
 	\item Damped molecular dynamics
 \end{enumerate}
 
-\noindent All algorithms requires to set the \texttt{POTIM} tag which controls the step-size. Usually the default value of 0.5 is reasonable. Damped molecular dynamics requires a damping factor in addition, set by the \texttt{SMASS} tag. For this reason RM-DIIS and CG require less user intervention and are good first choices. While RM-DIIS is usually a good choice for systems close to equilibrium, it struggles with rigid unit modes such as octahedral tilts in perovskites. Since these tilts are at the centre of our investigation, we use CG in most cases.
+\noindent All algorithms requires to set the \texttt{POTIM} tag which controls the step-size. Usually the default value of 0.5 is reasonable. Damped molecular dynamics requires a damping factor in addition, set by the \texttt{SMASS} tag. For this reason RM-DIIS and CG require less user intervention and are good first choices. While RM-DIIS is usually a good choice for systems close to equilibrium, it struggles with rigid unit modes such as octahedral tilts in perovskites. Since these tilts are at the centre of our investigation, we use CG in all geometry optimizations.
 
 The optimization routine is constrained by the point group symmetry as determined by VASP. The \texttt{ISIF} tag controls how the positions, cell shape and cell volume is updated during the optimization. It might seem obvious to simply optimize everything, but for complex problems convergence can be problematic. In addition, changing the cell volume affects the plane-wave basis set. Intuitively, this can be understood through thinking of the plane waves as standing waves in our finite box. Changing the size of the box necessarily changes the plane waves. This is also true when considering changes to the cell shape, but in a less significant way. These effects are known as `Pulay stress' \cite{zotero-1453} and are important to keep in mind when performing geometry optimizations. The effect of this can be avoided by changing the size of the basis set through the energy cut-off or by avoiding volume relaxations all together. In practice, there are two primary strategies for getting accurate geometry optimizations in VASP. The first is a step-wise optimization of parameters in the scheme
 
@@ -307,7 +291,7 @@ The optimization routine is constrained by the point group symmetry as determine
 	Coordinates $\rightarrow$ Coordinates/Shape $\rightarrow$ Coordinates/Shape/Volume, 
 \end{quote}
 
-\noindent where we are susceptible to severe Pulay stress only in the last step. The second is perform successive coordinate+shape optimizations at a set of fixed volumes and fit the resulting volume-energy curve to an equation-of-state (EOS). This avoids the most significant contribution to Pulay stress by never performing a volume optimization explicitly. While this method is more computationally expensive, it is more accurate and provides us with additional information about volume-dependent behaviour such as the bulk modulus, tilt patterns and orthorhombic strain. In practice we use the exponential EOS formulated by \citeauthor{Vinet1987} \cite{Vinet1987}:
+\noindent where we are susceptible to significant Pulay stress only in the last step. The second is perform successive coordinate+shape optimizations at a set of fixed volumes and fit the resulting volume-energy curve to an equation-of-state (EOS). This avoids the most significant contribution to Pulay stress by never performing a volume optimization explicitly. While this method is more computationally expensive, it is more accurate and provides us with additional information about volume-dependent behaviour such as the bulk modulus, tilt patterns and orthorhombic strain. In practice we use the exponential EOS formulated by \citeauthor{Vinet1987} \cite{Vinet1987}:
 
 \begin{align*}
 E(V) &= E_0 + \frac{2B_0V_0}{\left(B_0^\prime-1\right)^2} \\
@@ -317,15 +301,15 @@ E(V) &= E_0 + \frac{2B_0V_0}{\left(B_0^\prime-1\right)^2} \\
 \noindent where $V_0$ is the equilibrium volume, $B_0$ is the bulk modulus and 
 
 \begin{equation*}
-B_0^\prime = \left( \frac{\partial B_0}{\partial P}\right)_T \, .
+B_0^\prime = \left( \frac{\partial B_0}{\partial P}\right)_T \, ,
 \end{equation*}
 
-\noindent There exists several alternative energy-volume EOS formulations in literature \cite{Murnaghan1944, Birch1947, Poirier1998} designed for different conditions and materials. By testing several of these formulations on the same data, we get practically indistinguishable results, so the choice of the Vinet formula is somewhat arbitrary. In practice, roughly 10 volumes ranging from $\pm 5\%$ of the equilibrium are chosen, adding more volumes to fill out the graph if necessary. While performing the fits, we extract information about the volume-dependent tilt angles and cell ratios.
+\noindent where $P$ is pressure and $T$ is temperature. There exists several alternative energy-volume EOS formulations in literature \cite{Murnaghan1944, Birch1947, Poirier1998} designed for different conditions and materials. By testing several of these formulations on the same data, we get practically indistinguishable results, so the choice of the Vinet formula is somewhat arbitrary. In practice, roughly 10 volumes ranging from $\pm 5\%$ of the equilibrium are chosen, adding more volumes to fill out the graph if necessary. While performing the fits, we extract information about the volume-dependent tilt angles and cell ratios.
 
 Since forces are more susceptible to the energy cut-off, test were performed at the recommended cut-off, 1.3 times the cut-off and 2 times the cut-off. While the latter seems extreme at first glance, our phonon calculations show that we iron out certain artefacts of low-energy modes by using a large cut-off. A similar effect was seen in simulations of CsSnI$_3$ \cite{DaSilva2015}, a perovskite with distorted octahedra. As we shall see, the forces related to tilting octahedra is quite subtle in DFT.
 
 \subsection{Geometry of AFM LCO}
-We performed equation-of-state fits to AFM La$_2$CuO$_4$ in all three structural phases. Figure \ref{fig:eos_afm_all} shows the Energy-Volume fits, Figure \ref{fig:eos_ratios_afm} shows the volume dependence of the cell ratios and Figure \ref{fig:angles_afm} shows how the angles in the LTO and LTT phases change as a function of volume. Contrary to experiment, the LTO phase is energetically unfavourable and the favoured phase is LTT. In the tetragonal phases, the optimal $c/a$ ratio is reduced as a function of volume while the LTO phase has a maximum at optimal volume. The orthorhombicity in the LTO phase increases as a function of volume and tilts in the LTO and LTT phases increase wit increasing volume. Figure \ref{fig:angles_afm} additionally reveals that the $Q_1$ and $Q_2$ are not completely rigid, consistent with experiment \cite{Radaelli1994a}. Intuitively, it is `easier' to move the apical oxygen due to the rocksalt-layer being less dense. The observations on LTO are consistent with structural studies of LSCO under pressure \cite{Takahashi1994}, where both the orthorhombic strain and tilt angle are decreased with increasing pressure.
+We performed equation-of-state fits to AFM La$_2$CuO$_4$ in all three structural phases. Figure \ref{fig:eos_afm_all} shows the Energy-Volume fits, Figure \ref{fig:eos_ratios_afm} shows the volume dependence of the cell ratios and Figure \ref{fig:angles_afm} shows how the angles in the LTO and LTT phases change as a function of volume. Contrary to experiment, the LTO phase is energetically unfavourable and the favoured phase is LTT. In the tetragonal phases, the optimal $c/a$ ratio is reduced as a function of volume while the LTO phase has a maximum at optimal volume. The orthorhombicity in the LTO phase increases as a function of volume and tilts in the LTO and LTT phases increase wit increasing volume. Figure \ref{fig:angles_afm} additionally reveals that the $Q_1$ and $Q_2$ are not completely rigid, consistent with experiment \cite{Radaelli1994a}. Intuitively, it is `easier' to move the apical oxygen due to the interlayer region being less dense. The observations on LTO are consistent with structural studies of LSCO under pressure \cite{Takahashi1994}, where both the orthorhombic strain and tilt angle are decreased with increasing pressure.
 
 \begin{figure}
     \centering
@@ -384,7 +368,7 @@ A summary of all the geometry optimizations are shown in Table \ref{tab:sim_stru
 \end{table}
 
 \section{Phonons}
-Phonons are calculated using the Phonopy software using the finite displacement (also known as the direct method or the frozen phonon method). Details on the methodology is given in section \ref{sec:phononpractical}. Phonon calculations were performed on both metallic and AFM LCO in the HTT, LTO and LTT structural phases. We use the same computational parameters as in the preceding sections, but expand to a $2 \times 2 \times 1$ supercell in order to compute phonon energies at finite values of $\bm{q}$. Since the cell is expanded, we reduce the $k$-point mesh to $4 \times 4 \times 4$ for both the metallic and magnetic solutions. While it would be preferable to perform the metallic simulation at a higher $k$-point density, memory requirements became a problem when performing computations on a supercell with P1 symmetry. While we can rely on most of the computational parameters chosen/obtained in the preceding sections, we check the effect of functional choice and energy cut-off (\texttt{ENCUT}) on phonon bands since these are more susceptible to instabilities in forces. In Figure \ref{fig:pbe_bands}, we show the phonon band structure in the AFM phase with \texttt{ENCUT=520} and \texttt{ENCUT=800}. While the effect of increasing the plane wave cut-off is small, we see immediately that it fixes some unstable modes at $\Gamma$. While we do expect instabilities at the $M$ point in the HTT phase, the results could be improved.
+Phonons are calculated using the Phonopy software using the finite displacement (also known as the direct method or the frozen phonon method). Details on the methodology is given in section \ref{sec:phononpractical}. Phonon calculations were performed on both metallic and AFM LCO in the HTT, LTO and LTT structural phases. We use the same computational parameters as in the preceding sections, but expand to a $2 \times 2 \times 1$ supercell in order to compute phonon energies at finite values of $\bm{q}$. Since the cell is expanded, we reduce the $k$-point mesh to $4 \times 4 \times 4$ for both the metallic and magnetic solutions. While it would be preferable to perform the metallic simulation at a higher $k$-point density, memory requirements became a problem when performing computations on a supercell with P1 symmetry. While we can rely on most of the computational parameters chosen/obtained in the preceding sections, we check the effect of functional choice and energy cut-off (\texttt{ENCUT}) on phonon bands since these are more susceptible to instabilities in forces. In Figure \ref{fig:pbe_bands}, we show the phonon band structure in the AFM phase with \texttt{ENCUT=520} and \texttt{ENCUT=800}. While the effect of increasing the plane wave cut-off is small, we see immediately that it fixes some instabilities at $\Gamma$. While we do expect instabilities at the $M$ point in the HTT phase, the results could be improved.
 
 \begin{figure}
 	\centering
@@ -422,7 +406,7 @@ While there, in principle, are a huge number of functionals one could try, phono
 \end{figure}
 
 \subsection{Density of states}\label{sec:sim_dos}
-As discussed in section [REF], the the calculation of phonon bands makes it trivial to compute the (partial) phonon DOS by evaluating the bands on a grid and integrating onto the energy axis. By evaluating the partial DOS and weighing each partial by scattering cross section ($\sigma^\text{total}$) and ionic mass, we obtain the generalized phonon DOS as seen by a time-of-flight neutron spectrometer in the incoherent approximation. 
+ As discussed in section \ref{sec:sim_experiment_compare}, the the calculation of phonon bands makes it trivial to compute the (partial) phonon DOS by evaluating the bands on a grid and integrating onto the energy axis. By evaluating the partial DOS and weighing each partial by scattering cross section ($\sigma^\text{total}$) and ionic mass, we obtain the generalized phonon DOS as seen by a time-of-flight neutron spectrometer in the incoherent approximation. 
 
 \begin{figure}
 	\centering
@@ -433,7 +417,7 @@ As discussed in section [REF], the the calculation of phonon bands makes it triv
 
 Figure \ref{fig:dos_all} shows the neutron weighted partial and total density of states due to the 6 different phonon calculations we performed. The density of states was evaluated on a $48 \times 48 \times 48$ grid, integrated using the tetrahedron method and an applied Gaussian smearing of $\sigma=\SI{1}{\milli\eV}$ (\SI{2.35}{\milli\eV} FWHM). To get comparable values of $g(\omega)$, the plots are normalized to the BZ volume ($4V^\text{BZ}_\text{HTT} = 2 V^\text{BZ}_\text{LTO} = V^\text{BZ}_\text{LTT}$).
 
-Qualitatively, the main difference between the structural phases is a modification of the peak at $\approx \SI{30}{\milli\eV}$ as you go to progressively lower symmetries. A quick inspection of the eigenvectors of the HTT calculation reveals 4 modes in this energy-range (inspection performed at $\Gamma$)\todo{visual}:
+Qualitatively, the main difference between the structural phases is a modification of the peak at $\approx \SI{30}{\milli\eV}$ as you go to progressively lower symmetries. A quick inspection of the eigenvectors of the HTT calculation reveals 4 modes in this energy-range (inspection performed at $\Gamma$):
 
 \begin{enumerate}
 	\item \SI{26.3}{\milli\eV}: An in-plane oxygen mode where the oxygens move along $c$ and the two diagonals of the octahedra is out of phase.
